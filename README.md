@@ -23,30 +23,32 @@
 
 Le projet suit les conventions **SCAM (Single Component Angular Modules)** pour une meilleure lisibilité, testabilité et évolutivité.
 
+```
 src/
 ├── app/
-│ ├── core/ # Services singleton, modèles, interceptors HTTP
-│ │ ├── guards/ # Guards pour protéger les routes
-│ │ ├── interceptors/ # Interceptors HTTP (ex. JWT)
-│ │ ├── models/ # Modèles de données (ex. User, Dog, Course)
-│ │ └── services/ # Services partagés (ex. AuthService, ApiService)
-│ ├── shared/ # Composants, pipes et directives réutilisables
-│ │ ├── components/ # Composants communs (ex. boutons, cards)
-│ │ ├── directives/ # Directives personnalisées
-│ │ └── pipes/ # Pipes personnalisées
-│ ├── features/ # Modules fonctionnels de l'application
-│ │ ├── auth/ # Connexion et inscription
-│ │ ├── home/ # Page d'accueil
-│ │ ├── dashboard/ # Tableau de bord utilisateur
-│ │ ├── calendar/ # Calendrier des cours
-│ │ ├── contact/ # Page de contact
-│ │ └── profile/ # Profil utilisateur
-│ ├── layouts/ # Layouts principaux (header, footer, sidebar)
-│ │ └── main-layout/
+│   ├── core/ # Services singleton, modèles, interceptors HTTP
+│   │   ├── guards/ # Guards pour protéger les routes
+│   │   ├── interceptors/ # Interceptors HTTP (ex. JWT)
+│   │   ├── models/ # Modèles de données (ex. User, Dog, Course)
+│   │   └── services/ # Services partagés (ex. AuthService, ApiService)
+│   ├── shared/ # Composants, pipes et directives réutilisables
+│   │   ├── components/ # Composants communs (ex. boutons, cards)
+│   │   ├── directives/ # Directives personnalisées
+│   │   └── pipes/ # Pipes personnalisées
+│   ├── features/ # Modules fonctionnels de l'application
+│   │   ├── auth/ # Connexion et inscription
+│   │   ├── home/ # Page d'accueil
+│   │   ├── dashboard/ # Tableau de bord utilisateur
+│   │   ├── calendar/ # Calendrier des cours
+│   │   ├── contact/ # Page de contact
+│   │   └── profile/ # Profil utilisateur
+│   ├── layouts/ # Layouts principaux (header, footer, sidebar)
+│   │   └── main-layout/
 ├── assets/
-│ ├── images/
-│ ├── icons/
-│ └── fonts/
+│   ├── images/
+│   ├── icons/
+│   └── fonts/
+```
 
 ---
 
