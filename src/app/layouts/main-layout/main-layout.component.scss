@@ -1,0 +1,21 @@
+/* src/app/layouts/main-layout/main-layout.component.scss */
+
+.main-layout {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+header {
+}
+
+main {
+  flex: 1;
+  padding: 20px;
+}
+
+footer {
+  text-align: center;
+  padding: 20px;
+  background-color: #f0f0f0;
+}
