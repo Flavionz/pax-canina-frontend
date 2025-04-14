@@ -1,14 +1,24 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
-import {CommonModule} from '@angular/common';
-import {RouterModule} from '@angular/router';
+import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { MatTabsModule } from '@angular/material/tabs';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-profile',
-  imports: [CommonModule, RouterModule],
   templateUrl: './profile.component.html',
-  styleUrl: './profile.component.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  styleUrls: ['./profile.component.scss'],
+  standalone: true,
+  imports: [
+    CommonModule,
+    FormsModule,
+    MatTabsModule,
+    MatButtonModule,
+    MatIconModule,
+  ]
 })
 export class ProfileComponent {
 
+  activeTab: unknown;
 }

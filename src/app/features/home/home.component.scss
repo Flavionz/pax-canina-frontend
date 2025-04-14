@@ -1,204 +1,284 @@
+$primary-color: #22c55e;
+$text-color: #333;
+$background-color: #f8f9fa;
+$card-border-color: #ddd;
+
+@mixin card-styles {
+  border: 1px solid $card-border-color;
+  border-radius: 5px;
+  box-sizing: border-box;
+  margin-bottom: 30px;
+  padding: 20px;
+  text-align: center;
+}
+
 .home-container {
   font-family: Arial, sans-serif;
-  color: #333;
-  background-color: #f8f9fa;
+  color: $text-color;
+  background-color: $background-color;
   display: flex;
   flex-direction: column;
   align-items: center;
   width: 100%;
 }
 
-/* Hero Section */
 .hero {
-  background-color: #28a745;
+  width: 100%;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.hero-card {
+  background-color: $primary-color;
   color: white;
   text-align: center;
-  padding: 40px;
-  width: 100%;
-  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 300px;
+}
 
-  h1 {
-    font-size: 2.5em;
-    margin-bottom: 20px;
-  }
+.hero-content {
+  padding: 20px;
+}
 
-  p {
-    font-size: 1.2em;
-    margin-bottom: 30px;
-  }
+.hero-title {
+  font-size: 2.5em;
+  margin-bottom: 20px;
+}
 
-  button {
-    background-color: white;
-    color: #28a745;
-    border: none;
-    padding: 12px 24px;
-    font-size: 1em;
-    border-radius: 5px;
-    cursor: pointer;
-    margin: 0 10px;
+.hero-subtitle {
+  font-size: 1.2em;
+  margin-bottom: 30px;
+}
 
-    &:hover {
-      background-color: #eee;
-    }
+.hero-buttons {
+  display: flex;
+  justify-content: center;
+}
+
+.hero-button {
+  background-color: white;
+  color: $primary-color;
+  border: none;
+  padding: 12px 24px;
+  font-size: 1em;
+  border-radius: 5px;
+  cursor: pointer;
+  margin: 0 10px;
+
+  &:hover {
+    background-color: #eee;
   }
 }
 
-/* About Us Section */
 .about-us {
   text-align: center;
   padding: 40px;
   width: 80%;
   box-sizing: border-box;
-
-  h2 {
-    font-size: 2em;
-    margin-bottom: 20px;
-  }
-
-  p {
-    font-size: 1.1em;
-  }
 }
 
-/* Our Mission Section */
+.about-us-card {
+  @include card-styles;
+}
+
+.about-us-title {
+  font-size: 2em;
+  margin-bottom: 20px;
+}
+
+.about-us-text {
+  font-size: 1.1em;
+}
+
+.about-us-card img {
+  width: 100%;
+  height: auto;
+  margin-bottom: 20px;
+}
+
 .our-mission {
   text-align: center;
   padding: 40px;
   width: 80%;
   box-sizing: border-box;
-
-  h2 {
-    font-size: 2em;
-    margin-bottom: 20px;
-  }
-
-  p {
-    font-size: 1.1em;
-  }
 }
 
-/* Our Services Section */
+.our-mission-card {
+  @include card-styles;
+}
+
+.our-mission-title {
+  font-size: 2em;
+  margin-bottom: 20px;
+}
+
+.our-mission-text {
+  font-size: 1.1em;
+}
+
+.our-mission-card img {
+  width: 100%;
+  height: auto;
+  margin-bottom: 20px;
+}
+
 .our-services {
   text-align: center;
   padding: 40px;
   width: 80%;
   box-sizing: border-box;
-
-  h2 {
-    font-size: 2em;
-    margin-bottom: 20px;
-  }
-
-  .services-list {
-    display: flex;
-    justify-content: space-around;
-    flex-wrap: wrap;
-
-    .service {
-      width: 30%;
-      min-width: 300px;
-      margin-bottom: 30px;
-      padding: 20px;
-      border: 1px solid #ddd;
-      border-radius: 5px;
-      box-sizing: border-box;
-
-      h3 {
-        font-size: 1.5em;
-        margin-bottom: 10px;
-      }
-
-      p {
-        font-size: 1em;
-      }
-    }
-  }
 }
 
-/* Available Courses Section */
+.our-services-title {
+  font-size: 2em;
+  margin-bottom: 20px;
+}
+
+.services-list {
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+}
+
+.service-card {
+  @include card-styles;
+  width: 30%;
+  min-width: 300px;
+}
+
+.service-title {
+  font-size: 1.5em;
+  margin-bottom: 10px;
+}
+
+.service-text {
+  font-size: 1em;
+}
+
+.service-card img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+}
+
 .available-courses {
   text-align: center;
   padding: 40px;
   width: 80%;
   box-sizing: border-box;
+}
 
-  h2 {
-    font-size: 2em;
-    margin-bottom: 20px;
-  }
+.available-courses-title {
+  font-size: 2em;
+  margin-bottom: 20px;
+}
 
-  .courses-list {
-    display: flex;
-    justify-content: space-around;
-    flex-wrap: wrap;
+.courses-list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+}
 
-    .course {
-      width: 30%;
-      min-width: 300px;
-      margin-bottom: 30px;
-      padding: 20px;
-      border: 1px solid #ddd;
-      border-radius: 5px;
-      box-sizing: border-box;
+.course-card {
+  @include card-styles;
+  width: 100%;
+  min-width: 300px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
 
-      h3 {
-        font-size: 1.5em;
-        margin-bottom: 10px;
-      }
+.course-title {
+  font-size: 1.5em;
+  margin-bottom: 10px;
+  justify-content: center;
+}
 
-      p {
-        font-size: 1em;
-        margin-bottom: 15px;
-      }
+.course-text {
+  font-size: 1em;
+  margin-bottom: 15px;
+}
 
-      button {
-        background-color: #28a745;
-        color: white;
-        border: none;
-        padding: 10px 20px;
-        font-size: 0.9em;
-        border-radius: 5px;
-        cursor: pointer;
+.course-button {
+  background-color: $primary-color;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  font-size: 0.9em;
+  border-radius: 5px;
+  cursor: pointer;
+  justify-content: center;
 
-        &:hover {
-          background-color: #1e7e34;
-        }
-      }
-    }
+  &:hover {
+    background-color: darken($primary-color, 10%);
   }
 }
 
-/* Call to Action Section */
+.course-card img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+}
+
+.mat-card-content {
+  text-align: center;
+}
+
+.mat-card-actions {
+  margin: 0;
+}
+.mat-mdc-card-actions{
+  justify-content: center;
+}
+
+
+@media (min-width: 768px) {
+  .courses-list {
+    flex-wrap: nowrap;
+  }
+
+  .course-card {
+    width: 25%;
+    min-width: 0;
+  }
+}
+
 .call-to-action {
-  background-color: #28a745;
-  color: white;
   text-align: center;
   padding: 40px;
   width: 100%;
   box-sizing: border-box;
+}
 
-  h2 {
-    font-size: 2em;
-    margin-bottom: 20px;
-  }
+.call-to-action-card {
+  background-color: $primary-color;
+  color: white;
+}
 
-  p {
-    font-size: 1.1em;
-    margin-bottom: 30px;
-  }
+.call-to-action-title {
+  font-size: 2em;
+  margin-bottom: 20px;
+}
 
-  button {
-    background-color: white;
-    color: #28a745;
-    border: none;
-    padding: 12px 24px;
-    font-size: 1em;
-    border-radius: 5px;
-    cursor: pointer;
-    margin: 0 10px;
+.call-to-action-text {
+  font-size: 1.1em;
+  margin-bottom: 30px;
+}
 
-    &:hover {
-      background-color: #eee;
-    }
+.call-to-action-button {
+  background-color: white;
+  color: $primary-color;
+  border: none;
+  padding: 12px 24px;
+  font-size: 1em;
+  border-radius: 5px;
+  cursor: pointer;
+  margin: 0 10px;
+
+  &:hover {
+    background-color: #eee;
   }
 }

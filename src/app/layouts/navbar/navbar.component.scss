@@ -5,6 +5,9 @@
   padding: 10px 20px;
   background-color: #ffffff;
   border-bottom: 1px solid #e0e0e0;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
 
   &__logo {
     display: flex;
@@ -19,6 +22,14 @@
       font-size: 1.5rem;
       font-weight: bold;
       color: #333333;
+    }
+  }
+
+  &__burger {
+    display: none;
+    cursor: pointer;
+    img {
+      width: 30px;
     }
   }
 
@@ -69,6 +80,54 @@
         color: #d9534f;
         font-weight: bold;
       }
+    }
+  }
+
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    align-items: flex-start;
+
+
+    &__burger {
+      display: block;
+      position: absolute;
+      top: 10px;
+      right: 20px;
+    }
+
+
+    &__links {
+      display: none;
+      width: 100%;
+
+      &.active {
+        display: block;
+      }
+
+      ul {
+        flex-direction: column;
+        width: 100%;
+
+        li {
+          margin-right: 0;
+          margin-bottom: 10px;
+
+          a {
+            display: block;
+            padding: 10px;
+            border-bottom: 1px solid #e0e0e0;
+
+            img {
+              margin-right: 15px;
+            }
+          }
+        }
+      }
+    }
+
+    &__logout {
+      margin-top: 20px;
     }
   }
 }

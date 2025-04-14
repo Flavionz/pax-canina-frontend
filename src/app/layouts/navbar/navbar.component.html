@@ -3,7 +3,12 @@
     <img src="assets/icons/logo-sans-scri.png" alt="Pax Canina Logo" />
     <span>Pax Canina</span>
   </div>
-  <nav class="navbar__links">
+
+  <div class="navbar__burger" (click)="toggleMenu()">
+    <img src="assets/icons/burger.svg" alt="Menu" />
+  </div>
+
+  <nav class="navbar__links" [ngClass]="{'active': isMenuOpen}">
     <ul>
       <li>
         <a routerLink="/home" routerLinkActive="active">
