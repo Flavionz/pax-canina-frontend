@@ -1,17 +1,12 @@
-/* src/app/layouts/main-layout/main-layout.component.scss */
-
 .main-layout {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
 }
 
-header {
-}
-
 main {
   flex: 1;
-  padding: 20px;
+  padding: var(--navbar-height, 80px) 20px 20px;
 }
 
 footer {
