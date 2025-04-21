@@ -1,56 +1,63 @@
 <header class="navbar">
-  <div class="navbar__logo">
-    <img src="assets/icons/logo-sans-scri.png" alt="Pax Canina Logo" />
-    <span>Pax Canina</span>
+  <div class="navbar__inner">
+    <a
+      class="navbar__logo"
+      routerLink="/home"
+      routerLinkActive="active"
+      [routerLinkActiveOptions]="{ exact: true }"
+    >
+      <img src="assets/icons/logo-sans-scri.png" alt="Pax Canina Logo" />
+      <span>Pax Canina</span>
+    </a>
+
+    <div class="navbar__burger" *ngIf="isMobileView" (click)="toggleMenu()">
+      <img src="assets/icons/burger.svg" alt="Menu" />
+    </div>
+
+    <nav class="navbar__links navbar__links--main" [class.active]="isMenuOpen">
+      <ul>
+        <li>
+          <a routerLink="/home" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="closeMenu()">
+            <img src="assets/icons/maison.png" alt="Home Icon" />
+            Accueil
+          </a>
+        </li>
+        <li>
+          <a routerLink="/dashboard" routerLinkActive="active" (click)="closeMenu()">
+            <img src="assets/icons/tableau-de-bord.png" alt="Dashboard Icon" />
+            Tableau de bord
+          </a>
+        </li>
+        <li>
+          <a routerLink="/profile" routerLinkActive="active" (click)="closeMenu()">
+            <img src="assets/icons/utilisateur.png" alt="Profile Icon" />
+            Profil
+          </a>
+        </li>
+        <li>
+          <a routerLink="/calendar" routerLinkActive="active" (click)="closeMenu()">
+            <img src="assets/icons/calendrier.png" alt="Calendar Icon" />
+            Calendrier
+          </a>
+        </li>
+        <li>
+          <a routerLink="/contact" routerLinkActive="active" (click)="closeMenu()">
+            <img src="assets/icons/contact.png" alt="Contact Icon" />
+            Contact
+          </a>
+        </li>
+      </ul>
+    </nav>
+
+    <nav class="navbar__links navbar__links--logout" [class.active]="isMenuOpen">
+      <ul>
+        <li class="logout-item">
+          <a (click)="logout(); closeMenu()">
+            <img src="assets/icons/deconnexion.png" alt="Logout Icon" />
+            Déconnexion
+          </a>
+        </li>
+      </ul>
+    </nav>
   </div>
-
-  <div class="navbar__burger" *ngIf="isMobileView" (click)="toggleMenu()">
-    <img src="assets/icons/burger.svg" alt="Menu" />
-  </div>
-
-  <nav class="navbar__links navbar__links--main" [class.active]="isMenuOpen">
-    <ul>
-      <li>
-        <a routerLink="/home" routerLinkActive="active" (click)="closeMenu()">
-          <img src="assets/icons/maison.png" alt="Home Icon" />
-          Accueil
-        </a>
-      </li>
-      <li>
-        <a routerLink="/dashboard" routerLinkActive="active" (click)="closeMenu()">
-          <img src="assets/icons/tableau-de-bord.png" alt="Dashboard Icon" />
-          Tableau de bord
-        </a>
-      </li>
-      <li>
-        <a routerLink="/profile" routerLinkActive="active" (click)="closeMenu()">
-          <img src="assets/icons/utilisateur.png" alt="Profile Icon" />
-          Profil
-        </a>
-      </li>
-      <li>
-        <a routerLink="/calendar" routerLinkActive="active" (click)="closeMenu()">
-          <img src="assets/icons/calendrier.png" alt="Calendar Icon" />
-          Calendrier
-        </a>
-      </li>
-      <li>
-        <a routerLink="/contact" routerLinkActive="active" (click)="closeMenu()">
-          <img src="assets/icons/contact.png" alt="Contact Icon" />
-          Contact
-        </a>
-      </li>
-    </ul>
-  </nav>
-
-  <nav class="navbar__links navbar__links--logout" [class.active]="isMenuOpen">
-    <ul>
-      <li class="logout-item">
-        <a (click)="logout(); closeMenu()">
-          <img src="assets/icons/deconnexion.png" alt="Logout Icon" />
-          Déconnexion
-        </a>
-      </li>
-    </ul>
-  </nav>
 </header>
