@@ -24,23 +24,31 @@ $card-border-color: #ddd;
 
 .hero {
   width: 100%;
+  display: flex;
+  align-items: center;
   padding: 20px;
   box-sizing: border-box;
-}
-
-.hero-card {
   background-color: $primary-color;
   color: white;
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  min-height: 300px;
+  max-height: 500px;
+  overflow: hidden;
+}
+
+.hero-image {
+  width: 50%;
+  padding-right: 20px;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
 }
 
 .hero-content {
-  padding: 20px;
+  width: 50%;
+  text-align: left;
 }
 
 .hero-title {
@@ -55,7 +63,7 @@ $card-border-color: #ddd;
 
 .hero-buttons {
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
 }
 
 .hero-button {
@@ -73,56 +81,40 @@ $card-border-color: #ddd;
   }
 }
 
-.about-us {
-  text-align: center;
-  padding: 40px;
-  width: 80%;
-  box-sizing: border-box;
-}
-
-.about-us-card {
-  @include card-styles;
-}
-
-.about-us-title {
-  font-size: 2em;
-  margin-bottom: 20px;
-}
-
-.about-us-text {
-  font-size: 1.1em;
-}
-
-.about-us-card img {
-  width: 100%;
-  height: auto;
-  margin-bottom: 20px;
-}
-
+.about-us,
 .our-mission {
-  text-align: center;
+  width: 100%;
   padding: 40px;
-  width: 80%;
   box-sizing: border-box;
 }
 
-.our-mission-card {
-  @include card-styles;
+.section-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between; // Distribuisce lo spazio tra immagine e testo
 }
 
-.our-mission-title {
+.section-image {
+  width: 40%; // Larghezza dell'immagine
+  border-radius: 8px; // Bordo arrotondato
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); // Ombra leggera
+  object-fit: cover;
+  height: auto;
+}
+
+.section-text {
+  width: 55%; // Larghezza del testo
+}
+
+.section-title {
   font-size: 2em;
   margin-bottom: 20px;
+  text-align: left; // Allineamento del titolo a sinistra
 }
 
-.our-mission-text {
+.section-text {
   font-size: 1.1em;
-}
-
-.our-mission-card img {
-  width: 100%;
-  height: auto;
-  margin-bottom: 20px;
+  text-align: left; // Allineamento del testo a sinistra
 }
 
 .our-services {

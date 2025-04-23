@@ -1,41 +1,37 @@
 <div class="home-container">
   <section class="hero">
-    <mat-card class="hero-card">
-      <mat-card-content class="hero-content">
-        <div class="hero-text">
-          <h1 class="hero-title">BIENVENUE AU PAX CANINA</h1>
-          <p class="hero-subtitle">Une éducation basée sur l'équilibre, le respect et l'harmonie</p>
-        </div>
-        <div class="hero-buttons">
-          <button mat-raised-button color="primary" class="hero-button">Voir le calendrier</button>
-          <button mat-button class="hero-button">En savoir plus</button>
-        </div>
-      </mat-card-content>
-    </mat-card>
+    <div class="hero-content">
+      <h1 class="hero-title">BIENVENUE AU PAX CANINA</h1>
+      <p class="hero-subtitle">Le meilleur endroit pour entraîner et socialiser votre compagnon à quatre pattes</p>
+      <div class="hero-buttons">
+        <button mat-raised-button color="primary" class="hero-button">Voir le calendrier</button>
+        <button mat-button class="hero-button">En savoir plus</button>
+      </div>
+    </div>
+    <div class="hero-image">
+      <img src="/assets/images/caneblu.jpg" alt="Immagine Hero">
+    </div>
   </section>
 
   <section class="about-us">
-    <mat-card class="about-us-card">
-      <img mat-card-image src="URL_IMMAGINE_ABOUT_US" alt="Immagine di ClubCanine">
-      <mat-card-header>
-        <mat-card-title class="about-us-title">Qui sommes-nous?</mat-card-title>
-      </mat-card-header>
-      <mat-card-content>
-        <p class="about-us-text">ClubCanine est une communauté passionnée dédiée à l'éducation canine et au bien-être de votre compagnon.</p>
-      </mat-card-content>
-    </mat-card>
+    <div class="section-content">
+      <img src="/assets/images/canetestolina.jpg" alt="Immagine di ClubCanine" class="section-image">
+      <div class="section-text">
+        <h2 class="section-title">Qui sommes-nous?</h2>
+        <p class="section-text">Pax Canina est une communauté passionnée dédiée à l'éducation canine et au bien-être de votre compagnon.</p>
+      </div>
+    </div>
   </section>
 
+
   <section class="our-mission">
-    <mat-card class="our-mission-card">
-      <img mat-card-image src="URL_IMMAGINE_OUR_MISSION" alt="Immagine della missione di ClubCanine">
-      <mat-card-header>
-        <mat-card-title class="our-mission-title">Notre mission</mat-card-title>
-      </mat-card-header>
-      <mat-card-content>
-        <p class="our-mission-text">Depuis plus de 10 ans, nous nous engageons à créer un environnement où les chiens et leurs propriétaires peuvent apprendre, grandir et s'épanouir ensemble. Notre approche est basée sur le renforcement positif et le respect du bien-être animal.</p>
-      </mat-card-content>
-    </mat-card>
+  <div class="section-content">
+    <div class="section-text">
+      <h2 class="section-title">Notre mission</h2>
+      <p class="section-text">Depuis plus de 10 ans, nous nous engageons à créer un environnement où les chiens et leurs propriétaires peuvent apprendre, grandir et s'épanouir ensemble. Notre approche est basée sur le renforcement positif et le respect du bien-être animal.</p>
+    </div>
+    <img src="/assets/images/pitbull.jpg" alt="Immagine della missione di ClubCanine" class="section-image">
+  </div>
   </section>
 
   <section class="our-services">
@@ -72,61 +68,7 @@
   </section>
 
   <section class="available-courses">
-    <h2 class="available-courses-title">Cours disponibles</h2>
-    <div class="courses-list">
-      <mat-card class="course-card">
-        <img mat-card-image src="/assets/images/socializza.jpg" alt="Immagine della socialisation des chiots">
-        <mat-card-header>
-          <mat-card-title class="course-title">Socialisation des chiots</mat-card-title>
-        </mat-card-header>
-        <mat-card-content>
-          <p class="course-text">Age: 3 mois à 6 mois</p>
-          <p class="course-text">Places disponibles: 5</p>
-        </mat-card-content>
-        <mat-card-actions>
-          <button mat-button class="course-button">En savoir plus</button>
-        </mat-card-actions>
-      </mat-card>
-      <mat-card class="course-card">
-        <img mat-card-image src="assets/images/obey.jpg" alt="Immagine de l'obéissance de base">
-        <mat-card-header>
-          <mat-card-title class="course-title">Obéissance de base</mat-card-title>
-        </mat-card-header>
-        <mat-card-content>
-          <p class="course-text">Age: 6 mois à 4 ans</p>
-          <p class="course-text">Places disponibles: 6</p>
-        </mat-card-content>
-        <mat-card-actions>
-          <button mat-button class="course-button">En savoir plus</button>
-        </mat-card-actions>
-      </mat-card>
-      <mat-card class="course-card">
-        <img mat-card-image src="assets/images/agility.jpg" alt="Immagine de l'agility débutant">
-        <mat-card-header>
-          <mat-card-title class="course-title">Agility débutant</mat-card-title>
-        </mat-card-header>
-        <mat-card-content>
-          <p class="course-text">Age: 1 an à 10 ans</p>
-          <p class="course-text">Places disponibles: 3</p>
-        </mat-card-content>
-        <mat-card-actions>
-          <button mat-button class="course-button">En savoir plus</button>
-        </mat-card-actions>
-      </mat-card>
-      <mat-card class="course-card">
-        <img mat-card-image src="/assets/images/cani.webp" alt="Immagine du comportement avancé">
-        <mat-card-header>
-          <mat-card-title class="course-title">Comportement avancé</mat-card-title>
-        </mat-card-header>
-        <mat-card-content>
-          <p class="course-text">Age: 1 an à 12 ans</p>
-          <p class="course-text">Places disponibles: 2</p>
-        </mat-card-content>
-        <mat-card-actions>
-          <button mat-button class="course-button">En savoir plus</button>
-        </mat-card-actions>
-      </mat-card>
-    </div>
+    <app-course-list></app-course-list>
   </section>
 
   <section class="call-to-action">
