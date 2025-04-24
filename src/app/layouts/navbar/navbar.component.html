@@ -14,8 +14,64 @@
       <img src="assets/icons/burger.svg" alt="Menu" />
     </div>
 
-    <nav class="navbar__links navbar__links--main" [class.active]="isMenuOpen">
+    <nav class="navbar__links navbar__links--main" *ngIf="!isMobileView">
       <ul>
+        <li>
+          <a routerLink="/home" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+            <img src="assets/icons/maison.png" alt="Home Icon" />
+            Accueil
+          </a>
+        </li>
+        <li>
+          <a routerLink="/dashboard" routerLinkActive="active">
+            <img src="assets/icons/tableau-de-bord.png" alt="Dashboard Icon" />
+            Tableau de bord
+          </a>
+        </li>
+        <li>
+          <a routerLink="/profile" routerLinkActive="active">
+            <img src="assets/icons/utilisateur.png" alt="Profile Icon" />
+            Profil
+          </a>
+        </li>
+        <li>
+          <a routerLink="/calendar" routerLinkActive="active">
+            <img src="assets/icons/calendrier.png" alt="Calendar Icon" />
+            Calendrier
+          </a>
+        </li>
+        <li>
+          <a routerLink="/contact" routerLinkActive="active">
+            <img src="assets/icons/contact.png" alt="Contact Icon" />
+            Contact
+          </a>
+        </li>
+      </ul>
+    </nav>
+
+    <nav class="navbar__links navbar__links--logout" *ngIf="!isMobileView">
+      <ul>
+        <li class="logout-item">
+          <a (click)="logout()">
+            <img src="assets/icons/deconnexion.png" alt="Logout Icon" />
+            Déconnexion
+          </a>
+        </li>
+      </ul>
+    </nav>
+
+    <div class="navbar__mobile-menu" [class.active]="isMenuOpen">
+      <div class="navbar__mobile-header">
+        <a class="navbar__logo" routerLink="/home" (click)="closeMenu()">
+          <img src="assets/icons/logo-sans-scri.png" alt="Pax Canina Logo" />
+          <span>Pax Canina</span>
+        </a>
+        <button class="navbar__mobile-close" (click)="closeMenu()">
+          <span>&times;</span>
+        </button>
+      </div>
+
+      <ul class="navbar__mobile-links">
         <li>
           <a routerLink="/home" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="closeMenu()">
             <img src="assets/icons/maison.png" alt="Home Icon" />
@@ -47,17 +103,13 @@
           </a>
         </li>
       </ul>
-    </nav>
 
-    <nav class="navbar__links navbar__links--logout" [class.active]="isMenuOpen">
-      <ul>
-        <li class="logout-item">
-          <a (click)="logout(); closeMenu()">
-            <img src="assets/icons/deconnexion.png" alt="Logout Icon" />
-            Déconnexion
-          </a>
-        </li>
-      </ul>
-    </nav>
+      <div class="navbar__mobile-logout">
+        <a (click)="logout(); closeMenu()">
+          <img src="assets/icons/deconnexion.png" alt="Logout Icon" />
+          Déconnexion
+        </a>
+      </div>
+    </div>
   </div>
 </header>

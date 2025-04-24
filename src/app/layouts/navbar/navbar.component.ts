@@ -39,11 +39,17 @@ export class NavbarComponent implements OnInit {
 
   toggleMenu() {
     this.isMenuOpen = !this.isMenuOpen;
+    if (this.isMenuOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
   }
 
   closeMenu() {
-    if (this.isMobileView) {
+    if (this.isMobileView && this.isMenuOpen) {
       this.isMenuOpen = false;
+      document.body.style.overflow = '';
     }
   }
 
@@ -51,5 +57,6 @@ export class NavbarComponent implements OnInit {
     console.log('Logout effectuate');
     this.router.navigate(['/auth/logout']);
     this.isMenuOpen = false;
+    document.body.style.overflow = '';
   }
 }

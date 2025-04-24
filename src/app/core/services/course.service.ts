@@ -21,7 +21,7 @@ export class CourseService {
         niveau: 'Débutant',
         id_type_cours: 1,
         id_tranche: 1,
-        imageUrl: 'URL_IMMAGINE_CHIOT' // Sostituisci con un URL reale
+        imageUrl: 'URL_IMMAGINE_CHIOT'
       },
       {
         id: 2,
@@ -32,7 +32,7 @@ export class CourseService {
         niveau: 'Intermédiaire',
         id_type_cours: 2,
         id_tranche: 2,
-        imageUrl: 'URL_IMMAGINE_AGILITE' // Sostituisci con un URL reale
+        imageUrl: 'URL_IMMAGINE_AGILITE'
       },
       {
         id: 4,
@@ -43,7 +43,7 @@ export class CourseService {
         niveau: 'Débutant',
         id_type_cours: 1,
         id_tranche: 1,
-        imageUrl: 'URL_IMMAGINE_CHIOT' // Sostituisci con un URL reale
+        imageUrl: 'URL_IMMAGINE_CHIOT'
       },
     ]);
   }
