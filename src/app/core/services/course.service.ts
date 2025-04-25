@@ -21,7 +21,7 @@ export class CourseService {
         niveau: 'Débutant',
         id_type_cours: 1,
         id_tranche: 1,
-        imageUrl: 'URL_IMMAGINE_CHIOT'
+        imageUrl: 'assets/images/socializza.jpg'
       },
       {
         id: 2,
@@ -32,18 +32,18 @@ export class CourseService {
         niveau: 'Intermédiaire',
         id_type_cours: 2,
         id_tranche: 2,
-        imageUrl: 'URL_IMMAGINE_AGILITE'
+        imageUrl: 'assets/images/agility.jpg'
       },
       {
-        id: 4,
-        nom: 'Éducation Chiot Pelati',
-        description: 'Cours pour chiots de 2 à 6 mois.',
+        id: 3,
+        nom: 'Éducation Adulte',
+        description: 'Cours pour adultes de 12 mois+.',
         capacite_max: 9,
         statut: 'Actif',
         niveau: 'Débutant',
         id_type_cours: 1,
         id_tranche: 1,
-        imageUrl: 'URL_IMMAGINE_CHIOT'
+        imageUrl: 'assets/images/obey.jpg'
       },
     ]);
   }
