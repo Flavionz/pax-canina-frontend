@@ -1,19 +1,64 @@
-<div class="w-full bg-gray-50 min-h-screen">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-    <div class="mb-8">
-      <h1 class="text-3xl font-bold text-gray-800">Profil utilisateur</h1>
-      <p class="text-gray-600 mt-2">Gérez vos informations personnelles et vos chiens enregistrés</p>
+<div class="profile-welcome">
+  <h1>Bienvenue {{ user?.firstName }}</h1>
+  <p>Gérez vos informations personnelles et vos chiens enregistrés</p>
+</div>
+<div class="profile-page">
+  <div class="profile-header">
+    <div class="profile-banner">
+      <button mat-stroked-button color="primary" class="profile-edit-btn">
+        <mat-icon>edit</mat-icon> Modifier
+      </button>
     </div>
+    <img class="profile-avatar" [src]="user?.avatar || 'assets/images/default-avatar.png'" alt="Avatar" />
+  </div>
 
-    <div class="bg-white rounded-xl shadow-sm overflow-hidden">
-      <mat-tab-group [(selectedIndex)]="activeTab">
-        <mat-tab label="Informations personnelles">
-        </mat-tab>
-        <mat-tab label="Mes chiens">
-        </mat-tab>
-        <mat-tab label="Mes inscriptions">
-        </mat-tab>
-      </mat-tab-group>
-    </div>
+  <div class="profile-content">
+    <mat-tab-group>
+      <mat-tab label="Informations personnelles">
+        <div class="profile-info-grid">
+          <div>
+            <h3>Informations personnelles</h3>
+            <div><strong>Prénom</strong><br>{{ user?.firstName }}</div>
+            <div><strong>Nom</strong><br>{{ user?.lastName }}</div>
+            <div><strong>Email</strong><br>{{ user?.email }}</div>
+            <div><strong>Téléphone</strong><br>{{ user?.telephone }}</div>
+            <div><strong>Adresse</strong><br>{{ user?.address }}</div>
+            <div><strong>Ville</strong><br>{{ user?.city }}</div>
+            <div><strong>Code postal</strong><br>{{ user?.postalCode }}</div>
+          </div>
+          <div>
+            <h3>À propos de moi</h3>
+            <div><strong>Bio</strong><br>{{ user?.bio }}</div>
+            <div><strong>Membre depuis</strong><br>{{ user?.memberSince | date:'MMMM yyyy' }}</div>
+          </div>
+        </div>
+      </mat-tab>
+
+      <mat-tab label="Mes chiens">
+        <div class="p-6 space-y-4" *ngIf="user?.dogs?.length > 0; else noDogs">
+          <div *ngFor="let dog of user.dogs" class="border rounded p-4 shadow-sm">
+            <p><strong>Nom :</strong> {{ dog.name }}</p>
+            <p><strong>Race :</strong> {{ dog.breed }}</p>
+            <p><strong>Âge :</strong> {{ dog.age }} an(s)</p>
+          </div>
+        </div>
+        <ng-template #noDogs>
+          <p class="text-gray-600">Vous n'avez enregistré aucun chien.</p>
+        </ng-template>
+      </mat-tab>
+
+      <mat-tab label="Mes inscriptions">
+        <div class="p-6 space-y-4" *ngIf="user?.registrations?.length > 0; else noRegistrations">
+          <div *ngFor="let reg of user.registrations" class="border rounded p-4 shadow-sm">
+            <p><strong>Activité :</strong> {{ reg.activity }}</p>
+            <p><strong>Date :</strong> {{ reg.date | date }}</p>
+            <p><strong>Statut :</strong> {{ reg.status }}</p>
+          </div>
+        </div>
+        <ng-template #noRegistrations>
+          <p class="text-gray-600">Vous n'avez aucune inscription pour le moment.</p>
+        </ng-template>
+      </mat-tab>
+    </mat-tab-group>
   </div>
 </div>

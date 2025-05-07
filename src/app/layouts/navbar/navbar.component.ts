@@ -1,7 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { AuthService } from '@app/features/auth/auth.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-navbar',
@@ -10,17 +12,27 @@ import { CommonModule } from '@angular/common';
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.scss']
 })
-export class NavbarComponent implements OnInit {
+export class NavbarComponent implements OnInit, OnDestroy {
   isMobileView = false;
   isMenuOpen = false;
+  isLoggedIn = false;
+  private authSub?: Subscription;
 
   constructor(
     private breakpointObserver: BreakpointObserver,
-    private router: Router
+    private router: Router,
+    private authService: AuthService
   ) {}
 
   ngOnInit() {
     this.setupResponsiveBehavior();
+    this.authSub = this.authService.isLoggedIn$.subscribe(status => {
+      this.isLoggedIn = status;
+    });
+  }
+
+  ngOnDestroy() {
+    this.authSub?.unsubscribe();
   }
 
   private setupResponsiveBehavior() {
@@ -30,7 +42,6 @@ export class NavbarComponent implements OnInit {
       '(max-width: 768px)'
     ]).subscribe(result => {
       this.isMobileView = result.matches;
-
       if (!this.isMobileView) {
         this.isMenuOpen = false;
       }
@@ -39,11 +50,7 @@ export class NavbarComponent implements OnInit {
 
   toggleMenu() {
     this.isMenuOpen = !this.isMenuOpen;
-    if (this.isMenuOpen) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = '';
-    }
+    document.body.style.overflow = this.isMenuOpen ? 'hidden' : '';
   }
 
   closeMenu() {
@@ -54,9 +61,17 @@ export class NavbarComponent implements OnInit {
   }
 
   logout() {
-    console.log('Logout effectuate');
-    this.router.navigate(['/auth/logout']);
+    this.authService.logout();
+    this.router.navigate(['/auth/login']);
     this.isMenuOpen = false;
     document.body.style.overflow = '';
+  }
+
+  isLoginPage(): boolean {
+    return this.router.url === '/auth/login';
+  }
+
+  isRegisterPage(): boolean {
+    return this.router.url === '/auth/register';
   }
 }

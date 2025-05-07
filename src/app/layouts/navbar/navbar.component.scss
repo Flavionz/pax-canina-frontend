@@ -15,6 +15,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
+    position: relative;
   }
 
   &__logo {
@@ -108,7 +109,50 @@
     }
   }
 
-  // Menu mobile fullscreen
+  &__auth-buttons {
+    display: flex;
+    align-items: center;
+    gap: 1.2rem;
+    margin-left: 2rem;
+
+    .auth-link {
+      color: #495057;
+      font-size: 1.08rem;
+      font-weight: 500;
+      text-decoration: none;
+      background: none;
+      border: none;
+      padding: 0.45rem 1.2rem;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: color 0.2s;
+      &.active {
+        color: #22c55e;
+        font-weight: 600;
+      }
+    }
+
+    .auth-btn {
+      color: #fff;
+      background: #22c55e;
+      font-size: 1.08rem;
+      font-weight: 600;
+      text-decoration: none;
+      border: none;
+      padding: 0.45rem 1.2rem;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background 0.2s;
+      &.active,
+      &:hover {
+        background: #16a34a;
+        color: #fff;
+      }
+    }
+  }
+
+
+
   &__mobile-menu {
     position: fixed;
     top: 0;
@@ -207,6 +251,13 @@
 
     &__links {
       display: none;
+    }
+    &__auth-buttons {
+      margin-left: 0;
+      gap: 0.5rem;
+    }
+    &__underline {
+      height: 4px;
     }
   }
 }

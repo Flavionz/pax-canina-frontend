@@ -1,0 +1,138 @@
+$primary-color: #22c55e;
+$background-color: #f8f9fa;
+
+.contact-page {
+  background: $background-color;
+  min-height: 100vh;
+  padding: 32px 0;
+}
+
+.contact-header {
+  max-width: 1100px;
+  margin: 0 auto 32px auto;
+  h1 {
+    font-size: 2.2rem;
+    font-weight: bold;
+    color: #1f2937;
+    margin-bottom: 4px;
+  }
+  p {
+    color: #6b7280;
+    font-size: 1.1rem;
+    margin-bottom: 0;
+  }
+}
+
+.contact-content {
+  display: flex;
+  gap: 32px;
+  max-width: 1100px;
+  margin: 0 auto;
+  flex-wrap: wrap;
+}
+
+.contact-form-card,
+.contact-info-card {
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  padding: 32px 24px;
+  flex: 1 1 380px;
+  min-width: 340px;
+}
+
+.contact-form-card {
+  margin-bottom: 24px;
+  h2 {
+    font-size: 1.3rem;
+    font-weight: bold;
+    margin-bottom: 20px;
+  }
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  .form-row {
+    display: flex;
+    gap: 16px;
+    input {
+      flex: 1;
+    }
+  }
+  input, select, textarea {
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 10px 12px;
+    font-size: 1rem;
+    outline: none;
+    transition: border 0.2s;
+    &:focus {
+      border: 1.5px solid $primary-color;
+    }
+  }
+  .contact-btn {
+    background: $primary-color;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 12px 0;
+    font-size: 1.1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.2s;
+    margin-top: 8px;
+    &:hover {
+      background: darken($primary-color, 5%);
+    }
+  }
+}
+
+.contact-info-card {
+  margin-bottom: 24px;
+  h2 {
+    font-size: 1.3rem;
+    font-weight: bold;
+    margin-bottom: 20px;
+  }
+  ul {
+    list-style: none;
+    padding: 0;
+    li {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      margin-bottom: 22px;
+      .contact-icon {
+        color: $primary-color;
+        font-size: 1.6rem;
+        margin-top: 3px;
+      }
+      strong {
+        font-weight: 600;
+      }
+    }
+  }
+}
+
+.contact-faq-section {
+  max-width: 1100px;
+  margin: 0 auto 32px auto;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.contact-faq-card {
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  padding: 32px 24px;
+  min-width: 340px;
+  flex: 1 1 380px;
+  margin-top: 0;
+  h2 {
+    font-size: 1.3rem;
+    font-weight: bold;
+    margin-bottom: 20px;
+  }
+}

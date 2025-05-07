@@ -22,13 +22,13 @@
             Accueil
           </a>
         </li>
-        <li>
+        <li *ngIf="isLoggedIn">
           <a routerLink="/dashboard" routerLinkActive="active">
             <img src="assets/icons/tableau-de-bord.png" alt="Dashboard Icon" />
             Tableau de bord
           </a>
         </li>
-        <li>
+        <li *ngIf="isLoggedIn">
           <a routerLink="/profile" routerLinkActive="active">
             <img src="assets/icons/utilisateur.png" alt="Profile Icon" />
             Profil
@@ -49,7 +49,25 @@
       </ul>
     </nav>
 
-    <nav class="navbar__links navbar__links--logout" *ngIf="!isMobileView">
+    <nav class="navbar__auth-buttons" *ngIf="!isLoggedIn && !isMobileView">
+      <a
+        routerLink="/auth/login"
+        class="auth-link"
+        [ngClass]="{ 'active': isLoginPage() }"
+      >
+        Se connecter
+      </a>
+      <a
+        routerLink="/auth/register"
+        class="auth-btn"
+        [ngClass]="{ 'active': isRegisterPage() }"
+      >
+        S’inscrire
+      </a>
+    </nav>
+    <div class="navbar__underline" *ngIf="!isMobileView && !isLoggedIn"></div>
+
+    <nav class="navbar__links navbar__links--logout" *ngIf="!isMobileView && isLoggedIn">
       <ul>
         <li class="logout-item">
           <a (click)="logout()">
@@ -78,13 +96,13 @@
             Accueil
           </a>
         </li>
-        <li>
+        <li *ngIf="isLoggedIn">
           <a routerLink="/dashboard" routerLinkActive="active" (click)="closeMenu()">
             <img src="assets/icons/tableau-de-bord.png" alt="Dashboard Icon" />
             Tableau de bord
           </a>
         </li>
-        <li>
+        <li *ngIf="isLoggedIn">
           <a routerLink="/profile" routerLinkActive="active" (click)="closeMenu()">
             <img src="assets/icons/utilisateur.png" alt="Profile Icon" />
             Profil
@@ -102,9 +120,19 @@
             Contact
           </a>
         </li>
+        <li *ngIf="!isLoggedIn">
+          <a routerLink="/auth/login" (click)="closeMenu()">
+            Se connecter
+          </a>
+        </li>
+        <li *ngIf="!isLoggedIn">
+          <a routerLink="/auth/register" (click)="closeMenu()">
+            S’inscrire
+          </a>
+        </li>
       </ul>
 
-      <div class="navbar__mobile-logout">
+      <div class="navbar__mobile-logout" *ngIf="isLoggedIn">
         <a (click)="logout(); closeMenu()">
           <img src="assets/icons/deconnexion.png" alt="Logout Icon" />
           Déconnexion

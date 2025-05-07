@@ -1,3 +1,51 @@
-<p>
-  login works!
-</p>
+<div class="login-container">
+  <div class="login-card">
+    <h1>Connexion</h1>
+    <p class="subtitle">Connectez-vous à votre compte ClubCanine</p>
+
+    <form (ngSubmit)="onSubmit()" [formGroup]="loginForm">
+      <div class="form-group">
+        <label for="email">Adresse e-mail</label>
+        <input id="email" type="email" formControlName="email" placeholder="Entrez votre e-mail" />
+        <div class="error" *ngIf="email?.invalid && (email?.dirty || email?.touched)">
+          L'adresse e-mail est requise
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="password">Mot de passe</label>
+        <div class="password-field">
+          <input
+            id="password"
+            [type]="showPassword ? 'text' : 'password'"
+            formControlName="password"
+            placeholder="Entrez votre mot de passe"
+          />
+          <button type="button" class="toggle-password" (click)="togglePasswordVisibility()">
+            <span *ngIf="!showPassword">&#128065;</span>
+            <span *ngIf="showPassword">&#128064;</span>
+          </button>
+        </div>
+        <div class="error" *ngIf="password?.invalid && (password?.dirty || password?.touched)">
+          Le mot de passe est requis
+        </div>
+      </div>
+
+      <div class="options">
+        <label>
+          <input type="checkbox" formControlName="rememberMe" /> Se souvenir de moi
+        </label>
+        <a class="forgot" routerLink="/auth/forgot-password">Mot de passe oublié ?</a>
+      </div>
+
+      <button class="login-btn" type="submit">
+        Se connecter
+      </button>
+    </form>
+
+    <div class="register-link">
+      Pas encore de compte ?
+      <a routerLink="/auth/register">S’inscrire</a>
+    </div>
+  </div>
+</div>

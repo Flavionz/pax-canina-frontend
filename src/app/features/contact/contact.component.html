@@ -1,1 +1,113 @@
-<p>it works</p>
+<div class="contact-page">
+  <div class="contact-header">
+    <h1>Contactez-nous</h1>
+    <p>Nous sommes là pour répondre à toutes vos questions</p>
+  </div>
+
+  <div class="contact-content">
+    <div class="contact-form-card">
+      <h2>Envoyez-nous un message</h2>
+      <form>
+        <div class="form-row">
+          <input type="text" placeholder="Prénom" name="prenom" required />
+          <input type="text" placeholder="Nom" name="nom" required />
+        </div>
+        <input type="email" placeholder="Email" name="email" required />
+        <select name="sujet" required>
+          <option value="" disabled selected>Sélectionnez un sujet</option>
+          <option value="cours">Cours</option>
+          <option value="inscription">Inscription</option>
+          <option value="paiement">Paiement</option>
+          <option value="autre">Autre</option>
+        </select>
+        <textarea placeholder="Message" name="message" rows="5" required></textarea>
+        <button type="submit" class="contact-btn">Envoyer le message</button>
+      </form>
+    </div>
+
+    <div class="contact-info-card">
+      <h2>Informations de contact</h2>
+      <ul>
+        <li>
+          <span class="contact-icon"><mat-icon>location_on</mat-icon></span>
+          <div>
+            <strong>Adresse</strong><br />
+            123 Rue des Chiens<br />
+            57000 Metz, France
+          </div>
+        </li>
+        <li>
+          <span class="contact-icon"><mat-icon>phone</mat-icon></span>
+          <div>
+            <strong>Téléphone</strong><br />
+            01 23 45 67 89
+          </div>
+        </li>
+        <li>
+          <span class="contact-icon"><mat-icon>email</mat-icon></span>
+          <div>
+            <strong>Email</strong><br />
+            contact&#64;paxcanina.fr
+          </div>
+        </li>
+        <li>
+          <span class="contact-icon"><mat-icon>schedule</mat-icon></span>
+          <div>
+            <strong>Horaires</strong><br />
+            Lundi - Vendredi: 9h00 - 18h00<br />
+            Samedi: 9h00 - 12h00<br />
+            Dimanche: Fermé
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="contact-faq-section">
+    <div class="contact-faq-card">
+      <h2>Questions fréquentes</h2>
+      <mat-accordion>
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              Comment s'inscrire aux cours ?
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+          <p>
+            Pour vous inscrire aux cours, vous pouvez utiliser notre calendrier en ligne ou nous contacter directement par téléphone. Une évaluation initiale est requise pour les nouveaux membres.
+          </p>
+        </mat-expansion-panel>
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              Quels sont les modes de paiement acceptés ?
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+          <p>
+            Nous acceptons les paiements par carte bancaire, virement, et espèces.
+          </p>
+        </mat-expansion-panel>
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              Que faire en cas d'absence à un cours ?
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+          <p>
+            Merci de nous prévenir au moins 24h à l'avance pour reprogrammer votre séance.
+          </p>
+        </mat-expansion-panel>
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              À partir de quel âge puis-je faire participer mon chiot ?
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+          <p>
+            Les chiots sont acceptés à partir de 3 mois, avec carnet de vaccination à jour.
+          </p>
+        </mat-expansion-panel>
+      </mat-accordion>
+    </div>
+  </div>
+</div>
