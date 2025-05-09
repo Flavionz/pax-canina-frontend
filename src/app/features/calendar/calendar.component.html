@@ -1,1 +1,36 @@
-<p>it works</p>
+<div class="calendar-page">
+  <div class="calendar-grid">
+    <div class="calendar-panel">
+      <h2>Calendrier</h2>
+      <mat-calendar
+        [(selected)]="selectedDate"
+        (selectedChange)="onDateChange($event)">
+      </mat-calendar>
+    </div>
+
+    <div class="sessions-panel">
+      <h2>Sessions du {{ selectedDate | date:'d MMMM' : '' : 'fr' }}</h2>
+      <ng-container *ngIf="sessionsForSelectedDate.length; else noSessions">
+        <ul>
+          <li *ngFor="let session of sessionsForSelectedDate">
+            {{ session.title }}
+          </li>
+        </ul>
+      </ng-container>
+      <ng-template #noSessions>
+        <div class="no-sessions">
+          <mat-icon>event_busy</mat-icon>
+          <p>Pas de sessions</p>
+          <span>Aucune session n'est prévue pour cette date.</span>
+        </div>
+      </ng-template>
+    </div>
+  </div>
+
+  <div class="calendar-legend">
+    <span><span class="dot selected"></span> Date sélectionnée</span>
+    <span><span class="dot today"></span> Aujourd'hui</span>
+    <span><span class="dot available"></span> Sessions disponibles</span>
+    <span><span class="dot full"></span> Session complète</span>
+  </div>
+</div>

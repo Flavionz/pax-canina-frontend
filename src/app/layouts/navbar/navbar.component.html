@@ -55,6 +55,7 @@
         class="auth-link"
         [ngClass]="{ 'active': isLoginPage() }"
       >
+        <img src="assets/icons/login.png" alt="Login Icon" />
         Se connecter
       </a>
       <a
@@ -62,6 +63,7 @@
         class="auth-btn"
         [ngClass]="{ 'active': isRegisterPage() }"
       >
+        <img src="assets/icons/inscription.png" alt="Register Icon" />
         S’inscrire
       </a>
     </nav>
@@ -122,11 +124,13 @@
         </li>
         <li *ngIf="!isLoggedIn">
           <a routerLink="/auth/login" (click)="closeMenu()">
+            <img src="assets/icons/login.png" alt="Login Icon" />
             Se connecter
           </a>
         </li>
         <li *ngIf="!isLoggedIn">
           <a routerLink="/auth/register" (click)="closeMenu()">
+            <img src="assets/icons/inscription.png" alt="Register Icon" />
             S’inscrire
           </a>
         </li>
