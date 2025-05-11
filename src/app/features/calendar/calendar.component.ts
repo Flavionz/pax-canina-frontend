@@ -1,12 +1,18 @@
-import { Component } from '@angular/core';
+// src/app/features/calendar/calendar.component.ts
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
-import { MatIconModule } from '@angular/material/icon';
-import { MatDatepickerModule } from '@angular/material/datepicker';
+import { HttpClient } from '@angular/common/http';
+
+import {
+  MatDatepickerModule,
+  MatCalendarCellClassFunction
+} from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
+import { MatIconModule } from '@angular/material/icon';
 
 interface Session {
-  date: Date;
+  id: number;
+  date: string;   // ISO yyyy-MM-dd
   title: string;
   status: 'available' | 'full';
 }
@@ -16,32 +22,67 @@ interface Session {
   standalone: true,
   imports: [
     CommonModule,
-    RouterModule,
-    MatIconModule,
     MatDatepickerModule,
     MatNativeDateModule,
-
+    MatIconModule
   ],
   templateUrl: './calendar.component.html',
-  styleUrls: ['./calendar.component.scss']
+  styleUrls: ['./calendar.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class CalendarComponent {
-  selectedDate: Date = new Date();
+export class CalendarComponent implements OnInit {
+  selectedDate: Date | null = new Date();
+  sessionsByDate: Record<string, Session[]> = {};
+  sessions: Session[] = [];
 
-  sessions: Session[] = [
-    { date: new Date(2025, 4, 10), title: 'Puppy Class', status: 'available' },
-    { date: new Date(2025, 4, 14), title: 'Agility Base', status: 'full' },
-  ];
+  constructor(private http: HttpClient) {}
 
-  get sessionsForSelectedDate(): Session[] {
-    return this.sessions.filter(s =>
-      s.date.getFullYear() === this.selectedDate.getFullYear() &&
-      s.date.getMonth() === this.selectedDate.getMonth() &&
-      s.date.getDate() === this.selectedDate.getDate()
-    );
+  ngOnInit() {
+    if (this.selectedDate) {
+      this.loadMonth(this.selectedDate);
+      this.loadDay(this.selectedDate);
+    }
   }
 
-  onDateChange(date: Date) {
-    this.selectedDate = date;
+  onMonthChange(payload: unknown) {
+    const d = payload instanceof Date ? payload : (payload as any)?.value;
+    if (d instanceof Date) this.loadMonth(d);
+  }
+
+  private loadMonth(d: Date) {
+    const year = d.getFullYear(), month = d.getMonth() + 1;
+    this.http.get<Session[]>(`/api/sessions?year=${year}&month=${month}`)
+      .subscribe(arr => {
+        this.sessionsByDate = {};
+        for (let s of arr) {
+          (this.sessionsByDate[s.date] ??= []).push(s);
+        }
+      });
+  }
+
+  onDateChange(d: Date | null) {
+    if (!(d instanceof Date)) return;
+    this.selectedDate = d;
+    this.loadDay(d);
+  }
+
+  private loadDay(d: Date) {
+    const iso = d.toISOString().substring(0,10);
+    this.http.get<Session[]>(`/api/sessions?date=${iso}`)
+      .subscribe(arr => this.sessions = arr);
+  }
+
+  dateClass: MatCalendarCellClassFunction<Date> = (cellDate, view) => {
+    if (view === 'month') {
+      const key = cellDate.toISOString().substring(0,10);
+      const day = this.sessionsByDate[key] || [];
+      if (day.length) return day.every(s=>s.status==='full') ? 'full' : 'available';
+    }
+    return '';
+  }
+
+  get sessionsForSelectedDate(): Session[] {
+    if (!this.selectedDate) return [];
+    return this.sessionsByDate[this.selectedDate.toISOString().substring(0,10)] || [];
   }
 }

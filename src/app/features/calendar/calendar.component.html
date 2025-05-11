@@ -1,19 +1,27 @@
 <div class="calendar-page">
   <div class="calendar-grid">
-    <div class="calendar-panel">
+
+    <!-- Calendario -->
+    <div class="calendar-panel mat-elevation-z2">
       <h2>Calendrier</h2>
       <mat-calendar
         [(selected)]="selectedDate"
-        (selectedChange)="onDateChange($event)">
+        (selectedChange)="onDateChange($event)"
+        (activeDateChange)="onMonthChange($event)"
+        [dateClass]="dateClass">
       </mat-calendar>
     </div>
 
-    <div class="sessions-panel">
-      <h2>Sessions du {{ selectedDate | date:'d MMMM' : '' : 'fr' }}</h2>
+    <!-- Sessioni -->
+    <div class="sessions-panel mat-elevation-z2">
+      <h2>Sessions du {{ selectedDate | date:'d MMMM':'':'fr' }}</h2>
       <ng-container *ngIf="sessionsForSelectedDate.length; else noSessions">
         <ul>
-          <li *ngFor="let session of sessionsForSelectedDate">
-            {{ session.title }}
+          <li *ngFor="let s of sessionsForSelectedDate">
+            {{ s.title }}
+            <span class="status" [class.full]="s.status==='full'">
+              ({{ s.status==='full' ? 'Complet' : 'Disponible' }})
+            </span>
           </li>
         </ul>
       </ng-container>
@@ -21,13 +29,14 @@
         <div class="no-sessions">
           <mat-icon>event_busy</mat-icon>
           <p>Pas de sessions</p>
-          <span>Aucune session n'est prévue pour cette date.</span>
         </div>
       </ng-template>
     </div>
+
   </div>
 
-  <div class="calendar-legend">
+  <!-- Legenda -->
+  <div class="calendar-legend mat-elevation-z2">
     <span><span class="dot selected"></span> Date sélectionnée</span>
     <span><span class="dot today"></span> Aujourd'hui</span>
     <span><span class="dot available"></span> Sessions disponibles</span>
