@@ -1,7 +1,6 @@
 <div class="calendar-page">
   <div class="calendar-grid">
 
-    <!-- Calendario -->
     <div class="calendar-panel mat-elevation-z2">
       <h2>Calendrier</h2>
       <mat-calendar
@@ -12,7 +11,6 @@
       </mat-calendar>
     </div>
 
-    <!-- Sessioni -->
     <div class="sessions-panel mat-elevation-z2">
       <h2>Sessions du {{ selectedDate | date:'d MMMM':'':'fr' }}</h2>
       <ng-container *ngIf="sessionsForSelectedDate.length; else noSessions">
@@ -35,7 +33,6 @@
 
   </div>
 
-  <!-- Legenda -->
   <div class="calendar-legend mat-elevation-z2">
     <span><span class="dot selected"></span> Date sélectionnée</span>
     <span><span class="dot today"></span> Aujourd'hui</span>

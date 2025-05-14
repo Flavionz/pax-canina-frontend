@@ -21,7 +21,7 @@
 
 ## 🧱 Structure du Projet Angular
 
-Le projet suit les conventions **SCAM (Single Component Angular Modules)** pour une meilleure lisibilité, testabilité et évolutivité.
+Le projet est organisé en modules par fonctionnalité (auth, home, dashboard, calendar, profile…), chacun gérant ses propres composants, services et routes, pour une meilleure cohésion, un lazy‑loading efficace et une maintenance facilitée.
 
 ```
 src/
@@ -66,8 +66,8 @@ src/
 
 ## 🚀 Bonnes Pratiques Suivies
 
-✅ Architecture modulaire **SCAM**  
-✅ Séparation claire des responsabilités (`core`, `shared`, `features`, `layouts`)  
+✅ Architecture modulaire feature‑driven 
+✅ Séparation claire des responsabilités (`core`, `shared`, `features`, `layouts`)
 ✅ Structure prête pour la **scalabilité**  
 ✅ Suivi des conventions de nommage Angular et Spring  
 ✅ Mise en production facilitée (**préparation Docker-ready**)

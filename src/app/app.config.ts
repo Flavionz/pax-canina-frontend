@@ -1,5 +1,5 @@
 import { ApplicationConfig } from '@angular/core';
-import { provideRouter, Routes } from '@angular/router';
+import { provideRouter, Routes, withInMemoryScrolling } from '@angular/router';
 import { provideHttpClient } from '@angular/common/http';
 import { MainLayoutComponent } from './layouts/main-layout/main-layout.component';
 import { ProfileComponent } from './features/profile/profile.component';
@@ -43,7 +43,13 @@ const routes: Routes = [
 
 export const appConfig: ApplicationConfig = {
   providers: [
-    provideRouter(routes),
+    provideRouter(
+      routes,
+      withInMemoryScrolling({
+        scrollPositionRestoration: 'enabled',
+        anchorScrolling: 'enabled'
+      })
+    ),
     provideHttpClient()
   ]
 };

@@ -104,17 +104,14 @@ $card-border-color: #ddd;
 }
 
 .section-text {
+  font-size: 1.1em;
+  text-align: left;
   width: 50%;
 }
 
 .section-title {
   font-size: 2em;
   margin-bottom: 20px;
-  text-align: left;
-}
-
-.section-text {
-  font-size: 1.1em;
   text-align: left;
 }
 
@@ -148,10 +145,10 @@ $card-border-color: #ddd;
 }
 
 .service-image {
-  width: 100%;
-  height: 200px;
-  object-fit: cover;
-  margin-bottom: 10px;
+  width: 32px;
+  height: 32px;
+  left: 12px;
+  top: 12px;
 }
 
 .service-title {

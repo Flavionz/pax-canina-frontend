@@ -1,4 +1,3 @@
-// src/app/features/calendar/calendar.component.ts
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
@@ -12,7 +11,7 @@ import { MatIconModule } from '@angular/material/icon';
 
 interface Session {
   id: number;
-  date: string;   // ISO yyyy-MM-dd
+  date: string;
   title: string;
   status: 'available' | 'full';
 }
