@@ -1,0 +1,59 @@
+:host {
+  display: block;
+  width: 100%;
+  max-width: 600px;
+}
+
+h2 {
+  color: #1f2937;
+  font-weight: bold;
+  margin-bottom: 16px;
+}
+
+.full-width {
+  width: 100%;
+  margin-bottom: 16px;
+}
+
+.two-columns {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 16px;
+
+  mat-form-field {
+    flex: 1;
+  }
+}
+
+.photo-upload {
+  margin-bottom: 24px;
+
+  p {
+    margin-bottom: 8px;
+    color: rgba(0, 0, 0, 0.6);
+    font-size: 14px;
+  }
+
+  .upload-zone {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .upload-button {
+    mat-icon {
+      margin-right: 8px;
+    }
+  }
+
+  .file-selected {
+    color: #22c55e;
+    font-size: 14px;
+  }
+}
+
+[mat-dialog-actions] {
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid #eee;
+}

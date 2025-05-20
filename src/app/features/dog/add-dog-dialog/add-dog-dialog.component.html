@@ -1,0 +1,72 @@
+<h2 mat-dialog-title>Ajouter un chien</h2>
+
+<div mat-dialog-content>
+  <form [formGroup]="dogForm">
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Nom du chien</mat-label>
+      <input matInput formControlName="nom" placeholder="Ex: Max">
+      <mat-error *ngIf="dogForm.get('nom')?.hasError('required')">
+        Le nom est requis
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Race</mat-label>
+      <input matInput formControlName="race" placeholder="Ex: Labrador">
+      <mat-error *ngIf="dogForm.get('race')?.hasError('required')">
+        La race est requise
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Date de naissance</mat-label>
+      <input matInput [matDatepicker]="picker" formControlName="dateNaissance" placeholder="JJ/MM/AAAA" required>
+      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
+      <mat-error *ngIf="dogForm.get('dateNaissance')?.hasError('required')">
+        La date de naissance est requise
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Sexe</mat-label>
+      <mat-select formControlName="sexe">
+        <mat-option value="Mâle">Mâle</mat-option>
+        <mat-option value="Femelle">Femelle</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <div class="two-columns">
+      <mat-form-field appearance="outline">
+        <mat-label>Poids (kg)</mat-label>
+        <input matInput type="number" formControlName="poids" placeholder="Ex: 25">
+        <mat-error *ngIf="dogForm.get('poids')?.hasError('required') || dogForm.get('poids')?.hasError('min')">
+          Le poids est requis et doit être positif
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Numéro de puce</mat-label>
+        <input matInput formControlName="numeroPuce" placeholder="Ex: 123456789012345">
+      </mat-form-field>
+    </div>
+
+    <div class="photo-upload">
+      <p>Photo</p>
+      <div class="upload-zone">
+        <input type="file" #fileInput style="display: none" accept="image/*" (change)="onFileSelected($event)">
+        <button type="button" mat-stroked-button (click)="fileInput.click()" class="upload-button">
+          <mat-icon>upload</mat-icon> Télécharger une photo
+        </button>
+        <span *ngIf="dogForm.get('photo_url')?.value" class="file-selected">Photo sélectionnée</span>
+      </div>
+    </div>
+  </form>
+</div>
+
+<div mat-dialog-actions align="end">
+  <button mat-button (click)="cancel()">Annuler</button>
+  <button mat-raised-button color="primary" (click)="onSubmit()" [disabled]="dogForm.invalid">
+    Ajouter
+  </button>
+</div>

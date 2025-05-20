@@ -35,16 +35,47 @@
       </mat-tab>
 
       <mat-tab label="Mes chiens">
-        <div class="p-6 space-y-4" *ngIf="user?.dogs?.length > 0; else noDogs">
-          <div *ngFor="let dog of user.dogs" class="border rounded p-4 shadow-sm">
-            <p><strong>Nom :</strong> {{ dog.name }}</p>
-            <p><strong>Race :</strong> {{ dog.breed }}</p>
-            <p><strong>Âge :</strong> {{ dog.age }} an(s)</p>
-          </div>
+        <div class="dogs-header">
+          <h3>Mes chiens</h3>
+          <button mat-raised-button color="primary" (click)="openAddDogDialog()">
+            <mat-icon>add</mat-icon> Ajouter un chien
+          </button>
         </div>
-        <ng-template #noDogs>
-          <p class="text-gray-600">Vous n'avez enregistré aucun chien.</p>
-        </ng-template>
+        <div class="dog-list">
+          <ng-container *ngIf="user?.dogs?.length > 0; else noDogs">
+            <div class="dog-card" *ngFor="let dog of user.dogs">
+              <div class="dog-photo" *ngIf="dog.photo_url; else noPhoto">
+                <img [src]="dog.photo_url" alt="Photo de {{dog.nom}}" />
+              </div>
+              <ng-template #noPhoto>
+                <div class="dog-photo placeholder">
+                  <mat-icon>pets</mat-icon>
+                </div>
+              </ng-template>
+              <div class="dog-info">
+                <h4>{{ dog.nom }}</h4>
+                <div class="dog-breed-age">{{ dog.race }}, {{ getDogAge(dog.dateNaissance) }}</div>
+                <div class="dog-details">
+                  <div><strong>Sexe</strong> <span>{{ dog.sexe }}</span></div>
+                  <div><strong>Poids</strong> <span>{{ dog.poids }} kg</span></div>
+                  <div *ngIf="dog.numeroPuce"><strong>Puce</strong> <span>{{ dog.numeroPuce }}</span></div>
+                </div>
+                <div class="dog-actions">
+                  <a class="dog-edit" (click)="editDog(dog)">Modifier</a>
+                  <a class="dog-delete" (click)="deleteDog(dog)">Supprimer</a>
+                </div>
+              </div>
+            </div>
+          </ng-container>
+          <ng-template #noDogs>
+            <div class="empty-dogs-state">
+              <p class="text-gray-600">Vous n'avez enregistré aucun chien.</p>
+              <button mat-raised-button color="primary" (click)="openAddDogDialog()">
+                <mat-icon>add</mat-icon> Ajouter un chien
+              </button>
+            </div>
+          </ng-template>
+        </div>
       </mat-tab>
 
       <mat-tab label="Mes inscriptions">
