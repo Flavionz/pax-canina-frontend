@@ -15,7 +15,7 @@
         <div class="form-group">
           <label for="nom">Nom</label>
           <input id="nom" type="text" formControlName="nom" placeholder="Votre nom" />
-          <div class="error" *ngIf="nom.invalid && (nom.dirty || nom.touched)">
+          <div class="error" *ngIf="nom?.invalid && (nom.dirty || nom.touched)">
             Le nom est requis
           </div>
         </div>

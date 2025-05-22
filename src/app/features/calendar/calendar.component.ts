@@ -8,6 +8,7 @@ import {
 } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatIconModule } from '@angular/material/icon';
+import { MAT_DATE_LOCALE, provideNativeDateAdapter } from '@angular/material/core';
 
 interface Session {
   id: number;
@@ -17,6 +18,10 @@ interface Session {
 }
 
 @Component({
+  providers: [
+    provideNativeDateAdapter(),
+    { provide: MAT_DATE_LOCALE, useValue: 'fr-FR' }
+  ],
   selector: 'app-calendar',
   standalone: true,
   imports: [

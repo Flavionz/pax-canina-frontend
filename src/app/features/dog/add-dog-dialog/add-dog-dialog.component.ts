@@ -1,14 +1,35 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
-import { MatDialogRef, MatDialogContent, MatDialogTitle } from '@angular/material/dialog';
+import { MatDialogRef, MAT_DIALOG_DATA, MatDialogContent, MatDialogTitle } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MatNativeDateModule } from '@angular/material/core';
+import { MAT_DATE_LOCALE, MAT_DATE_FORMATS, MatNativeDateModule, provideNativeDateAdapter } from '@angular/material/core';
+
+export interface Dog {
+  nom: string;
+  race: string;
+  dateNaissance: string | Date;
+  sexe: string;
+  poids: number;
+  numeroPuce?: string;
+  photo_url?: string;
+}
+
+// Formato francese JJ/MM/AAAA
+export const FRENCH_DATE_FORMATS = {
+  parse: { dateInput: 'DD/MM/YYYY' },
+  display: {
+    dateInput: 'DD/MM/YYYY',
+    monthYearLabel: 'MMMM YYYY',
+    dateA11yLabel: 'DD/MM/YYYY',
+    monthYearA11yLabel: 'MMMM YYYY',
+  },
+};
 
 @Component({
   selector: 'app-add-dog-dialog',
@@ -26,15 +47,22 @@ import { MatNativeDateModule } from '@angular/material/core';
     MatDialogContent,
     MatDialogTitle
   ],
+  providers: [
+    provideNativeDateAdapter(),
+    { provide: MAT_DATE_LOCALE, useValue: 'fr-FR' },
+    { provide: MAT_DATE_FORMATS, useValue: FRENCH_DATE_FORMATS }
+  ],
   templateUrl: './add-dog-dialog.component.html',
   styleUrls: ['./add-dog-dialog.component.scss']
 })
 export class AddDogDialogComponent implements OnInit {
   dogForm!: FormGroup;
+  isEditMode = false;
 
   constructor(
     private fb: FormBuilder,
-    public dialogRef: MatDialogRef<AddDogDialogComponent>
+    public dialogRef: MatDialogRef<AddDogDialogComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: { dog?: Dog }
   ) {}
 
   ngOnInit(): void {
@@ -47,6 +75,11 @@ export class AddDogDialogComponent implements OnInit {
       numeroPuce: [''],
       photo_url: ['']
     });
+
+    if (this.data && this.data.dog) {
+      this.isEditMode = true;
+      this.dogForm.patchValue(this.data.dog);
+    }
   }
 
   onFileSelected(event: Event): void {
