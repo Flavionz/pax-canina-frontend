@@ -5,11 +5,13 @@ import { MainLayoutComponent } from './layouts/main-layout/main-layout.component
 import { ProfileComponent } from './features/profile/profile.component';
 
 const routes: Routes = [
+  // Redirect root path (fuori dai children!)
+  { path: '', redirectTo: '/home', pathMatch: 'full' },
+
   {
     path: '',
     component: MainLayoutComponent,
     children: [
-      { path: '', redirectTo: 'home', pathMatch: 'full' },
       {
         path: 'home',
         loadChildren: () =>
@@ -20,6 +22,14 @@ const routes: Routes = [
         loadChildren: () =>
           import('./features/auth/auth.routes').then(m => m.AUTH_ROUTES)
       },
+      {
+        path: 'courses',
+        loadChildren: () =>
+          import('./features/courses/courses.routes').then(m => m.COURSES_ROUTES)
+
+
+      },
+
       {
         path: 'dashboard',
         loadChildren: () =>
@@ -38,7 +48,9 @@ const routes: Routes = [
       { path: 'profile', component: ProfileComponent }
     ]
   },
-  { path: '**', redirectTo: '' }
+
+  // Wildcard route for 404
+  { path: '**', redirectTo: '/home' }
 ];
 
 export const appConfig: ApplicationConfig = {

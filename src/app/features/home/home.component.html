@@ -2,10 +2,16 @@
   <section class="hero">
     <div class="hero-content">
       <h1 class="hero-title">BIENVENUE AU PAX CANINA</h1>
-      <p class="hero-subtitle">Le meilleur endroit pour entraîner et socialiser votre compagnon à quatre pattes</p>
+      <p class="hero-subtitle">
+        Le meilleur endroit pour entraîner et socialiser votre compagnon à quatre pattes
+      </p>
       <div class="hero-buttons">
-        <button mat-raised-button color="primary" class="hero-button" routerLink="/calendar">Voir le calendrier</button>
-        <button mat-button class="hero-button" routerLink="/contact">En savoir plus</button>
+        <button mat-raised-button color="primary" class="hero-button" routerLink="/calendar">
+          Voir le calendrier
+        </button>
+        <button mat-button class="hero-button" routerLink="/contact">
+          En savoir plus
+        </button>
       </div>
     </div>
     <div class="hero-image">
@@ -15,10 +21,12 @@
 
   <section class="about-us">
     <div class="section-content">
-      <img src="/assets/images/canetestolina.jpg" alt="Immagine di ClubCanine" class="section-image">
+      <img src="/assets/images/canetestolina.jpg" alt="Immagine de ClubCanine" class="section-image">
       <div class="section-text">
         <h2 class="section-title">Qui sommes-nous?</h2>
-        <p class="section-text">Pax Canina est une communauté passionnée dédiée à l'éducation canine et au bien-être de votre compagnon.</p>
+        <p class="section-text">
+          Pax Canina est une communauté passionnée dédiée à l'éducation canine et au bien-être de votre compagnon.
+        </p>
       </div>
     </div>
   </section>
@@ -27,9 +35,11 @@
     <div class="section-content">
       <div class="section-text">
         <h2 class="section-title">Notre mission</h2>
-        <p class="section-text">Depuis plus de 10 ans, nous nous engageons à créer un environnement où les chiens et leurs propriétaires peuvent apprendre, grandir et s'épanouir ensemble. Notre approche est basée sur le renforcement positif et le respect du bien-être animal.</p>
+        <p class="section-text">
+          Depuis plus de 10 ans, nous nous engageons à créer un environnement où les chiens et leurs propriétaires peuvent apprendre, grandir et s'épanouir ensemble. Notre approche est basée sur le renforcement positif et le respect du bien-être animal.
+        </p>
       </div>
-      <img src="/assets/images/pitbull.jpg" alt="Immagine della missione di ClubCanine" class="section-image">
+      <img src="/assets/images/pitbull.jpg" alt="Immagine della missione de ClubCanine" class="section-image">
     </div>
   </section>
 
@@ -37,36 +47,49 @@
     <h2 class="our-services-title">Nos services</h2>
     <div class="services-list">
       <div class="service-card">
-        <img src="assets/icons/cours.svg" alt="Immagine del corso di educazione canine" class="service-image">
+        <img src="assets/icons/cours.svg" alt="Immagine du cours d'éducation canine" class="service-image">
         <h3 class="service-title">Cours d'éducation canine</h3>
-        <p class="service-text">Des cours adaptés à tous les niveaux, des chiots aux chiens adultes, des chiens équilibrés et obéissants.</p>
+        <p class="service-text">
+          Des cours adaptés à tous les niveaux, des chiots aux chiens adultes, des chiens équilibrés et obéissants.
+        </p>
       </div>
       <div class="service-card">
         <img src="assets/icons/sociali.svg" alt="Immagine della socialisation" class="service-image">
         <h3 class="service-title">Socialisation</h3>
-        <p class="service-text">Des séances de groupe pour aider votre chien à interagir positivamente con ses congénères et les humains.</p>
+        <p class="service-text">
+          Des séances de groupe pour aider votre chien à interagir positivamente con ses congénères et les humains.
+        </p>
       </div>
       <div class="service-card">
-        <img src="assets/icons/punto.svg" alt="Immagine del conseil personnalisé" class="service-image">
+        <img src="assets/icons/punto.svg" alt="Immagine du conseil personnalisé" class="service-image">
         <h3 class="service-title">Conseil personnalisé</h3>
-        <p class="service-text">Des experts à votre disposition pour répondre à toutes vos questions et adapter nos conseils aux besoins spécifiques de comportement de votre canine.</p>
+        <p class="service-text">
+          Des experts à votre disposition pour répondre à toutes vos questions et adapter nos conseils aux besoins spécifiques de comportement de votre canine.
+        </p>
       </div>
     </div>
   </section>
 
   <section class="available-courses">
-    <app-course-list></app-course-list>
+    <app-course-list [previewMode]="true" [previewCount]="3"></app-course-list>
   </section>
 
   <section class="call-to-action">
     <mat-card class="call-to-action-card">
       <mat-card-content>
-        <h2 class="call-to-action-title">Prêt à commencer l'aventure avec votre chien?</h2>
-        <p class="call-to-action-text">Rejoignez Pax Canina dès aujourd'hui et donnez à votre compagnon la meilleure éducation canine!</p>
+        <h2 class="call-to-action-title">
+          Prêt à commencer l'aventure avec votre chien?
+        </h2>
+        <p class="call-to-action-text">
+          Rejoignez Pax Canina dès aujourd'hui et donnez à votre compagnon la meilleure éducation canine!
+        </p>
         <div>
           <button mat-raised-button color="primary" class="call-to-action-button" routerLink="/auth/register">
-            Créer un compte</button>
-          <button mat-button class="call-to-action-button">Contacter un formateur</button>
+            Créer un compte
+          </button>
+          <button mat-button class="call-to-action-button" routerLink="/contact">
+            Contacter un formateur
+          </button>
         </div>
       </mat-card-content>
     </mat-card>

@@ -2,6 +2,7 @@ $primary-color: #22c55e;
 $text-color: #333;
 $background-color: #f8f9fa;
 $card-border-color: #ddd;
+@use "sass:color";
 
 @mixin card-styles {
   border: 1px solid $card-border-color;
@@ -209,7 +210,7 @@ $card-border-color: #ddd;
   justify-content: center;
 
   &:hover {
-    background-color: darken($primary-color, 10%);
+    background-color: color.adjust($primary-color, $lightness: -10%);
   }
 }
 

@@ -1,12 +1,20 @@
 import { Component } from '@angular/core';
-import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
-import {Router, RouterLink} from '@angular/router';
+import {
+  FormBuilder,
+  FormGroup,
+  Validators,
+  AbstractControl,
+  ReactiveFormsModule
+} from '@angular/forms';
+import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../auth.service';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-register',
   standalone: true,
   imports: [
+    CommonModule,
     ReactiveFormsModule,
     RouterLink
   ],
@@ -32,21 +40,33 @@ export class RegisterComponent {
     });
   }
 
-  get prenom() { return this.registerForm.get('prenom'); }
-  get nom() { return this.registerForm.get('nom'); }
-  get email() { return this.registerForm.get('email'); }
-  get telephone() { return this.registerForm.get('telephone'); }
-  get password() { return this.registerForm.get('password'); }
-  get conditions() { return this.registerForm.get('conditions'); }
+  // Getter con non-null assertion per rimuovere l’errore NG1
+  get prenom(): AbstractControl {
+    return this.registerForm.get('prenom')!;
+  }
+  get nom(): AbstractControl {
+    return this.registerForm.get('nom')!;
+  }
+  get email(): AbstractControl {
+    return this.registerForm.get('email')!;
+  }
+  get telephone(): AbstractControl {
+    return this.registerForm.get('telephone')!;
+  }
+  get password(): AbstractControl {
+    return this.registerForm.get('password')!;
+  }
+  get conditions(): AbstractControl {
+    return this.registerForm.get('conditions')!;
+  }
 
-  togglePasswordVisibility() {
+  togglePasswordVisibility(): void {
     this.showPassword = !this.showPassword;
   }
 
-  onSubmit() {
+  onSubmit(): void {
     if (this.registerForm.valid) {
       // Qui puoi chiamare il backend per la registrazione
-      // Per ora simula la registrazione e logga l'utente
       this.authService.login(); // Simula login dopo registrazione
       this.router.navigate(['/dashboard']);
     } else {
@@ -54,4 +74,3 @@ export class RegisterComponent {
     }
   }
 }
-

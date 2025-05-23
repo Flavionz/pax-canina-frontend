@@ -1,0 +1,90 @@
+<h2>{{ previewMode ? 'Nos Cours Populaires' : 'Tous les cours' }}</h2>
+
+<!-- PREVIEW MODE: homepage -->
+<div *ngIf="previewMode" class="course-list preview-grid">
+  <div *ngFor="let course of displayedCourses" class="course-card">
+    <img [src]="course.imageUrl" alt="Immagine du cours" class="course-image">
+    <div class="course-details">
+      <span class="course-level">{{ course.niveau }}</span>
+      <h3 class="course-title">{{ course.nom }}</h3>
+      <p class="course-description">{{ course.description }}</p>
+      <div class="course-info">
+        Places: {{ course.capacite_max }} places restantes
+      </div>
+      <button class="course-button">S'inscrire</button>
+    </div>
+  </div>
+  <a routerLink="/courses" class="view-all-courses">
+    Voir tous les cours →
+  </a>
+</div>
+
+<!-- FULL PAGE MODE: /courses -->
+<ng-container *ngIf="!previewMode">
+  <div class="courses-toolbar">
+    <input
+      type="text"
+      placeholder="Rechercher un cours..."
+      [(ngModel)]="searchTerm"
+      (input)="applyFilters()"
+      class="search-input"
+    />
+    <select [(ngModel)]="selectedStatus" (change)="applyFilters()" class="status-filter">
+      <option value="">Tous les statuts</option>
+      <option value="Actif">Actif</option>
+      <option value="Inactif">Inactif</option>
+      <option value="Brouillon">Brouillon</option>
+    </select>
+    <button
+      *ngIf="canAddCourse"
+      class="add-course-btn"
+      (click)="onAddCourse()"
+    >
+      + Ajouter un cours
+    </button>
+  </div>
+  <div class="courses-list">
+    <table>
+      <thead>
+      <tr>
+        <th>COURS</th>
+        <th>NIVEAU</th>
+        <th>CAPACITÉ</th>
+        <th>STATUT</th>
+        <th>ACTIONS</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let course of filteredCourses">
+        <td>
+          <img [src]="course.imageUrl" alt="img" class="course-img" />
+          <div>
+            <strong>{{ course.nom }}</strong>
+            <div class="desc">{{ course.description }}</div>
+          </div>
+        </td>
+        <td>{{ course.niveau }}</td>
+        <td>{{ course.capacite_max }} participants</td>
+        <td>
+            <span [ngClass]="{
+              'status-actif': course.statut === 'Actif',
+              'status-inactif': course.statut === 'Inactif',
+              'status-brouillon': course.statut === 'Brouillon'
+            }">{{ course.statut }}</span>
+        </td>
+        <td>
+          <button class="icon-btn" (click)="onEditCourse(course)" *ngIf="canEditCourse">
+            <mat-icon>edit</mat-icon>
+          </button>
+          <button class="icon-btn" (click)="onDeleteCourse(course)" *ngIf="canDeleteCourse">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+  <div *ngIf="filteredCourses.length === 0" class="no-courses">
+    <p>Aucun cours disponible pour le moment.</p>
+  </div>
+</ng-container>

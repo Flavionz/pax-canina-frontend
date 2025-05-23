@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
-import { CourseListComponent } from '@app/features/courses/component/course-list/course-list.component';
+import { CourseListComponent } from '@features/courses/course-list/course-list.component';
 import { CoursesModule } from '@app/features/courses/courses.module';
 
 @Component({

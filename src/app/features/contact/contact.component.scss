@@ -1,5 +1,7 @@
 $primary-color: #22c55e;
 $background-color: #f8f9fa;
+@use "sass:color";
+
 
 .contact-page {
   background: $background-color;
@@ -83,7 +85,7 @@ $background-color: #f8f9fa;
     transition: background 0.2s;
     margin-top: 8px;
     &:hover {
-      background: darken($primary-color, 5%);
+      background: color.adjust($primary-color, $lightness: -5%);
     }
   }
 }
