@@ -2,11 +2,18 @@
   <h1>Bienvenue {{ user?.firstName }}</h1>
   <p>Gérez vos informations personnelles et vos chiens enregistrés</p>
 </div>
+
 <div class="profile-page">
   <div class="profile-header">
     <div class="profile-banner">
-      <button mat-stroked-button color="primary" class="profile-edit-btn">
+      <button *ngIf="!editingProfile" mat-stroked-button class="profile-edit-btn" (click)="startEditProfile()">
         <mat-icon>edit</mat-icon> Modifier
+      </button>
+      <button *ngIf="editingProfile" mat-flat-button class="profile-save-btn" (click)="saveProfile()">
+        <mat-icon>save</mat-icon> Enregistrer
+      </button>
+      <button *ngIf="editingProfile" mat-stroked-button class="profile-cancel-btn" (click)="cancelEditProfile()">
+        <mat-icon>close</mat-icon> Annuler
       </button>
     </div>
     <img class="profile-avatar" [src]="user?.avatar || 'assets/images/default-avatar.png'" alt="Avatar" />
@@ -15,23 +22,99 @@
   <div class="profile-content">
     <mat-tab-group>
       <mat-tab label="Informations personnelles">
-        <div class="profile-info-grid">
+        <form class="profile-info-grid" autocomplete="off">
           <div>
             <h3>Informations personnelles</h3>
-            <div><strong>Prénom</strong><br>{{ user?.firstName }}</div>
-            <div><strong>Nom</strong><br>{{ user?.lastName }}</div>
-            <div><strong>Email</strong><br>{{ user?.email }}</div>
-            <div><strong>Téléphone</strong><br>{{ user?.telephone }}</div>
-            <div><strong>Adresse</strong><br>{{ user?.address }}</div>
-            <div><strong>Ville</strong><br>{{ user?.city }}</div>
-            <div><strong>Code postal</strong><br>{{ user?.postalCode }}</div>
+            <div>
+              <strong>Prénom</strong><br>
+              <ng-container *ngIf="!editingProfile; else editFirstName">
+                {{ user?.firstName }}
+              </ng-container>
+              <ng-template #editFirstName>
+                <input [(ngModel)]="user.firstName" name="firstName" required />
+              </ng-template>
+            </div>
+            <div>
+              <strong>Nom</strong><br>
+              <ng-container *ngIf="!editingProfile; else editLastName">
+                {{ user?.lastName }}
+              </ng-container>
+              <ng-template #editLastName>
+                <input [(ngModel)]="user.lastName" name="lastName" required />
+              </ng-template>
+            </div>
+            <div>
+              <strong>Email</strong><br>
+              <ng-container *ngIf="!editingProfile; else editEmail">
+                {{ user?.email }}
+              </ng-container>
+              <ng-template #editEmail>
+                <input [(ngModel)]="user.email" name="email" type="email" required />
+              </ng-template>
+            </div>
+            <div>
+              <strong>Téléphone</strong><br>
+              <ng-container *ngIf="!editingProfile; else editTel">
+                {{ user?.telephone }}
+              </ng-container>
+              <ng-template #editTel>
+                <input [(ngModel)]="user.telephone" name="telephone" />
+              </ng-template>
+            </div>
+            <div>
+              <strong>Adresse</strong><br>
+              <ng-container *ngIf="!editingProfile; else editAddress">
+                {{ user?.address }}
+              </ng-container>
+              <ng-template #editAddress>
+                <input [(ngModel)]="user.address" name="address" />
+              </ng-template>
+            </div>
+            <div>
+              <strong>Ville</strong><br>
+              <ng-container *ngIf="!editingProfile; else editCity">
+                {{ user?.city }}
+              </ng-container>
+              <ng-template #editCity>
+                <input [(ngModel)]="user.city" name="city" />
+              </ng-template>
+            </div>
+            <div>
+              <strong>Code postal</strong><br>
+              <ng-container *ngIf="!editingProfile; else editPostal">
+                {{ user?.postalCode }}
+              </ng-container>
+              <ng-template #editPostal>
+                <input [(ngModel)]="user.postalCode" name="postalCode" />
+              </ng-template>
+            </div>
+            <div *ngIf="user?.hobbies">
+              <strong>Hobbies</strong><br>
+              <ng-container *ngIf="!editingProfile; else editHobbies">
+                {{ user?.hobbies }}
+              </ng-container>
+              <ng-template #editHobbies>
+                <input [(ngModel)]="user.hobbies" name="hobbies" />
+              </ng-template>
+            </div>
           </div>
           <div>
             <h3>À propos de moi</h3>
-            <div><strong>Bio</strong><br>{{ user?.bio }}</div>
-            <div><strong>Membre depuis</strong><br>{{ user?.memberSince | date:'MMMM yyyy' }}</div>
+            <div>
+              <strong>Bio</strong><br>
+              <ng-container *ngIf="!editingProfile; else editBio">
+                {{ user?.bio }}
+              </ng-container>
+              <ng-template #editBio>
+                <textarea [(ngModel)]="user.bio" name="bio" rows="3"></textarea>
+              </ng-template>
+            </div>
+            <div>
+              <strong>Membre depuis</strong><br>
+              {{ user?.memberSince | date:'MMMM yyyy' }}
+            </div>
           </div>
-        </div>
+        </form>
       </mat-tab>
 
       <mat-tab label="Mes chiens">

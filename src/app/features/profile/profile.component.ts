@@ -1,10 +1,10 @@
-import { Component, OnInit, Inject } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { MatDialog, MatDialogModule, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { UserService } from '@core/services/user.service';
 import { DogService, Dog } from '@core/services/dog.service';
 import { AddDogDialogComponent } from '@features/dog/add-dog-dialog/add-dog-dialog.component';
@@ -24,8 +24,9 @@ import { AddDogDialogComponent } from '@features/dog/add-dog-dialog/add-dog-dial
   ]
 })
 export class ProfileComponent implements OnInit {
-  activeTab: unknown;
   user: any;
+  editingProfile = false;
+  backupUser: any;
 
   constructor(
     private userService: UserService,
@@ -36,12 +37,27 @@ export class ProfileComponent implements OnInit {
   ngOnInit(): void {
     if (this.userService.isLoggedIn()) {
       this.user = this.userService.getUserProfile();
-
-      // Inizializza user.dogs se non esiste
       if (!this.user.dogs) {
         this.user.dogs = [];
       }
     }
+  }
+
+  startEditProfile(): void {
+    this.backupUser = { ...this.user }; // backup per annullare modifiche se serve
+    this.editingProfile = true;
+  }
+
+  saveProfile(): void {
+    this.userService.updateUserProfile(this.user).subscribe((updatedUser: any) => {
+      this.user = updatedUser;
+      this.editingProfile = false;
+    });
+  }
+
+  cancelEditProfile(): void {
+    this.user = { ...this.backupUser };
+    this.editingProfile = false;
   }
 
   openAddDogDialog(): void {
@@ -72,27 +88,19 @@ export class ProfileComponent implements OnInit {
         if (index !== -1) {
           this.user.dogs[index] = result;
         }
-        // Se vuoi aggiornare anche il backend, chiama qui il servizio updateDog
-        // this.dogService.updateDog(result).subscribe(...)
       }
     });
   }
 
   deleteDog(dog: Dog): void {
     this.user.dogs = this.user.dogs.filter((d: Dog) => d !== dog);
-    // In un'app reale, chiama anche il servizio per eliminare dal backend!
-    // this.dogService.deleteDog(dog.id).subscribe(...)
-    console.log('Elimina cane:', dog);
+// Puoi aggiungere qui la chiamata al backend se vuoi
   }
 
-  /**
-   * Calcola l'età del cane in anni e mesi a partire dalla data di nascita.
-   */
   getDogAge(dateNaissance: string | Date): string {
     if (!dateNaissance) return '';
     const birth = new Date(dateNaissance);
     const now = new Date();
-
     let years = now.getFullYear() - birth.getFullYear();
     let months = now.getMonth() - birth.getMonth();
     let days = now.getDate() - birth.getDate();
@@ -106,7 +114,6 @@ export class ProfileComponent implements OnInit {
       years--;
       months += 12;
     }
-
     if (years > 0) {
       return `${years} an(s) et ${months} mois`;
     } else {

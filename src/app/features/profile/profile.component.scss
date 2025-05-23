@@ -1,6 +1,10 @@
+@use "sass:color";
+
 $primary-color: #22c55e;
 $text-color: #333;
 $background-color: #f8f9fa;
+$cancel-color: #64748b;
+$cancel-color-hover: #334155;
 
 .profile-welcome {
   max-width: 1100px;
@@ -42,10 +46,90 @@ $background-color: #f8f9fa;
   justify-content: flex-end;
   align-items: flex-start;
   padding: 24px;
-}
 
-.profile-edit-btn {
-  margin-top: 0;
+  .profile-edit-btn {
+    background: #fff !important;
+    color: $primary-color !important;
+    border: 2px solid $primary-color !important;
+    border-radius: 10px !important;
+    font-weight: 600 !important;
+    min-width: 120px;
+    box-shadow: none !important;
+    margin-left: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s, color 0.2s, border-color 0.2s;
+
+    .mat-icon {
+      color: $primary-color !important;
+      margin-right: 6px;
+      font-size: 1.2em;
+      vertical-align: middle;
+      transition: color 0.2s;
+    }
+
+    &:hover,
+    &:focus {
+      background: #f3fef6 !important;
+      border-color: color.adjust($primary-color, $lightness: -10%) !important;
+      color: color.adjust($primary-color, $lightness: -10%) !important;
+
+      .mat-icon {
+        color: color.adjust($primary-color, $lightness: -10%) !important;
+      }
+    }
+  }
+
+  .profile-save-btn {
+    background: $primary-color !important;
+    color: #fff !important;
+    border-radius: 10px !important;
+    font-weight: 600 !important;
+    min-width: 120px;
+    margin-left: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    .mat-icon {
+      color: #fff !important;
+      margin-right: 6px;
+      font-size: 1.2em;
+      vertical-align: middle;
+    }
+    &:hover,
+    &:focus {
+      background: color.adjust($primary-color, $lightness: -10%) !important;
+    }
+  }
+
+  .profile-cancel-btn {
+    background: #fff !important;
+    color: $cancel-color !important;
+    border: 2px solid $cancel-color !important;
+    border-radius: 10px !important;
+    font-weight: 600 !important;
+    min-width: 120px;
+    margin-left: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    .mat-icon {
+      color: $cancel-color !important;
+      margin-right: 6px;
+      font-size: 1.2em;
+      vertical-align: middle;
+    }
+    &:hover,
+    &:focus {
+      background: #f1f5f9 !important;
+      border-color: $cancel-color-hover !important;
+      color: $cancel-color-hover !important;
+      .mat-icon {
+        color: $cancel-color-hover !important;
+      }
+    }
+  }
 }
 
 .profile-avatar {
@@ -84,6 +168,39 @@ $background-color: #f8f9fa;
   div {
     margin-bottom: 12px;
     font-size: 1rem;
+    color: $text-color;
+  }
+
+  input,
+  textarea {
+    width: 100%;
+    padding: 8px 10px;
+    font-size: 1rem;
+    border: 2px solid $primary-color;
+    border-radius: 8px;
+    margin-top: 4px;
+    margin-bottom: 2px;
+    background: #fff;
+    color: $text-color;
+    transition: border-color 0.2s, box-shadow 0.2s;
+
+    &:focus {
+      outline: none;
+      border-color: color.adjust($primary-color, $lightness: -10%);
+      box-shadow: 0 0 0 2px rgba(34, 197, 94, 0.15);
+    }
+  }
+
+  textarea {
+    resize: vertical;
+    min-height: 60px;
+  }
+}
+
+/* --- Stile per la visualizzazione (non-editing) --- */
+.profile-info-grid {
+  .ng-container:not(:has(input)):not(:has(textarea)),
+  .ng-container:empty {
     color: $text-color;
   }
 }
@@ -192,5 +309,22 @@ $background-color: #f8f9fa;
   padding: 40px 0;
   p {
     margin-bottom: 16px;
+  }
+}
+
+/* --- Responsive --- */
+@media (max-width: 900px) {
+  .profile-content,
+  .profile-header {
+    max-width: 98vw;
+    padding: 16px 4px;
+  }
+  .profile-info-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  .profile-avatar {
+    left: 12px;
+    top: 90px;
   }
 }
