@@ -1,0 +1,32 @@
+<div class="not-found-container">
+  <div class="not-found-card">
+    <div class="not-found-img-wrapper">
+      <img src="/assets/images/404-dog.jpg" alt="Chien perdu" class="not-found-img" />
+      <div class="not-found-badge mat-elevation-z2">
+        <span class="not-found-paws">🐾</span>
+        <span class="not-found-code">404</span>
+      </div>
+    </div>
+    <h1>Oups ! Cette page s'est égarée...</h1>
+    <p class="not-found-desc">
+      Comme un chiot joueur, cette page semble avoir disparu.<br>
+      Peut-être est-elle partie faire une promenade ?
+    </p>
+
+    <div class="not-found-actions">
+      <button mat-flat-button routerLink="/" class="not-found-btn-primary">
+        <mat-icon>home</mat-icon>
+        Retour à l'accueil
+      </button>
+      <button mat-stroked-button (click)="goBack()" class="not-found-btn">
+        Page précédente
+      </button>
+    </div>
+  </div>
+  <div class="not-found-footer">
+    <span class="not-found-fact">
+      <strong>Le saviez-vous ?</strong>
+      Un chien peut comprendre jusqu'à 165 mots, mais malheureusement, il ne peut pas vous aider à trouver cette page ! 🐶
+    </span>
+  </div>
+</div>

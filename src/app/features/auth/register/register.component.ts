@@ -4,6 +4,8 @@ import {
   FormGroup,
   Validators,
   AbstractControl,
+  ValidatorFn,
+  ValidationErrors,
   ReactiveFormsModule
 } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
@@ -24,6 +26,7 @@ import { CommonModule } from '@angular/common';
 export class RegisterComponent {
   registerForm: FormGroup;
   showPassword = false;
+  showConfirmPassword = false; // toggle visibilità conferma
 
   constructor(
     private fb: FormBuilder,
@@ -36,38 +39,41 @@ export class RegisterComponent {
       email: ['', [Validators.required, Validators.email]],
       telephone: ['', Validators.required],
       password: ['', [Validators.required, Validators.minLength(6)]],
+      confirmPassword: ['', Validators.required],
       conditions: [false, Validators.requiredTrue]
+    }, {
+      validators: this.passwordsMatchValidator()
     });
   }
 
-  // Getter con non-null assertion per rimuovere l’errore NG1
-  get prenom(): AbstractControl {
-    return this.registerForm.get('prenom')!;
+  // Validator custom: se password ≠ confirmPassword, setta l’errore 'passwordMismatch'
+  private passwordsMatchValidator(): ValidatorFn {
+    return (group: AbstractControl): ValidationErrors | null => {
+      const pwd = group.get('password')?.value;
+      const cpw = group.get('confirmPassword')?.value;
+      return pwd === cpw ? null : { passwordMismatch: true };
+    };
   }
-  get nom(): AbstractControl {
-    return this.registerForm.get('nom')!;
-  }
-  get email(): AbstractControl {
-    return this.registerForm.get('email')!;
-  }
-  get telephone(): AbstractControl {
-    return this.registerForm.get('telephone')!;
-  }
-  get password(): AbstractControl {
-    return this.registerForm.get('password')!;
-  }
-  get conditions(): AbstractControl {
-    return this.registerForm.get('conditions')!;
-  }
+
+  get prenom(): AbstractControl { return this.registerForm.get('prenom')!; }
+  get nom(): AbstractControl { return this.registerForm.get('nom')!; }
+  get email(): AbstractControl { return this.registerForm.get('email')!; }
+  get telephone(): AbstractControl { return this.registerForm.get('telephone')!; }
+  get password(): AbstractControl { return this.registerForm.get('password')!; }
+  get confirmPassword(): AbstractControl { return this.registerForm.get('confirmPassword')!; }
+  get conditions(): AbstractControl { return this.registerForm.get('conditions')!; }
 
   togglePasswordVisibility(): void {
     this.showPassword = !this.showPassword;
   }
 
+  toggleConfirmPasswordVisibility(): void {
+    this.showConfirmPassword = !this.showConfirmPassword;
+  }
+
   onSubmit(): void {
     if (this.registerForm.valid) {
-      // Qui puoi chiamare il backend per la registrazione
-      this.authService.login(); // Simula login dopo registrazione
+      this.authService.login();
       this.router.navigate(['/dashboard']);
     } else {
       this.registerForm.markAllAsTouched();

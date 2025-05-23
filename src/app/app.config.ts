@@ -26,10 +26,7 @@ const routes: Routes = [
         path: 'courses',
         loadChildren: () =>
           import('./features/courses/courses.routes').then(m => m.COURSES_ROUTES)
-
-
       },
-
       {
         path: 'dashboard',
         loadChildren: () =>
@@ -49,8 +46,15 @@ const routes: Routes = [
     ]
   },
 
-  // Wildcard route for 404
-  { path: '**', redirectTo: '/home' }
+  // Rotte errori (403 e fallback 404)
+  {
+    path: 'error',
+    loadChildren: () =>
+      import('./features/errors/errors.routes').then(m => m.ERRORS_ROUTES)
+  },
+
+  // Wildcard route: tutto ciò che non corrisponde va a /error (404)
+  { path: '**', redirectTo: '/error' }
 ];
 
 export const appConfig: ApplicationConfig = {

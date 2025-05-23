@@ -1,5 +1,3 @@
-<!-- src/app/features/auth/register/register.component.html -->
-
 <div class="register-container">
   <div class="register-card">
     <h1>Créer un compte</h1>
@@ -39,6 +37,7 @@
         </div>
       </div>
 
+      <!-- Password -->
       <div class="form-group">
         <label for="password">Mot de passe</label>
         <div class="password-field">
@@ -47,7 +46,6 @@
             [type]="showPassword ? 'text' : 'password'"
             formControlName="password"
             placeholder="Créer un mot de passe"
-            [attr.aria-invalid]="password.invalid"
           />
           <button
             type="button"
@@ -61,6 +59,35 @@
         </div>
         <div class="error" *ngIf="password.invalid && (password.dirty || password.touched)">
           Le mot de passe est requis (au moins 6 caractères)
+        </div>
+      </div>
+
+      <!-- Confirm Password -->
+      <div class="form-group">
+        <label for="confirmPassword">Confirmer le mot de passe</label>
+        <div class="password-field">
+          <input
+            id="confirmPassword"
+            [type]="showConfirmPassword ? 'text' : 'password'"
+            formControlName="confirmPassword"
+            placeholder="Retapez votre mot de passe"
+          />
+          <button
+            type="button"
+            class="toggle-password"
+            (click)="toggleConfirmPasswordVisibility()"
+            aria-label="Afficher/Masquer le mot de passe"
+          >
+            <span *ngIf="!showConfirmPassword">&#128065;</span>
+            <span *ngIf="showConfirmPassword">&#128064;</span>
+          </button>
+        </div>
+        <div class="error" *ngIf="confirmPassword.invalid && (confirmPassword.dirty || confirmPassword.touched)">
+          Vous devez confirmer votre mot de passe
+        </div>
+        <div class="error"
+             *ngIf="registerForm.hasError('passwordMismatch') && (confirmPassword.dirty || confirmPassword.touched)">
+          Les mots de passe ne correspondent pas
         </div>
       </div>
 

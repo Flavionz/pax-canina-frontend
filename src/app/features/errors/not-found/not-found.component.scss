@@ -1,0 +1,123 @@
+.not-found-container {
+  min-height: 100vh;
+  background: #f7f8fa;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.not-found-card {
+  background: #fff;
+  border-radius: 24px;
+  box-shadow: 0 4px 32px rgba(0,0,0,0.06);
+  padding: 2.5rem 2rem 2rem 2rem;
+  max-width: 420px;
+  width: 100%;
+  margin-top: 4rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.not-found-img-wrapper {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1.2rem;
+}
+
+.not-found-img {
+  width: 110px;
+  height: 110px;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 6px solid #e8faf2;
+  background: #e8faf2;
+}
+
+.not-found-badge {
+  position: absolute;
+  bottom: -20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #fff;
+  border-radius: 20px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  padding: 0.3rem 1.2rem;
+  display: flex;
+  align-items: center;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #22223b;
+}
+
+.not-found-paws {
+  font-size: 1.3rem;
+  margin-right: 0.5rem;
+}
+
+.not-found-code {
+  font-size: 1.3rem;
+  font-weight: 700;
+}
+
+h1 {
+  margin-top: 2.5rem;
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: #22223b;
+  text-align: center;
+}
+
+.not-found-desc {
+  color: #3d405b;
+  font-size: 1.07rem;
+  text-align: center;
+  margin: 1rem 0 1.2rem 0;
+  line-height: 1.5;
+}
+
+
+.not-found-actions {
+  display: flex;
+  gap: 1rem;
+  width: 100%;
+  margin-bottom: 0.5rem;
+  justify-content: center;
+}
+
+.not-found-btn-primary {
+  background: #22c55e !important;
+  color: #fff !important;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+
+  &:hover {
+    background: #16a34a !important;
+  }
+}
+
+.not-found-footer {
+  margin-top: 2.5rem;
+  text-align: center;
+  color: #64748b;
+  font-size: 1rem;
+  width: 100%;
+}
+
+.not-found-fact {
+  display: inline-block;
+  margin: 0 auto;
+  max-width: 600px;
+  line-height: 1.5;
+}
+
+@media (max-width: 600px) {
+  .not-found-card {
+    padding: 1.5rem 0.5rem 1.5rem 0.5rem;
+    max-width: 98vw;
+  }
+}

@@ -1,6 +1,5 @@
 <h2>{{ previewMode ? 'Nos Cours Populaires' : 'Tous les cours' }}</h2>
 
-<!-- PREVIEW MODE: homepage -->
 <div *ngIf="previewMode" class="course-list preview-grid">
   <div *ngFor="let course of displayedCourses" class="course-card">
     <img [src]="course.imageUrl" alt="Immagine du cours" class="course-image">
@@ -19,7 +18,6 @@
   </a>
 </div>
 
-<!-- FULL PAGE MODE: /courses -->
 <ng-container *ngIf="!previewMode">
   <div class="courses-toolbar">
     <input
