@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { AuthService } from '@app/features/auth/auth.service';
+import { AuthService } from '@core/services/auth.service';
 import { Subscription } from 'rxjs';
 
 @Component({

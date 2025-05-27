@@ -9,8 +9,10 @@ import {
   ReactiveFormsModule
 } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
-import { AuthService } from '../auth.service';
+import { AuthService } from '@core/services/auth.service';
 import { CommonModule } from '@angular/common';
+import { HttpClient } from '@angular/common/http';
+
 
 @Component({
   selector: 'app-register',
@@ -26,12 +28,15 @@ import { CommonModule } from '@angular/common';
 export class RegisterComponent {
   registerForm: FormGroup;
   showPassword = false;
-  showConfirmPassword = false; // toggle visibilità conferma
+  showConfirmPassword = false;
+  error: string | null = null;
+  loading = false;
 
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private http: HttpClient // <--- aggiungi se usi HttpClient qui
   ) {
     this.registerForm = this.fb.group({
       prenom: ['', Validators.required],
@@ -46,7 +51,6 @@ export class RegisterComponent {
     });
   }
 
-  // Validator custom: se password ≠ confirmPassword, setta l’errore 'passwordMismatch'
   private passwordsMatchValidator(): ValidatorFn {
     return (group: AbstractControl): ValidationErrors | null => {
       const pwd = group.get('password')?.value;
@@ -72,9 +76,37 @@ export class RegisterComponent {
   }
 
   onSubmit(): void {
+    this.error = null;
     if (this.registerForm.valid) {
-      this.authService.login();
-      this.router.navigate(['/dashboard']);
+      this.loading = true;
+      const { prenom, nom, email, telephone, password } = this.registerForm.value;
+
+      // 1. Chiamata API di registrazione (adatta l'URL e i parametri secondo il tuo backend)
+      this.http.post('/api/auth/register', {
+        prenom, nom, email, telephone, password
+      }).subscribe({
+        next: () => {
+          // 2. Login automatico dopo registrazione
+          this.authService.login(email, password).subscribe({
+            next: (success) => {
+              this.loading = false;
+              if (success) {
+                this.router.navigate(['/dashboard']);
+              } else {
+                this.error = "Erreur lors de la connexion automatique.";
+              }
+            },
+            error: () => {
+              this.loading = false;
+              this.error = "Erreur lors de la connexion automatique.";
+            }
+          });
+        },
+        error: (err) => {
+          this.loading = false;
+          this.error = "Erreur lors de l'inscription. Vérifiez vos informations.";
+        }
+      });
     } else {
       this.registerForm.markAllAsTouched();
     }

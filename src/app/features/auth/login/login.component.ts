@@ -1,10 +1,10 @@
 import { Component } from '@angular/core';
-import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
-import { AuthService } from '../auth.service';
-import {Router, RouterLink} from '@angular/router';
-import {CommonModule} from '@angular/common';
-
-
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AuthService } from '@app/core/services/auth.service';
+import { Router } from '@angular/router';
+import { CommonModule } from '@angular/common';
+import { ReactiveFormsModule } from '@angular/forms';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -20,6 +20,8 @@ import {CommonModule} from '@angular/common';
 export class LoginComponent {
   loginForm: FormGroup;
   showPassword = false;
+  error: string | null = null;
+  loading = false;
 
   constructor(
     private fb: FormBuilder,
@@ -41,9 +43,24 @@ export class LoginComponent {
   }
 
   onSubmit() {
+    this.error = null;
     if (this.loginForm.valid) {
-      this.authService.login();
-      this.router.navigate(['/profile']);
+      this.loading = true;
+      const { email, password } = this.loginForm.value;
+      this.authService.login(email, password).subscribe({
+        next: (success) => {
+          this.loading = false;
+          if (success) {
+            this.router.navigate(['/profile']);
+          } else {
+            this.error = "Identifiants invalides";
+          }
+        },
+        error: () => {
+          this.loading = false;
+          this.error = "Erreur de connexion. Veuillez réessayer.";
+        }
+      });
     } else {
       this.loginForm.markAllAsTouched();
     }

@@ -38,9 +38,12 @@
         <a class="forgot" routerLink="/auth/forgot-password">Mot de passe oublié ?</a>
       </div>
 
-      <button class="login-btn" type="submit">
-        Se connecter
+      <button class="login-btn" type="submit" [disabled]="loading">
+        <span *ngIf="!loading">Se connecter</span>
+        <span *ngIf="loading">Connexion...</span>
       </button>
+
+      <div class="error" *ngIf="error">{{ error }}</div>
     </form>
 
     <div class="register-link">

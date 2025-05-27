@@ -1,13 +1,14 @@
 import { ApplicationConfig } from '@angular/core';
 import { provideRouter, Routes, withInMemoryScrolling } from '@angular/router';
-import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { MainLayoutComponent } from './layouts/main-layout/main-layout.component';
 import { ProfileComponent } from './features/profile/profile.component';
+import { jwtInterceptor } from '@app/core/interceptors/jwt.interceptor';
+import { connecteGuard } from '@app/core/guards/connecte.guard';
+
 
 const routes: Routes = [
-  // Redirect root path (fuori dai children!)
   { path: '', redirectTo: '/home', pathMatch: 'full' },
-
   {
     path: '',
     component: MainLayoutComponent,
@@ -42,18 +43,16 @@ const routes: Routes = [
         loadChildren: () =>
           import('./features/contact/contact.routes').then(m => m.CONTACT_ROUTES)
       },
-      { path: 'profile', component: ProfileComponent }
+      { path: 'profile',
+        component: ProfileComponent,
+        canActivate: [connecteGuard] }
     ]
   },
-
-  // Rotte errori (403 e fallback 404)
   {
     path: 'error',
     loadChildren: () =>
       import('./features/errors/errors.routes').then(m => m.ERRORS_ROUTES)
   },
-
-  // Wildcard route: tutto ciò che non corrisponde va a /error (404)
   { path: '**', redirectTo: '/error' }
 ];
 
@@ -66,6 +65,6 @@ export const appConfig: ApplicationConfig = {
         anchorScrolling: 'enabled'
       })
     ),
-    provideHttpClient()
+    provideHttpClient(withInterceptors([jwtInterceptor]))
   ]
 };
