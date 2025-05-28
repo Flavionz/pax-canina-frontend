@@ -6,8 +6,10 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { UserService } from '@core/services/user.service';
-import { DogService, Dog } from '@core/services/dog.service';
+import { DogService } from '@core/services/dog.service';
 import { AddDogDialogComponent } from '@features/dog/add-dog-dialog/add-dog-dialog.component';
+import { User } from '@models/user.model';
+import { Dog } from '@models/dog.model';
 
 @Component({
   selector: 'app-profile',
@@ -24,9 +26,9 @@ import { AddDogDialogComponent } from '@features/dog/add-dog-dialog/add-dog-dial
   ]
 })
 export class ProfileComponent implements OnInit {
-  user: any;
+  user: User | null = null;
   editingProfile = false;
-  backupUser: any;
+  backupUser: User | null = null;
 
   constructor(
     private userService: UserService,
@@ -35,28 +37,30 @@ export class ProfileComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    if (this.userService.isLoggedIn()) {
-      this.user = this.userService.getUserProfile();
-      if (!this.user.dogs) {
-        this.user.dogs = [];
+    this.userService.getUserProfile().subscribe(user => {
+      this.user = user;
+      if (!this.user.chiens) {
+        this.user.chiens = [];
       }
-    }
+    });
   }
 
   startEditProfile(): void {
-    this.backupUser = { ...this.user }; // backup per annullare modifiche se serve
+    this.backupUser = this.user ? { ...this.user } : null;
     this.editingProfile = true;
   }
 
   saveProfile(): void {
-    this.userService.updateUserProfile(this.user).subscribe((updatedUser: any) => {
-      this.user = updatedUser;
-      this.editingProfile = false;
-    });
+    if (this.user) {
+      this.userService.updateUserProfile(this.user).subscribe((updatedUser: User) => {
+        this.user = updatedUser;
+        this.editingProfile = false;
+      });
+    }
   }
 
   cancelEditProfile(): void {
-    this.user = { ...this.backupUser };
+    this.user = this.backupUser ? { ...this.backupUser } : null;
     this.editingProfile = false;
   }
 
@@ -68,8 +72,8 @@ export class ProfileComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe((result: Dog) => {
       if (result && result.nom && result.race) {
-        this.dogService.addDog(result).subscribe(newDog => {
-          this.user.dogs.push(newDog);
+        this.dogService.addDog(result).subscribe(() => {
+          this.reloadDogs();
         });
       }
     });
@@ -83,18 +87,28 @@ export class ProfileComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe((result: Dog) => {
-      if (result && result.nom && result.race) {
-        const index = this.user.dogs.findIndex((d: Dog) => d === dog);
-        if (index !== -1) {
-          this.user.dogs[index] = result;
-        }
+      if (result && result.nom && result.race && dog.idChien) {
+        this.dogService.updateDog({ ...dog, ...result }).subscribe(() => {
+          this.reloadDogs();
+        });
       }
     });
   }
 
   deleteDog(dog: Dog): void {
-    this.user.dogs = this.user.dogs.filter((d: Dog) => d !== dog);
-// Puoi aggiungere qui la chiamata al backend se vuoi
+    if (dog.idChien) {
+      this.dogService.deleteDog(dog.idChien).subscribe(() => {
+        this.reloadDogs();
+      });
+    }
+  }
+
+  reloadDogs(): void {
+    this.dogService.getMyDogs().subscribe(dogs => {
+      if (this.user) {
+        this.user.chiens = dogs;
+      }
+    });
   }
 
   getDogAge(dateNaissance: string | Date): string {

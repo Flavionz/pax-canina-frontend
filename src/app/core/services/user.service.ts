@@ -1,47 +1,64 @@
 import { Injectable } from '@angular/core';
-import { User } from '../models/user.model';
-import { Observable, of } from 'rxjs';
-
-
+import { HttpClient } from '@angular/common/http';
+import { Observable, map } from 'rxjs';
+import { environment } from '@environments/environment';
+import { User } from '@models/user.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserService {
-  private mockUser: User = {
-    id: 1,
-    firstName: 'Flavio',
-    lastName: 'Terenzi',
-    email: 'flavio.terenzi@example.com',
-    role: 'Propriétaire',
-    telephone: '0612345678',
-    avatar: 'assets/images/avatar.png',
-    address: '5 Rue Principale',
-    city: 'La Maxe',
-    postalCode: '57140',
-    bio: 'Passionné de dressage canin depuis plus de 5 ans. Propriétaire de deux bergers allemands et d\'un labrador.',
-    memberSince: '2022-01-01',
-    dogs: [
-      { name: 'Rex', breed: 'Berger Allemand', age: 3 },
-      { name: 'Luna', breed: 'Labrador', age: 2 }
-    ],
-    registrations: [
-      { activity: 'Cours d\'obéissance', date: '2024-03-15', status: 'Confirmé' },
-      { activity: 'Atelier agility', date: '2024-04-10', status: 'En attente' }
-    ]
+  constructor(private http: HttpClient) {}
+
+  getUserProfile(): Observable<User> {
+    return this.http.get<any>(`${environment.apiUrl}/proprietaires/me`).pipe(
+      map(data => mapUserFromBackend(data))
+    );
+  }
+
+  updateUserProfile(user: Partial<User>): Observable<User> {
+    // Prima di inviare, mappa camelCase -> snake_case se il backend lo richiede
+    const payload = mapUserToBackend(user);
+    return this.http.put<any>(`${environment.apiUrl}/proprietaires/me`, payload).pipe(
+      map(data => mapUserFromBackend(data))
+    );
+  }
+}
+
+// Funzione di mapping (se il backend usa snake_case)
+function mapUserFromBackend(data: any): User {
+  return {
+    idUtilisateur: data.id_utilisateur,
+    nom: data.nom,
+    prenom: data.prenom,
+    email: data.email,
+    telephone: data.telephone,
+    dateInscription: data.date_inscription,
+    lastLogin: data.last_login,
+    adresse: data.adresse,
+    ville: data.ville,
+    codePostal: data.code_postal,
+    bio: data.bio,
+    avatarUrl: data.avatar_url,
+    chiens: data.chiens,
+    inscriptions: data.inscriptions
   };
+}
 
-
-  getUserProfile(): User {
-    return this.mockUser;
-  }
-
-  isLoggedIn(): boolean {
-    return true;
-  }
-
-  updateUserProfile(result: any): Observable<any> {
-    this.mockUser = { ...this.mockUser, ...result };
-    return of(this.mockUser);
-  }
+function mapUserToBackend(user: Partial<User>): any {
+  return {
+    id_utilisateur: user.idUtilisateur,
+    nom: user.nom,
+    prenom: user.prenom,
+    email: user.email,
+    telephone: user.telephone,
+    date_inscription: user.dateInscription,
+    last_login: user.lastLogin,
+    adresse: user.adresse,
+    ville: user.ville,
+    code_postal: user.codePostal,
+    bio: user.bio,
+    avatar_url: user.avatarUrl,
+    // Non mandare relazioni se non richieste dal backend
+  };
 }

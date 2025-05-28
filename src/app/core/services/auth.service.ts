@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, of } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
-import {catchError,map } from 'rxjs/operators';
-
+import { catchError, map } from 'rxjs/operators';
+import { environment } from '@environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -22,8 +22,11 @@ export class AuthService {
     }
   }
 
-  login(username: string, password: string): Observable<boolean> {
-    return this.http.post<{ token: string }>('/api/auth/login', { username, password }).pipe(
+  login(email: string, password: string): Observable<boolean> {
+    return this.http.post<{ token: string }>(
+      `${environment.apiUrl}/auth/login`,
+      { email, password }
+    ).pipe(
       map(response => {
         if (response && response.token) {
           this.decodeJwt(response.token);

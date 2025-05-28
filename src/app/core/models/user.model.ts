@@ -1,28 +1,21 @@
-export interface Dog {
-  name: string;
-  breed: string;
-  age: number;
-}
-
-export interface Registration {
-  activity: string;
-  date: string;  // o Date
-  status: string;
-}
-
 export interface User {
-  id: number;
-  firstName: string;
-  lastName: string;
+  // Campi da UTILISATEUR
+  idUtilisateur: number;
+  nom: string;
+  prenom: string;
   email: string;
-  role: string;
-  telephone: string;
-  avatar?: string;
-  address?: string;
-  city?: string;
-  postalCode?: string;
+  telephone?: string;
+  dateInscription: string; // ISO string (es: '2022-01-01')
+  lastLogin?: string;      // ISO string (es: '2024-05-28T15:00:00Z')
+
+  // Campi da PROPRIETAIRE (opzionali, solo per i proprietari)
+  adresse?: string;
+  ville?: string;
+  codePostal?: string;
   bio?: string;
-  memberSince?: string; // o Date
-  dogs?: Dog[];
-  registrations?: Registration[];
+  avatarUrl?: string;
+
+  // Relazioni (puoi aggiungerle se il backend le espone)
+  chiens?: any[];         // Array di Dog, se vuoi tipizzalo meglio
+  inscriptions?: any[];   // Array di iscrizioni, se vuoi tipizzalo meglio
 }

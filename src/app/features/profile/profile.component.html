@@ -1,5 +1,5 @@
 <div class="profile-welcome">
-  <h1>Bienvenue {{ user?.firstName }}</h1>
+  <h1>Bienvenue {{ user?.prenom }}</h1>
   <p>Gérez vos informations personnelles et vos chiens enregistrés</p>
 </div>
 
@@ -16,7 +16,7 @@
         <mat-icon>close</mat-icon> Annuler
       </button>
     </div>
-    <img class="profile-avatar" [src]="user?.avatar || 'assets/images/default-avatar.png'" alt="Avatar" />
+    <img class="profile-avatar" [src]="user?.avatarUrl || 'assets/images/default-avatar.png'" alt="Avatar" />
   </div>
 
   <div class="profile-content">
@@ -28,19 +28,19 @@
             <div>
               <strong>Prénom</strong><br>
               <ng-container *ngIf="!editingProfile; else editFirstName">
-                {{ user?.firstName }}
+                {{ user?.prenom }}
               </ng-container>
               <ng-template #editFirstName>
-                <input [(ngModel)]="user.firstName" name="firstName" required />
+                <input [(ngModel)]="user.prenom" name="prenom" required />
               </ng-template>
             </div>
             <div>
               <strong>Nom</strong><br>
               <ng-container *ngIf="!editingProfile; else editLastName">
-                {{ user?.lastName }}
+                {{ user?.nom }}
               </ng-container>
               <ng-template #editLastName>
-                <input [(ngModel)]="user.lastName" name="lastName" required />
+                <input [(ngModel)]="user.nom" name="nom" required />
               </ng-template>
             </div>
             <div>
@@ -64,37 +64,28 @@
             <div>
               <strong>Adresse</strong><br>
               <ng-container *ngIf="!editingProfile; else editAddress">
-                {{ user?.address }}
+                {{ user?.adresse }}
               </ng-container>
               <ng-template #editAddress>
-                <input [(ngModel)]="user.address" name="address" />
+                <input [(ngModel)]="user.adresse" name="adresse" />
               </ng-template>
             </div>
             <div>
               <strong>Ville</strong><br>
               <ng-container *ngIf="!editingProfile; else editCity">
-                {{ user?.city }}
+                {{ user?.ville }}
               </ng-container>
               <ng-template #editCity>
-                <input [(ngModel)]="user.city" name="city" />
+                <input [(ngModel)]="user.ville" name="ville" />
               </ng-template>
             </div>
             <div>
               <strong>Code postal</strong><br>
               <ng-container *ngIf="!editingProfile; else editPostal">
-                {{ user?.postalCode }}
+                {{ user?.codePostal }}
               </ng-container>
               <ng-template #editPostal>
-                <input [(ngModel)]="user.postalCode" name="postalCode" />
-              </ng-template>
-            </div>
-            <div *ngIf="user?.hobbies">
-              <strong>Hobbies</strong><br>
-              <ng-container *ngIf="!editingProfile; else editHobbies">
-                {{ user?.hobbies }}
-              </ng-container>
-              <ng-template #editHobbies>
-                <input [(ngModel)]="user.hobbies" name="hobbies" />
+                <input [(ngModel)]="user.codePostal" name="codePostal" />
               </ng-template>
             </div>
           </div>
@@ -111,7 +102,7 @@
             </div>
             <div>
               <strong>Membre depuis</strong><br>
-              {{ user?.memberSince | date:'MMMM yyyy' }}
+              {{ user?.dateInscription | date:'MMMM yyyy' }}
             </div>
           </div>
         </form>
@@ -125,10 +116,10 @@
           </button>
         </div>
         <div class="dog-list">
-          <ng-container *ngIf="user?.dogs?.length > 0; else noDogs">
-            <div class="dog-card" *ngFor="let dog of user.dogs">
-              <div class="dog-photo" *ngIf="dog.photo_url; else noPhoto">
-                <img [src]="dog.photo_url" alt="Photo de {{dog.nom}}" />
+          <ng-container *ngIf="user?.chiens?.length > 0; else noDogs">
+            <div class="dog-card" *ngFor="let dog of user.chiens">
+              <div class="dog-photo" *ngIf="dog.photoUrl; else noPhoto">
+                <img [src]="dog.photoUrl" alt="Photo de {{dog.nom}}" />
               </div>
               <ng-template #noPhoto>
                 <div class="dog-photo placeholder">
@@ -162,8 +153,8 @@
       </mat-tab>
 
       <mat-tab label="Mes inscriptions">
-        <div class="p-6 space-y-4" *ngIf="user?.registrations?.length > 0; else noRegistrations">
-          <div *ngFor="let reg of user.registrations" class="border rounded p-4 shadow-sm">
+        <div class="p-6 space-y-4" *ngIf="user?.inscriptions?.length > 0; else noRegistrations">
+          <div *ngFor="let reg of user.inscriptions" class="border rounded p-4 shadow-sm">
             <p><strong>Activité :</strong> {{ reg.activity }}</p>
             <p><strong>Date :</strong> {{ reg.date | date }}</p>
             <p><strong>Statut :</strong> {{ reg.status }}</p>
