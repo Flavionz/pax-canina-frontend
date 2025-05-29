@@ -1,3 +1,4 @@
+// src/app/core/services/user.service.ts
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, map } from 'rxjs';
@@ -17,7 +18,6 @@ export class UserService {
   }
 
   updateUserProfile(user: Partial<User>): Observable<User> {
-    // Prima di inviare, mappa camelCase -> snake_case se il backend lo richiede
     const payload = mapUserToBackend(user);
     return this.http.put<any>(`${environment.apiUrl}/proprietaires/me`, payload).pipe(
       map(data => mapUserFromBackend(data))
@@ -25,7 +25,6 @@ export class UserService {
   }
 }
 
-// Funzione di mapping (se il backend usa snake_case)
 function mapUserFromBackend(data: any): User {
   return {
     idUtilisateur: data.id_utilisateur,
@@ -59,6 +58,5 @@ function mapUserToBackend(user: Partial<User>): any {
     code_postal: user.codePostal,
     bio: user.bio,
     avatar_url: user.avatarUrl,
-    // Non mandare relazioni se non richieste dal backend
   };
 }

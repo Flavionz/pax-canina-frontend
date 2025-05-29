@@ -1,169 +1,179 @@
-<div class="profile-welcome">
-  <h1>Bienvenue {{ user?.prenom }}</h1>
-  <p>Gérez vos informations personnelles et vos chiens enregistrés</p>
+<!-- profile.component.html -->
+
+<!-- Messaggio di caricamento -->
+<div *ngIf="user === null">
+  <p>Caricamento profilo in corso...</p>
 </div>
 
-<div class="profile-page">
-  <div class="profile-header">
-    <div class="profile-banner">
-      <button *ngIf="!editingProfile" mat-stroked-button class="profile-edit-btn" (click)="startEditProfile()">
-        <mat-icon>edit</mat-icon> Modifier
-      </button>
-      <button *ngIf="editingProfile" mat-flat-button class="profile-save-btn" (click)="saveProfile()">
-        <mat-icon>save</mat-icon> Enregistrer
-      </button>
-      <button *ngIf="editingProfile" mat-stroked-button class="profile-cancel-btn" (click)="cancelEditProfile()">
-        <mat-icon>close</mat-icon> Annuler
-      </button>
-    </div>
-    <img class="profile-avatar" [src]="user?.avatarUrl || 'assets/images/default-avatar.png'" alt="Avatar" />
+<!-- Tutto il profilo viene mostrato solo se user è valorizzato -->
+<div *ngIf="user">
+  <div class="profile-welcome">
+    <h1>Bienvenue {{ user.prenom }}</h1>
+    <p>Gérez vos informations personnelles et vos chiens enregistrés</p>
   </div>
 
-  <div class="profile-content">
-    <mat-tab-group>
-      <mat-tab label="Informations personnelles">
-        <form class="profile-info-grid" autocomplete="off">
-          <div>
-            <h3>Informations personnelles</h3>
-            <div>
-              <strong>Prénom</strong><br>
-              <ng-container *ngIf="!editingProfile; else editFirstName">
-                {{ user?.prenom }}
-              </ng-container>
-              <ng-template #editFirstName>
-                <input [(ngModel)]="user.prenom" name="prenom" required />
-              </ng-template>
-            </div>
-            <div>
-              <strong>Nom</strong><br>
-              <ng-container *ngIf="!editingProfile; else editLastName">
-                {{ user?.nom }}
-              </ng-container>
-              <ng-template #editLastName>
-                <input [(ngModel)]="user.nom" name="nom" required />
-              </ng-template>
-            </div>
-            <div>
-              <strong>Email</strong><br>
-              <ng-container *ngIf="!editingProfile; else editEmail">
-                {{ user?.email }}
-              </ng-container>
-              <ng-template #editEmail>
-                <input [(ngModel)]="user.email" name="email" type="email" required />
-              </ng-template>
-            </div>
-            <div>
-              <strong>Téléphone</strong><br>
-              <ng-container *ngIf="!editingProfile; else editTel">
-                {{ user?.telephone }}
-              </ng-container>
-              <ng-template #editTel>
-                <input [(ngModel)]="user.telephone" name="telephone" />
-              </ng-template>
-            </div>
-            <div>
-              <strong>Adresse</strong><br>
-              <ng-container *ngIf="!editingProfile; else editAddress">
-                {{ user?.adresse }}
-              </ng-container>
-              <ng-template #editAddress>
-                <input [(ngModel)]="user.adresse" name="adresse" />
-              </ng-template>
-            </div>
-            <div>
-              <strong>Ville</strong><br>
-              <ng-container *ngIf="!editingProfile; else editCity">
-                {{ user?.ville }}
-              </ng-container>
-              <ng-template #editCity>
-                <input [(ngModel)]="user.ville" name="ville" />
-              </ng-template>
-            </div>
-            <div>
-              <strong>Code postal</strong><br>
-              <ng-container *ngIf="!editingProfile; else editPostal">
-                {{ user?.codePostal }}
-              </ng-container>
-              <ng-template #editPostal>
-                <input [(ngModel)]="user.codePostal" name="codePostal" />
-              </ng-template>
-            </div>
-          </div>
-          <div>
-            <h3>À propos de moi</h3>
-            <div>
-              <strong>Bio</strong><br>
-              <ng-container *ngIf="!editingProfile; else editBio">
-                {{ user?.bio }}
-              </ng-container>
-              <ng-template #editBio>
-                <textarea [(ngModel)]="user.bio" name="bio" rows="3"></textarea>
-              </ng-template>
-            </div>
-            <div>
-              <strong>Membre depuis</strong><br>
-              {{ user?.dateInscription | date:'MMMM yyyy' }}
-            </div>
-          </div>
-        </form>
-      </mat-tab>
+  <div class="profile-page">
+    <div class="profile-header">
+      <div class="profile-banner">
+        <button *ngIf="!editingProfile" mat-stroked-button class="profile-edit-btn" (click)="startEditProfile()">
+          <mat-icon>edit</mat-icon> Modifier
+        </button>
+        <button *ngIf="editingProfile" mat-flat-button class="profile-save-btn" (click)="saveProfile()">
+          <mat-icon>save</mat-icon> Enregistrer
+        </button>
+        <button *ngIf="editingProfile" mat-stroked-button class="profile-cancel-btn" (click)="cancelEditProfile()">
+          <mat-icon>close</mat-icon> Annuler
+        </button>
+      </div>
+      <img class="profile-avatar" [src]="user.avatarUrl || 'assets/images/default-avatar.png'" alt="Avatar" />
+    </div>
 
-      <mat-tab label="Mes chiens">
-        <div class="dogs-header">
-          <h3>Mes chiens</h3>
-          <button mat-raised-button color="primary" (click)="openAddDogDialog()">
-            <mat-icon>add</mat-icon> Ajouter un chien
-          </button>
-        </div>
-        <div class="dog-list">
-          <ng-container *ngIf="user?.chiens?.length > 0; else noDogs">
-            <div class="dog-card" *ngFor="let dog of user.chiens">
-              <div class="dog-photo" *ngIf="dog.photoUrl; else noPhoto">
-                <img [src]="dog.photoUrl" alt="Photo de {{dog.nom}}" />
+    <div class="profile-content">
+      <mat-tab-group>
+        <mat-tab label="Informations personnelles">
+          <form class="profile-info-grid" autocomplete="off">
+            <div>
+              <h3>Informations personnelles</h3>
+              <div>
+                <strong>Prénom</strong><br>
+                <ng-container *ngIf="!editingProfile; else editFirstName">
+                  {{ user.prenom }}
+                </ng-container>
+                <ng-template #editFirstName>
+                  <input [(ngModel)]="user.prenom" name="prenom" required />
+                </ng-template>
               </div>
-              <ng-template #noPhoto>
-                <div class="dog-photo placeholder">
-                  <mat-icon>pets</mat-icon>
-                </div>
-              </ng-template>
-              <div class="dog-info">
-                <h4>{{ dog.nom }}</h4>
-                <div class="dog-breed-age">{{ dog.race }}, {{ getDogAge(dog.dateNaissance) }}</div>
-                <div class="dog-details">
-                  <div><strong>Sexe</strong> <span>{{ dog.sexe }}</span></div>
-                  <div><strong>Poids</strong> <span>{{ dog.poids }} kg</span></div>
-                  <div *ngIf="dog.numeroPuce"><strong>Puce</strong> <span>{{ dog.numeroPuce }}</span></div>
-                </div>
-                <div class="dog-actions">
-                  <a class="dog-edit" (click)="editDog(dog)">Modifier</a>
-                  <a class="dog-delete" (click)="deleteDog(dog)">Supprimer</a>
-                </div>
+              <div>
+                <strong>Nom</strong><br>
+                <ng-container *ngIf="!editingProfile; else editLastName">
+                  {{ user.nom }}
+                </ng-container>
+                <ng-template #editLastName>
+                  <input [(ngModel)]="user.nom" name="nom" required />
+                </ng-template>
+              </div>
+              <div>
+                <strong>Email</strong><br>
+                <ng-container *ngIf="!editingProfile; else editEmail">
+                  {{ user.email }}
+                </ng-container>
+                <ng-template #editEmail>
+                  <input [(ngModel)]="user.email" name="email" type="email" required />
+                </ng-template>
+              </div>
+              <div>
+                <strong>Téléphone</strong><br>
+                <ng-container *ngIf="!editingProfile; else editTel">
+                  {{ user.telephone }}
+                </ng-container>
+                <ng-template #editTel>
+                  <input [(ngModel)]="user.telephone" name="telephone" />
+                </ng-template>
+              </div>
+              <div>
+                <strong>Adresse</strong><br>
+                <ng-container *ngIf="!editingProfile; else editAddress">
+                  {{ user.adresse }}
+                </ng-container>
+                <ng-template #editAddress>
+                  <input [(ngModel)]="user.adresse" name="adresse" />
+                </ng-template>
+              </div>
+              <div>
+                <strong>Ville</strong><br>
+                <ng-container *ngIf="!editingProfile; else editCity">
+                  {{ user.ville }}
+                </ng-container>
+                <ng-template #editCity>
+                  <input [(ngModel)]="user.ville" name="ville" />
+                </ng-template>
+              </div>
+              <div>
+                <strong>Code postal</strong><br>
+                <ng-container *ngIf="!editingProfile; else editPostal">
+                  {{ user.codePostal }}
+                </ng-container>
+                <ng-template #editPostal>
+                  <input [(ngModel)]="user.codePostal" name="codePostal" />
+                </ng-template>
               </div>
             </div>
-          </ng-container>
-          <ng-template #noDogs>
-            <div class="empty-dogs-state">
-              <p class="text-gray-600">Vous n'avez enregistré aucun chien.</p>
-              <button mat-raised-button color="primary" (click)="openAddDogDialog()">
-                <mat-icon>add</mat-icon> Ajouter un chien
-              </button>
+            <div>
+              <h3>À propos de moi</h3>
+              <div>
+                <strong>Bio</strong><br>
+                <ng-container *ngIf="!editingProfile; else editBio">
+                  {{ user.bio }}
+                </ng-container>
+                <ng-template #editBio>
+                  <textarea [(ngModel)]="user.bio" name="bio" rows="3"></textarea>
+                </ng-template>
+              </div>
+              <div>
+                <strong>Membre depuis</strong><br>
+                {{ user.dateInscription | date:'MMMM yyyy' }}
+              </div>
             </div>
+          </form>
+        </mat-tab>
+
+        <mat-tab label="Mes chiens">
+          <div class="dogs-header">
+            <h3>Mes chiens</h3>
+            <button mat-raised-button color="primary" (click)="openAddDogDialog()">
+              <mat-icon>add</mat-icon> Ajouter un chien
+            </button>
+          </div>
+          <div class="dog-list">
+            <ng-container *ngIf="user.chiens && user.chiens.length > 0; else noDogs">
+              <div class="dog-card" *ngFor="let dog of user.chiens">
+                <div class="dog-photo" *ngIf="dog.photoUrl; else noPhoto">
+                  <img [src]="dog.photoUrl" alt="Photo de {{dog.nom}}" />
+                </div>
+                <ng-template #noPhoto>
+                  <div class="dog-photo placeholder">
+                    <mat-icon>pets</mat-icon>
+                  </div>
+                </ng-template>
+                <div class="dog-info">
+                  <h4>{{ dog.nom }}</h4>
+                  <div class="dog-breed-age">{{ dog.race }}, {{ getDogAge(dog.dateNaissance) }}</div>
+                  <div class="dog-details">
+                    <div><strong>Sexe</strong> <span>{{ dog.sexe }}</span></div>
+                    <div><strong>Poids</strong> <span>{{ dog.poids }} kg</span></div>
+                    <div *ngIf="dog.numeroPuce"><strong>Puce</strong> <span>{{ dog.numeroPuce }}</span></div>
+                  </div>
+                  <div class="dog-actions">
+                    <a class="dog-edit" (click)="editDog(dog)">Modifier</a>
+                    <a class="dog-delete" (click)="deleteDog(dog)">Supprimer</a>
+                  </div>
+                </div>
+              </div>
+            </ng-container>
+            <ng-template #noDogs>
+              <div class="empty-dogs-state">
+                <p class="text-gray-600">Vous n'avez enregistré aucun chien.</p>
+                <button mat-raised-button color="primary" (click)="openAddDogDialog()">
+                  <mat-icon>add</mat-icon> Ajouter un chien
+                </button>
+              </div>
+            </ng-template>
+          </div>
+        </mat-tab>
+
+        <mat-tab label="Mes inscriptions">
+          <div class="p-6 space-y-4" *ngIf="user.inscriptions && user.inscriptions.length > 0; else noRegistrations">
+            <div *ngFor="let reg of user.inscriptions" class="border rounded p-4 shadow-sm">
+              <p><strong>Activité :</strong> {{ reg.activity }}</p>
+              <p><strong>Date :</strong> {{ reg.date | date }}</p>
+              <p><strong>Statut :</strong> {{ reg.status }}</p>
+            </div>
+          </div>
+          <ng-template #noRegistrations>
+            <p class="text-gray-600">Vous n'avez aucune inscription pour le moment.</p>
           </ng-template>
-        </div>
-      </mat-tab>
-
-      <mat-tab label="Mes inscriptions">
-        <div class="p-6 space-y-4" *ngIf="user?.inscriptions?.length > 0; else noRegistrations">
-          <div *ngFor="let reg of user.inscriptions" class="border rounded p-4 shadow-sm">
-            <p><strong>Activité :</strong> {{ reg.activity }}</p>
-            <p><strong>Date :</strong> {{ reg.date | date }}</p>
-            <p><strong>Statut :</strong> {{ reg.status }}</p>
-          </div>
-        </div>
-        <ng-template #noRegistrations>
-          <p class="text-gray-600">Vous n'avez aucune inscription pour le moment.</p>
-        </ng-template>
-      </mat-tab>
-    </mat-tab-group>
+        </mat-tab>
+      </mat-tab-group>
+    </div>
   </div>
 </div>

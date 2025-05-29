@@ -1,3 +1,4 @@
+// src/app/features/profile/profile.component.ts
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -8,8 +9,9 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { UserService } from '@core/services/user.service';
 import { DogService } from '@core/services/dog.service';
 import { AddDogDialogComponent } from '@features/dog/add-dog-dialog/add-dog-dialog.component';
-import { User } from '@models/user.model';
 import { Dog } from '@models/dog.model';
+import { User } from '@models/user.model';
+
 
 @Component({
   selector: 'app-profile',
@@ -35,12 +37,18 @@ export class ProfileComponent implements OnInit {
     private dogService: DogService,
     private dialog: MatDialog
   ) {}
-
   ngOnInit(): void {
-    this.userService.getUserProfile().subscribe(user => {
-      this.user = user;
-      if (!this.user.chiens) {
-        this.user.chiens = [];
+    this.userService.getUserProfile().subscribe({
+      next: user => {
+        console.log('Profilo caricato:', user);
+        this.user = user;
+        if (!this.user.chiens) {
+          this.user.chiens = [];
+        }
+      },
+      error: err => {
+        console.error('Errore caricamento profilo:', err);
+        // Se vuoi, mostra un messaggio di errore a schermo
       }
     });
   }
@@ -104,7 +112,7 @@ export class ProfileComponent implements OnInit {
   }
 
   reloadDogs(): void {
-    this.dogService.getMyDogs().subscribe(dogs => {
+    this.dogService.getMyDogs().subscribe((dogs: Dog[]) => {
       if (this.user) {
         this.user.chiens = dogs;
       }

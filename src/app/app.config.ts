@@ -2,7 +2,7 @@ import { ApplicationConfig } from '@angular/core';
 import { provideRouter, Routes, withInMemoryScrolling } from '@angular/router';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { MainLayoutComponent } from './layouts/main-layout/main-layout.component';
-import { ProfileComponent } from './features/profile/profile.component';
+import { ProfileComponent } from '@features/profile/profile.component';
 import { jwtInterceptor } from '@app/core/interceptors/jwt.interceptor';
 import { connecteGuard } from '@app/core/guards/connecte.guard';
 

@@ -1,12 +1,11 @@
+// src/app/core/models/dog.model.ts
 export interface Dog {
-  id?: string;
+  idChien?: number;
   nom: string;
   race: string;
-  age: number;
-  avatar?: string;
-  sexe?: string;
-  poids?: number;
+  dateNaissance: string;
+  sexe: string;
+  poids: number;
   numeroPuce?: string;
-  dateNaissance?: string;
-  photo_url?: string;
+  photoUrl?: string;
 }
