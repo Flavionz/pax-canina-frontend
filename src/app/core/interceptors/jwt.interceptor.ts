@@ -2,7 +2,7 @@ import { HttpInterceptorFn } from '@angular/common/http';
 
 export const jwtInterceptor: HttpInterceptorFn = (req, next) => {
   const jwt = localStorage.getItem('jwt');
-  console.log('Interceptor attivo. JWT:', jwt, 'URL:', req.url); // <--- AGGIUNGI QUESTA RIGA
+  console.log('Interceptor attivo. JWT:', jwt, 'URL:', req.url);
   if (jwt) {
     const reqWithJwt = req.clone({
       setHeaders: { Authorization: 'Bearer ' + jwt }

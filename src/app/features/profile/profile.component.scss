@@ -197,7 +197,6 @@ $cancel-color-hover: #334155;
   }
 }
 
-/* --- Stile per la visualizzazione (non-editing) --- */
 .profile-info-grid {
   .ng-container:not(:has(input)):not(:has(textarea)),
   .ng-container:empty {
@@ -205,7 +204,6 @@ $cancel-color-hover: #334155;
   }
 }
 
-/* --- AGGIUNTA STILI PER CARDS CANI --- */
 .dogs-header {
   display: flex;
   justify-content: space-between;
@@ -312,7 +310,6 @@ $cancel-color-hover: #334155;
   }
 }
 
-/* --- Responsive --- */
 @media (max-width: 900px) {
   .profile-content,
   .profile-header {

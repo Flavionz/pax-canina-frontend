@@ -1,11 +1,25 @@
 export interface Registration {
-  cours: string;
-  niveau: string;
-  chien: {
-    nom: string;
-    avatar: string;
+  idInscription?: number;
+  dateInscription?: string;
+  statut: string;
+  dateAnnulation?: string;
+  motifAnnulation?: string;
+
+  session: {
+    idSession: number;
+    date: string;
+    niveau: string;
+    heureDebut: string;
+    heureFin: string;
+    cours: {
+      idCours: number;
+      nom: string;
+    }
   };
-  date: string;    // ISO string
-  heure: string;   // es: "10:00 - 11:30"
-  statut: string;  // es: "Confirmé", "En attente"
+
+  chien: {
+    idChien: number;
+    nom: string;
+    photoUrl?: string;
+  };
 }

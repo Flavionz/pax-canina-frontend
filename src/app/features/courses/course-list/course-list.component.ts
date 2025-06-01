@@ -1,18 +1,18 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { CourseService } from '@core/services/course.service';
-import { Course } from '@core/models/course.model';
-import { RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { RouterLink } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
 
+import { CourseService } from '@core/services/course.service';
+import { Course } from '@core/models/course.model';
 
 @Component({
   selector: 'app-course-list',
   standalone: true,
-  imports: [CommonModule, RouterLink, FormsModule, MatIconModule ],
+  imports: [CommonModule, FormsModule, RouterLink, MatIconModule],
   templateUrl: './course-list.component.html',
-  styleUrls: ['./course-list.component.scss']
+  styleUrls: ['./course-list.component.scss'],
 })
 export class CourseListComponent implements OnInit {
   @Input() previewMode = false;
@@ -23,8 +23,8 @@ export class CourseListComponent implements OnInit {
   searchTerm = '';
   selectedStatus = '';
 
-  // Simulazione ruolo (integra con il tuo auth service)
-  userRole = 'admin'; // 'admin', 'coach', 'user'
+  userRole = 'admin';
+
   get canAddCourse() {
     return this.userRole === 'admin' || this.userRole === 'coach';
   }
@@ -37,20 +37,20 @@ export class CourseListComponent implements OnInit {
 
   constructor(private courseService: CourseService) {}
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.loadCourses();
   }
 
-  loadCourses() {
-    this.courseService.getCourses().subscribe(
-      (data: Course[]) => {
+  loadCourses(): void {
+    this.courseService.getCourses().subscribe({
+      next: (data) => {
         this.courses = data;
         this.applyFilters();
       },
-      (error: any) => {
-        console.error('Error fetching courses:', error);
+      error: (err) => {
+        console.error('Errore caricamento corsi:', err);
       }
-    );
+    });
   }
 
   get displayedCourses(): Course[] {
@@ -59,15 +59,14 @@ export class CourseListComponent implements OnInit {
       : this.courses;
   }
 
-  applyFilters() {
-    // Solo usato nella pagina principale
+  applyFilters(): void {
     this.filteredCourses = this.courses.filter(course =>
       (!this.searchTerm || course.nom.toLowerCase().includes(this.searchTerm.toLowerCase())) &&
       (!this.selectedStatus || course.statut === this.selectedStatus)
     );
   }
 
-  onAddCourse() { /* ... */ }
-  onEditCourse(course: Course) { /* ... */ }
-  onDeleteCourse(course: Course) { /* ... */ }
+  onAddCourse(): void { /*...*/ }
+  onEditCourse(course: Course): void { /*...*/ }
+  onDeleteCourse(course: Course): void { /*...*/ }
 }

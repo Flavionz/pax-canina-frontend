@@ -1,4 +1,3 @@
-// src/app/core/services/dog.service.ts
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
@@ -10,11 +9,12 @@ import { environment } from '@environments/environment';
 })
 export class DogService {
   private baseUrl = `${environment.apiUrl}/chiens`;
+  private myDogsUrl = `${environment.apiUrl}/proprietaires/me/chiens`;
 
   constructor(private http: HttpClient) {}
 
   getMyDogs(): Observable<Dog[]> {
-    return this.http.get<Dog[]>(`${environment.apiUrl}/proprietaires/me/chiens`);
+    return this.http.get<Dog[]>(this.myDogsUrl);
   }
 
   addDog(dog: Dog): Observable<Dog> {
@@ -22,6 +22,9 @@ export class DogService {
   }
 
   updateDog(dog: Dog): Observable<Dog> {
+    if (!dog.idChien) {
+      throw new Error('Dog ID is required for update');
+    }
     return this.http.put<Dog>(`${this.baseUrl}/${dog.idChien}`, dog);
   }
 

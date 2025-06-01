@@ -1,50 +1,36 @@
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
-import { Course } from '../models/course.model';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { Course } from '@models/course.model';
+import { environment } from '@environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CourseService {
 
-  constructor() {}
+  private baseUrl = `${environment.apiUrl}/cours`;
+
+  constructor(private http: HttpClient) {}
 
   getCourses(): Observable<Course[]> {
-    // Mock temporaneo
-    return of<Course[]>([
-      {
-        id: 1,
-        nom: 'Éducation Chiot',
-        description: 'Cours pour chiots de 2 à 6 mois.',
-        capacite_max: 10,
-        statut: 'Actif',
-        niveau: 'Débutant',
-        id_type_cours: 1,
-        id_tranche: 1,
-        imageUrl: 'assets/images/socializza.jpg'
-      },
-      {
-        id: 2,
-        nom: 'Agilité Adulte',
-        description: 'Initiation à l’agilité pour chiens adultes.',
-        capacite_max: 8,
-        statut: 'Actif',
-        niveau: 'Intermédiaire',
-        id_type_cours: 2,
-        id_tranche: 2,
-        imageUrl: 'assets/images/agility.jpg'
-      },
-      {
-        id: 3,
-        nom: 'Éducation Adulte',
-        description: 'Cours pour adultes de 12 mois+.',
-        capacite_max: 9,
-        statut: 'Actif',
-        niveau: 'Débutant',
-        id_type_cours: 1,
-        id_tranche: 1,
-        imageUrl: 'assets/images/obey.jpg'
-      },
-    ]);
+    return this.http.get<Course[]>(this.baseUrl);
+  }
+
+  getCourseById(id: number): Observable<Course> {
+    return this.http.get<Course>(`${this.baseUrl}/${id}`);
+  }
+
+  createCourse(course: Course): Observable<Course> {
+    return this.http.post<Course>(this.baseUrl, course);
+  }
+
+  updateCourse(course: Course): Observable<Course> {
+    return this.http.put<Course>(`${this.baseUrl}/${course.idCours}`, course);
+  }
+
+
+  deleteCourse(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.baseUrl}/${id}`);
   }
 }

@@ -2,14 +2,10 @@
 
 <div *ngIf="previewMode" class="course-list preview-grid">
   <div *ngFor="let course of displayedCourses" class="course-card">
-    <img [src]="course.imageUrl" alt="Immagine du cours" class="course-image">
+    <img [src]="course.imgUrl" alt="Immagine du cours" class="course-image" />
     <div class="course-details">
-      <span class="course-level">{{ course.niveau }}</span>
       <h3 class="course-title">{{ course.nom }}</h3>
       <p class="course-description">{{ course.description }}</p>
-      <div class="course-info">
-        Places: {{ course.capacite_max }} places restantes
-      </div>
       <button class="course-button">S'inscrire</button>
     </div>
   </div>
@@ -41,13 +37,12 @@
       + Ajouter un cours
     </button>
   </div>
+
   <div class="courses-list">
     <table>
       <thead>
       <tr>
         <th>COURS</th>
-        <th>NIVEAU</th>
-        <th>CAPACITÉ</th>
         <th>STATUT</th>
         <th>ACTIONS</th>
       </tr>
@@ -55,14 +50,12 @@
       <tbody>
       <tr *ngFor="let course of filteredCourses">
         <td>
-          <img [src]="course.imageUrl" alt="img" class="course-img" />
+          <img [src]="course.imgUrl" alt="img" class="course-img" />
           <div>
             <strong>{{ course.nom }}</strong>
             <div class="desc">{{ course.description }}</div>
           </div>
         </td>
-        <td>{{ course.niveau }}</td>
-        <td>{{ course.capacite_max }} participants</td>
         <td>
             <span [ngClass]="{
               'status-actif': course.statut === 'Actif',
@@ -82,6 +75,7 @@
       </tbody>
     </table>
   </div>
+
   <div *ngIf="filteredCourses.length === 0" class="no-courses">
     <p>Aucun cours disponible pour le moment.</p>
   </div>

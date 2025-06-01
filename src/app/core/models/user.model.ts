@@ -1,4 +1,6 @@
-// src/app/core/models/user.model.ts
+import { Dog } from './dog.model';
+import { Registration } from './registration.model';
+
 export interface User {
   idUtilisateur: number;
   nom: string;
@@ -14,6 +16,6 @@ export interface User {
   bio?: string;
   avatarUrl?: string;
 
-  chiens?: any[];         // Array di Dog, se vuoi tipizzalo meglio
-  inscriptions?: any[];   // Array di iscrizioni, se vuoi tipizzalo meglio
+  chiens?: Dog[];
+  inscriptions?: Registration[];
 }

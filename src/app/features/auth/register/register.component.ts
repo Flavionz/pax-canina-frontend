@@ -13,7 +13,6 @@ import { AuthService } from '@core/services/auth.service';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 
-
 @Component({
   selector: 'app-register',
   standalone: true,
@@ -36,7 +35,7 @@ export class RegisterComponent {
     private fb: FormBuilder,
     private authService: AuthService,
     private router: Router,
-    private http: HttpClient // <--- aggiungi se usi HttpClient qui
+    private http: HttpClient
   ) {
     this.registerForm = this.fb.group({
       prenom: ['', Validators.required],
@@ -81,12 +80,12 @@ export class RegisterComponent {
       this.loading = true;
       const { prenom, nom, email, telephone, password } = this.registerForm.value;
 
-      // 1. Chiamata API di registrazione (adatta l'URL e i parametri secondo il tuo backend)
-      this.http.post('/api/auth/register', {
+      // Chiamata POST al backend con URL corretto per registrazione proprietaire
+      this.http.post(`${this.authService.baseUrl}/register/proprietaire`, {
         prenom, nom, email, telephone, password
       }).subscribe({
         next: () => {
-          // 2. Login automatico dopo registrazione
+          // Login automatico dopo registrazione
           this.authService.login(email, password).subscribe({
             next: (success) => {
               this.loading = false;

@@ -4,11 +4,10 @@ import { CourseListComponent } from '@features/courses/course-list/course-list.c
 import { RouterModule } from '@angular/router';
 
 @NgModule({
-  declarations: [],
   imports: [
     CommonModule,
     RouterModule,
-    CourseListComponent
+    CourseListComponent,
   ],
   exports: [CourseListComponent]
 })

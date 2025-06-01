@@ -10,6 +10,8 @@ export class AuthService {
   isLoggedIn$: Observable<boolean> = this.loggedIn.asObservable();
   private _role: string | null = null;
 
+  baseUrl = environment.apiUrl;
+
   get role(): string | null {
     return this._role;
   }
@@ -23,13 +25,14 @@ export class AuthService {
   }
 
   login(email: string, password: string): Observable<boolean> {
-    return this.http.post<{ token: string }>(
-      `${environment.apiUrl}/auth/login`,
+    return this.http.post<{ token: string, role: string }>(
+      `${this.baseUrl}/auth/login`,
       { email, password }
     ).pipe(
       map(response => {
         if (response && response.token) {
           this.decodeJwt(response.token);
+          this._role = response.role;
           this.loggedIn.next(true);
           return true;
         }
@@ -41,6 +44,16 @@ export class AuthService {
         return of(false);
       })
     );
+  }
+
+  registerProprietaire(data: {
+    prenom: string;
+    nom: string;
+    email: string;
+    telephone: string;
+    password: string;
+  }): Observable<any> {
+    return this.http.post(`${this.baseUrl}/register/proprietaire`, data);
   }
 
   decodeJwt(jwt: string) {

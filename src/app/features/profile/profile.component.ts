@@ -1,4 +1,3 @@
-// src/app/features/profile/profile.component.ts
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -6,12 +5,13 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { finalize } from 'rxjs/operators';
+
 import { UserService } from '@core/services/user.service';
 import { DogService } from '@core/services/dog.service';
 import { AddDogDialogComponent } from '@features/dog/add-dog-dialog/add-dog-dialog.component';
 import { Dog } from '@models/dog.model';
 import { User } from '@models/user.model';
-
 
 @Component({
   selector: 'app-profile',
@@ -31,26 +31,36 @@ export class ProfileComponent implements OnInit {
   user: User | null = null;
   editingProfile = false;
   backupUser: User | null = null;
+  loading = false;
+  errorMsg: string | null = null;
 
   constructor(
     private userService: UserService,
     private dogService: DogService,
     private dialog: MatDialog
   ) {}
+
   ngOnInit(): void {
-    this.userService.getUserProfile().subscribe({
-      next: user => {
-        console.log('Profilo caricato:', user);
-        this.user = user;
-        if (!this.user.chiens) {
-          this.user.chiens = [];
+    this.loadUserProfile();
+  }
+
+  loadUserProfile(): void {
+    this.loading = true;
+    this.errorMsg = null;
+    this.userService.getUserProfile()
+      .pipe(finalize(() => this.loading = false))
+      .subscribe({
+        next: user => {
+          this.user = user;
+          if (!this.user.chiens) {
+            this.user.chiens = [];
+          }
+        },
+        error: err => {
+          console.error('Errore caricamento profilo:', err);
+          this.errorMsg = "Erreur lors du chargement du profil.";
         }
-      },
-      error: err => {
-        console.error('Errore caricamento profilo:', err);
-        // Se vuoi, mostra un messaggio di errore a schermo
-      }
-    });
+      });
   }
 
   startEditProfile(): void {
@@ -60,16 +70,26 @@ export class ProfileComponent implements OnInit {
 
   saveProfile(): void {
     if (this.user) {
-      this.userService.updateUserProfile(this.user).subscribe((updatedUser: User) => {
-        this.user = updatedUser;
-        this.editingProfile = false;
-      });
+      this.loading = true;
+      this.userService.updateUserProfile(this.user)
+        .pipe(finalize(() => this.loading = false))
+        .subscribe({
+          next: updatedUser => {
+            this.user = updatedUser;
+            this.editingProfile = false;
+          },
+          error: err => {
+            console.error('Erreur sauvegarde profil:', err);
+            this.errorMsg = "Erreur lors de la sauvegarde.";
+          }
+        });
     }
   }
 
   cancelEditProfile(): void {
     this.user = this.backupUser ? { ...this.backupUser } : null;
     this.editingProfile = false;
+    this.errorMsg = null;
   }
 
   openAddDogDialog(): void {
@@ -80,9 +100,10 @@ export class ProfileComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe((result: Dog) => {
       if (result && result.nom && result.race) {
-        this.dogService.addDog(result).subscribe(() => {
-          this.reloadDogs();
-        });
+        this.loading = true;
+        this.dogService.addDog(result)
+          .pipe(finalize(() => this.loading = false))
+          .subscribe(() => this.reloadDogs());
       }
     });
   }
@@ -96,18 +117,20 @@ export class ProfileComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe((result: Dog) => {
       if (result && result.nom && result.race && dog.idChien) {
-        this.dogService.updateDog({ ...dog, ...result }).subscribe(() => {
-          this.reloadDogs();
-        });
+        this.loading = true;
+        this.dogService.updateDog({ ...dog, ...result })
+          .pipe(finalize(() => this.loading = false))
+          .subscribe(() => this.reloadDogs());
       }
     });
   }
 
   deleteDog(dog: Dog): void {
-    if (dog.idChien) {
-      this.dogService.deleteDog(dog.idChien).subscribe(() => {
-        this.reloadDogs();
-      });
+    if (dog.idChien && confirm(`Supprimer le chien "${dog.nom}" ? Cette action est irréversible.`)) {
+      this.loading = true;
+      this.dogService.deleteDog(dog.idChien)
+        .pipe(finalize(() => this.loading = false))
+        .subscribe(() => this.reloadDogs());
     }
   }
 

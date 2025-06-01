@@ -26,7 +26,6 @@ export interface Dog {
   photo_url?: string;
 }
 
-// Formato francese JJ/MM/AAAA
 export const FRENCH_DATE_FORMATS = {
   parse: { dateInput: 'DD/MM/YYYY' },
   display: {
