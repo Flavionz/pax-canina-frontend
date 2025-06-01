@@ -7,8 +7,8 @@ export interface User {
   prenom: string;
   email: string;
   telephone?: string;
-  dateInscription: string;
-  lastLogin?: string;
+  dateInscription?: Date | null;  // nullable
+  lastLogin?: Date | null;         // nullable
 
   adresse?: string;
   ville?: string;
