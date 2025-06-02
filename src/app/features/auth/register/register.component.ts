@@ -81,7 +81,7 @@ export class RegisterComponent {
       const { prenom, nom, email, telephone, password } = this.registerForm.value;
 
       // Chiamata POST al backend con URL corretto per registrazione proprietaire
-      this.http.post(`${this.authService.baseUrl}/register/proprietaire`, {
+      this.http.post(`${this.authService.baseUrl}/auth/register/proprietaire`, {
         prenom, nom, email, telephone, password
       }).subscribe({
         next: () => {

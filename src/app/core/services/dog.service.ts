@@ -10,6 +10,7 @@ import { environment } from '@environments/environment';
 export class DogService {
   private baseUrl = `${environment.apiUrl}/chiens`;
   private myDogsUrl = `${environment.apiUrl}/proprietaires/me/chiens`;
+  private uploadUrl = `${environment.apiUrl}/upload`;
 
   constructor(private http: HttpClient) {}
 
@@ -30,5 +31,12 @@ export class DogService {
 
   deleteDog(idChien: number): Observable<void> {
     return this.http.delete<void>(`${this.baseUrl}/${idChien}`);
+  }
+
+  uploadDogPhoto(file: File): Observable<string> {
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('isPublic', 'true');
+    return this.http.post(this.uploadUrl, formData, { responseType: 'text' });
   }
 }

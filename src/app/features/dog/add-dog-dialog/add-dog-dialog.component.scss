@@ -2,6 +2,7 @@
   display: block;
   width: 100%;
   max-width: 600px;
+  padding: 16px; // migliora il respiro interno nei layout standalone
 }
 
 h2 {
@@ -17,11 +18,16 @@ h2 {
 
 .two-columns {
   display: flex;
+  flex-wrap: wrap; // per evitare overflow su schermi piccoli
   gap: 16px;
   margin-bottom: 16px;
 
   mat-form-field {
-    flex: 1;
+    flex: 1 1 100%;
+
+    @media (min-width: 600px) {
+      flex: 1;
+    }
   }
 }
 
@@ -32,23 +38,30 @@ h2 {
     margin-bottom: 8px;
     color: rgba(0, 0, 0, 0.6);
     font-size: 14px;
+    font-weight: 500;
   }
 
   .upload-zone {
     display: flex;
     align-items: center;
+    flex-wrap: wrap;
     gap: 12px;
   }
 
   .upload-button {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
     mat-icon {
-      margin-right: 8px;
+      font-size: 20px;
     }
   }
 
   .file-selected {
     color: #22c55e;
     font-size: 14px;
+    font-weight: 500;
   }
 }
 
@@ -56,4 +69,7 @@ h2 {
   margin-top: 16px;
   padding-top: 16px;
   border-top: 1px solid #eee;
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
 }

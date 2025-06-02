@@ -58,16 +58,32 @@
       </mat-form-field>
     </div>
 
+    <!-- Upload immagine -->
     <div class="photo-upload">
-      <p>Photo</p>
+      <p><strong>Photo</strong></p>
       <div class="upload-zone">
-        <input type="file" #fileInput style="display: none" accept="image/*" (change)="onFileSelected($event)">
-        <button type="button" mat-stroked-button (click)="fileInput.click()" class="upload-button">
+        <input
+          type="file"
+          #fileInput
+          style="display: none"
+          accept="image/*"
+          (change)="onFileSelected($event)"
+        >
+        <button
+          type="button"
+          mat-stroked-button
+          (click)="fileInput.click()"
+          class="upload-button"
+        >
           <mat-icon>upload</mat-icon> Télécharger une photo
         </button>
-        <span *ngIf="dogForm.get('photo_url')?.value" class="file-selected">Photo sélectionnée</span>
+
+        <span *ngIf="selectedPhotoFile" class="file-selected">
+          {{ selectedPhotoFile.name }}
+        </span>
       </div>
     </div>
+
   </form>
 </div>
 

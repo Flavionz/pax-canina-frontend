@@ -14,7 +14,14 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MAT_DATE_LOCALE, MAT_DATE_FORMATS, MatNativeDateModule, provideNativeDateAdapter } from '@angular/material/core';
+import {
+  MAT_DATE_LOCALE,
+  MAT_DATE_FORMATS,
+  MatNativeDateModule,
+  provideNativeDateAdapter
+} from '@angular/material/core';
+
+import { DogService } from '@core/services/dog.service';
 
 export interface Dog {
   nom: string;
@@ -64,9 +71,11 @@ export const FRENCH_DATE_FORMATS = {
 export class AddDogDialogComponent implements OnInit {
   dogForm!: FormGroup;
   isEditMode = false;
+  selectedPhotoFile: File | null = null;
 
   constructor(
     private fb: FormBuilder,
+    private dogService: DogService,
     public dialogRef: MatDialogRef<AddDogDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: { dog?: Dog }
   ) {}
@@ -82,7 +91,7 @@ export class AddDogDialogComponent implements OnInit {
       photo_url: ['']
     });
 
-    if (this.data && this.data.dog) {
+    if (this.data?.dog) {
       this.isEditMode = true;
       this.dogForm.patchValue(this.data.dog);
     }
@@ -90,21 +99,30 @@ export class AddDogDialogComponent implements OnInit {
 
   onFileSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
-    if (input.files && input.files.length) {
-      const file = input.files[0];
-      const reader = new FileReader();
-      reader.onload = () => {
-        this.dogForm.patchValue({
-          photo_url: reader.result
-        });
-      };
-      reader.readAsDataURL(file);
+    if (input.files?.length) {
+      this.selectedPhotoFile = input.files[0];
+      this.dogForm.patchValue({ photo_url: this.selectedPhotoFile.name });
     }
   }
 
   onSubmit(): void {
     if (this.dogForm.valid) {
-      this.dialogRef.close(this.dogForm.value);
+      const dogData = this.dogForm.value;
+
+      if (this.selectedPhotoFile) {
+        this.dogService.uploadDogPhoto(this.selectedPhotoFile).subscribe({
+          next: (photoUrl: string) => {
+            dogData.photo_url = photoUrl;
+            this.dialogRef.close(dogData);
+          },
+          error: () => {
+            console.error("Erreur lors de l'upload de l'image");
+            this.dialogRef.close(dogData); // fallback anche in caso di errore
+          }
+        });
+      } else {
+        this.dialogRef.close(dogData);
+      }
     }
   }
 
