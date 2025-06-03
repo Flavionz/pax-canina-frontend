@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, map } from 'rxjs';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { environment } from '@environments/environment';
 import { User } from '@models/user.model';
 
@@ -26,60 +27,39 @@ export class UserService {
   }
 }
 
+// Mapping camelCase <-> camelCase
 function mapUserFromBackend(data: any): User {
   return {
-    idUtilisateur: data.id_utilisateur,
+    idUtilisateur: data.id,
     nom: data.nom,
     prenom: data.prenom,
     email: data.email,
     telephone: data.telephone,
-    dateInscription: data.date_inscription ? new Date(data.date_inscription) : null,
-    lastLogin: data.last_login ? new Date(data.last_login) : null,
+    dateInscription: data.dateInscription ? new Date(data.dateInscription) : null,
+    lastLogin: data.lastLogin ? new Date(data.lastLogin) : null,
     adresse: data.adresse,
     ville: data.ville,
-    codePostal: data.code_postal,
+    codePostal: data.codePostal,
     bio: data.bio,
-    avatarUrl: data.avatar_url,
+    avatarUrl: data.avatarUrl,
     chiens: data.chiens,
-    inscriptions: data.inscriptions ? data.inscriptions.map((reg: any) => ({
-      idInscription: reg.id_inscription,
-      dateInscription: reg.date_inscription ? new Date(reg.date_inscription) : null,
-      statut: reg.statut,
-      dateAnnulation: reg.date_annulation ? new Date(reg.date_annulation) : null,
-      motifAnnulation: reg.motif_annulation,
-      session: {
-        idSession: reg.session?.id_session,
-        date: reg.session?.date ? new Date(reg.session.date) : null,
-        niveau: reg.session?.niveau,
-        heureDebut: reg.session?.heure_debut,
-        heureFin: reg.session?.heure_fin,
-        cours: {
-          idCours: reg.session?.cours?.id_cours,
-          nom: reg.session?.cours?.nom
-        }
-      },
-      chien: {
-        idChien: reg.chien?.id_chien,
-        nom: reg.chien?.nom,
-        photoUrl: reg.chien?.photo_url
-      }
-    })) : []
+    inscriptions: data.inscriptions // Se vuoi puoi anche fare un mapping più profondo qui
   };
 }
 
 function mapUserToBackend(user: Partial<User>): any {
   return {
-    id_utilisateur: user.idUtilisateur,
+    id: user.idUtilisateur,
     nom: user.nom,
     prenom: user.prenom,
     email: user.email,
     telephone: user.telephone,
-    date_inscription: user.dateInscription,
-    last_login: user.lastLogin,
+    dateInscription: user.dateInscription,
+    lastLogin: user.lastLogin,
     adresse: user.adresse,
     ville: user.ville,
-    code_postal: user.codePostal,
+    codePostal: user.codePostal,
     bio: user.bio,
-    avatar_url: user.avatarUrl,
+    avatarUrl: user.avatarUrl,
   };
 }

@@ -117,7 +117,7 @@ export class AddDogDialogComponent implements OnInit {
           },
           error: () => {
             console.error("Erreur lors de l'upload de l'image");
-            this.dialogRef.close(dogData); // fallback anche in caso di errore
+            this.dialogRef.close(dogData);
           }
         });
       } else {

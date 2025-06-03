@@ -8,31 +8,36 @@ import { environment } from '@environments/environment';
   providedIn: 'root'
 })
 export class DogService {
-  private baseUrl = `${environment.apiUrl}/chiens`;
-  private myDogsUrl = `${environment.apiUrl}/proprietaires/me/chiens`;
+  private baseUrl = `${environment.apiUrl}/chien`; // NOTA: nessuna "s" finale!
+  private myDogsUrl = `${environment.apiUrl}/chien/me`;
   private uploadUrl = `${environment.apiUrl}/upload`;
 
   constructor(private http: HttpClient) {}
 
+  // Ottieni tutti i cani del proprietario loggato
   getMyDogs(): Observable<Dog[]> {
     return this.http.get<Dog[]>(this.myDogsUrl);
   }
 
+  // Aggiungi un nuovo cane per il proprietario loggato
   addDog(dog: Dog): Observable<Dog> {
-    return this.http.post<Dog>(this.baseUrl, dog);
+    return this.http.post<Dog>(`${this.baseUrl}/me`, dog);
   }
 
+  // Modifica un cane (solo se del proprietario loggato)
   updateDog(dog: Dog): Observable<Dog> {
     if (!dog.idChien) {
       throw new Error('Dog ID is required for update');
     }
-    return this.http.put<Dog>(`${this.baseUrl}/${dog.idChien}`, dog);
+    return this.http.put<Dog>(`${this.baseUrl}/me/${dog.idChien}`, dog);
   }
 
+  // Elimina un cane (solo se del proprietario loggato)
   deleteDog(idChien: number): Observable<void> {
-    return this.http.delete<void>(`${this.baseUrl}/${idChien}`);
+    return this.http.delete<void>(`${this.baseUrl}/me/${idChien}`);
   }
 
+  // Upload foto del cane
   uploadDogPhoto(file: File): Observable<string> {
     const formData = new FormData();
     formData.append('file', file);
