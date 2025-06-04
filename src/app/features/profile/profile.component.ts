@@ -6,6 +6,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { finalize } from 'rxjs/operators';
+import { environment } from '@environments/environment';
+
 
 import { UserService } from '@core/services/user.service';
 import { DogService } from '@core/services/dog.service';
@@ -141,7 +143,13 @@ export class ProfileComponent implements OnInit {
       }
     });
   }
-
+  getDogPhotoUrl(dog: Dog): string {
+    if (!dog.photoUrl) {
+      return 'assets/images/default-dog.png'; // o quello che vuoi come placeholder
+    }
+    // dog.photoUrl è ad esempio "1749047116536_obey.jpg"
+    return `${environment.mediaUrl}/${dog.photoUrl}`;
+  }
   getDogAge(dateNaissance: string | Date): string {
     if (!dateNaissance) return '';
     const birth = new Date(dateNaissance);

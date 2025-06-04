@@ -35,7 +35,6 @@ export class LoginComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    // Se già autenticato, redirect immediato
     if (this.authService.isAuthenticated()) {
       this.router.navigate(['/profile']);
     }

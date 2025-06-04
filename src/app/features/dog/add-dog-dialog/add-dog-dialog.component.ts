@@ -88,7 +88,7 @@ export class AddDogDialogComponent implements OnInit {
       sexe: ['', Validators.required],
       poids: ['', [Validators.required, Validators.min(0)]],
       numeroPuce: [''],
-      photo_url: ['']
+      photoUrl: ['']
     });
 
     if (this.data?.dog) {
@@ -112,7 +112,7 @@ export class AddDogDialogComponent implements OnInit {
       if (this.selectedPhotoFile) {
         this.dogService.uploadDogPhoto(this.selectedPhotoFile).subscribe({
           next: (photoUrl: string) => {
-            dogData.photo_url = photoUrl;
+            dogData.photoUrl = photoUrl;
             this.dialogRef.close(dogData);
           },
           error: () => {

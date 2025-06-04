@@ -126,7 +126,7 @@
             <ng-container *ngIf="user.chiens && user.chiens.length > 0; else noDogs">
               <div class="dog-card" *ngFor="let dog of user.chiens">
                 <div class="dog-photo" *ngIf="dog.photoUrl; else noPhoto">
-                  <img [src]="dog.photoUrl" [alt]="'Photo de ' + dog.nom" />
+                  <img [src]="getDogPhotoUrl(dog)" [alt]="'Photo de ' + dog.nom" />
                 </div>
                 <ng-template #noPhoto>
                   <div class="dog-photo placeholder" aria-label="Pas de photo disponible">
