@@ -23,7 +23,46 @@
           <mat-icon>close</mat-icon> Annuler
         </button>
       </div>
-      <img class="profile-avatar" [src]="user.avatarUrl || 'assets/images/default-avatar.png'" alt="Avatar de {{ user.prenom }}" />
+
+      <!-- AVATAR + BUTTON -->
+      <div class="profile-avatar-container">
+        <img
+          class="profile-avatar"
+          [src]="avatarPreview || getAvatarUrl(user)"
+          alt="Avatar de {{ user.prenom }}"
+        />
+
+        <button
+          *ngIf="editingProfile"
+          class="avatar-edit-btn"
+          mat-mini-fab
+          color="primary"
+          (click)="avatarFileInput.click()"
+          [disabled]="loading"
+          aria-label="Changer l'avatar"
+          type="button"
+        >
+          <mat-icon>camera_alt</mat-icon>
+        </button>
+
+        <input
+          type="file"
+          #avatarFileInput
+          accept="image/*"
+          style="display: none"
+          (change)="onAvatarSelected($event)"
+        />
+
+        <!-- Bottoni anteprima/annulla/conferma, mostrati solo quando c'è una preview -->
+        <div *ngIf="avatarPreview" class="avatar-preview-actions">
+          <button mat-stroked-button color="primary" (click)="confirmAvatarUpload()" [disabled]="loading">
+            Sauvegarder l'avatar
+          </button>
+          <button mat-button (click)="cancelAvatarSelection()" [disabled]="loading">
+            Annuler
+          </button>
+        </div>
+      </div>
     </div>
 
     <div class="profile-content">
@@ -171,8 +210,6 @@
             <p class="text-gray-600">Vous n'avez aucune inscription pour le moment.</p>
           </ng-template>
         </mat-tab>
-
-
       </mat-tab-group>
     </div>
   </div>

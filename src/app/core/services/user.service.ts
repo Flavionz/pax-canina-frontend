@@ -25,6 +25,19 @@ export class UserService {
       map(data => mapUserFromBackend(data))
     );
   }
+
+  /**
+   * Upload avatar (immagine del profilo)
+   * Restituisce la stringa (path relativo o url) da salvare su user.avatarUrl
+   */
+  uploadAvatar(file: File): Observable<string> {
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('isPublic', 'true'); // opzionale secondo tua API
+    // Assumiamo che la risposta sia: { url: 'xxx' } oppure direttamente la stringa (adatta se necessario)
+    return this.http.post<{ url: string }>(`${environment.apiUrl}/upload`, formData)
+      .pipe(map(res => res.url || res as any as string));
+  }
 }
 
 // Mapping camelCase <-> camelCase
@@ -43,7 +56,7 @@ function mapUserFromBackend(data: any): User {
     bio: data.bio,
     avatarUrl: data.avatarUrl,
     chiens: data.chiens,
-    inscriptions: data.inscriptions // Se vuoi puoi anche fare un mapping più profondo qui
+    inscriptions: data.inscriptions
   };
 }
 

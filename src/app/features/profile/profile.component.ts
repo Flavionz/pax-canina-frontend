@@ -8,7 +8,6 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { finalize } from 'rxjs/operators';
 import { environment } from '@environments/environment';
 
-
 import { UserService } from '@core/services/user.service';
 import { DogService } from '@core/services/dog.service';
 import { AddDogDialogComponent } from '@features/dog/add-dog-dialog/add-dog-dialog.component';
@@ -35,6 +34,9 @@ export class ProfileComponent implements OnInit {
   backupUser: User | null = null;
   loading = false;
   errorMsg: string | null = null;
+
+  avatarPreview: string | null = null;
+  selectedAvatarFile: File | null = null;
 
   constructor(
     private userService: UserService,
@@ -65,6 +67,55 @@ export class ProfileComponent implements OnInit {
       });
   }
 
+  // ------ Avatar upload/preview ------
+  onAvatarSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (input.files?.length) {
+      const file = input.files[0];
+      // Dimensione massima: 2MB esempio
+      if (file.size > 2 * 1024 * 1024) {
+        alert("L'image est trop grande (max 2MB)");
+        return;
+      }
+      this.selectedAvatarFile = file;
+      const reader = new FileReader();
+      reader.onload = () => {
+        this.avatarPreview = reader.result as string;
+      };
+      reader.readAsDataURL(file);
+    }
+  }
+
+  confirmAvatarUpload(): void {
+    if (!this.selectedAvatarFile) return;
+    this.loading = true;
+    this.userService.uploadAvatar(this.selectedAvatarFile).subscribe({
+      next: (avatarUrl: string) => {
+        if (this.user) {
+          this.user.avatarUrl = avatarUrl;
+        }
+        this.loading = false;
+        this.avatarPreview = null;
+        this.selectedAvatarFile = null;
+      },
+      error: () => {
+        this.loading = false;
+        alert("Erreur lors de l'upload de l'avatar");
+      }
+    });
+  }
+
+  cancelAvatarSelection(): void {
+    this.avatarPreview = null;
+    this.selectedAvatarFile = null;
+  }
+
+  getAvatarUrl(user: User | null): string {
+    if (!user?.avatarUrl) return 'assets/images/default-avatar.png';
+    return `${environment.mediaUrl}/${user.avatarUrl}`;
+  }
+
+  // ------ Profilo ------
   startEditProfile(): void {
     this.backupUser = this.user ? { ...this.user } : null;
     this.editingProfile = true;
@@ -94,6 +145,7 @@ export class ProfileComponent implements OnInit {
     this.errorMsg = null;
   }
 
+  // ------ CRUD cani ------
   openAddDogDialog(): void {
     const dialogRef = this.dialog.open(AddDogDialogComponent, {
       width: '500px',
@@ -143,13 +195,14 @@ export class ProfileComponent implements OnInit {
       }
     });
   }
+
   getDogPhotoUrl(dog: Dog): string {
     if (!dog.photoUrl) {
-      return 'assets/images/default-dog.png'; // o quello che vuoi come placeholder
+      return 'assets/images/default-dog.png';
     }
-    // dog.photoUrl è ad esempio "1749047116536_obey.jpg"
     return `${environment.mediaUrl}/${dog.photoUrl}`;
   }
+
   getDogAge(dateNaissance: string | Date): string {
     if (!dateNaissance) return '';
     const birth = new Date(dateNaissance);
