@@ -1,0 +1,35 @@
+<div class="p-8 max-w-4xl mx-auto" *ngIf="!loading">
+  <h2 class="text-3xl font-bold mb-4">Tableau de bord Admin</h2>
+
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+    <div class="bg-white rounded-2xl shadow p-4 text-center">
+      <h3 class="font-semibold mb-2">Nombre de cours</h3>
+      <p class="text-2xl">{{ courses.length }}</p>
+    </div>
+    <div class="bg-white rounded-2xl shadow p-4 text-center">
+      <h3 class="font-semibold mb-2">Sessions actives</h3>
+      <p class="text-2xl">{{ sessions.length }}</p>
+    </div>
+    <div class="bg-white rounded-2xl shadow p-4 text-center">
+      <h3 class="font-semibold mb-2">Utilisateurs (placeholder)</h3>
+      <p class="text-2xl">{{ users.length }}</p>
+    </div>
+  </div>
+
+  <div class="mb-6 flex flex-wrap gap-4">
+    <button class="btn btn-primary" routerLink="/courses">Gérer les cours</button>
+    <button class="btn btn-primary" routerLink="/users">Gérer les utilisateurs</button>
+    <button class="btn btn-primary" routerLink="/sessions">Gérer les sessions</button>
+  </div>
+
+  <div class="bg-white rounded-2xl shadow p-4 mt-6">
+    <h3 class="font-semibold mb-2">Derniers cours créés</h3>
+    <ul>
+      <li *ngFor="let course of courses | slice:0:5">
+        <span class="font-medium">{{ course.nom }}</span>
+        <span class="text-xs text-gray-500 ml-2">{{ course.statut }}</span>
+      </li>
+    </ul>
+  </div>
+</div>
+<div *ngIf="loading" class="text-center py-10">Chargement...</div>

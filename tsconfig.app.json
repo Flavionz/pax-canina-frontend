@@ -10,7 +10,9 @@
       "@shared/*": ["app/shared/*"],
       "@features/*": ["app/features/*"],
       "@environments/*": ["environments/*"],
-      "@models/*": ["app/core/models/*"]
+      "@models/*": ["app/core/models/*"],
+      "@services/*": ["app/core/services/*"]
+
     }
   },
   "files": [

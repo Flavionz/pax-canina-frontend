@@ -1,0 +1,70 @@
+<div class="p-8 max-w-3xl mx-auto" *ngIf="!loading && user">
+
+  <!-- Intestazione con profilo rapido -->
+  <div class="flex items-center mb-6 bg-white rounded-2xl shadow p-4">
+    <img [src]="user.avatarUrl || 'assets/avatar.png'" alt="Avatar" class="w-16 h-16 rounded-full shadow mr-4" />
+    <div>
+      <h2 class="text-2xl font-bold">Bonjour, {{ user.prenom }}</h2>
+      <p class="text-gray-500">{{ user.email }}</p>
+    </div>
+    <div class="ml-auto">
+      <button class="btn btn-secondary" routerLink="/profil">Mon Profil</button>
+    </div>
+  </div>
+
+  <!-- Lista cani -->
+  <div class="bg-white rounded-2xl shadow p-4 mb-6">
+    <h3 class="font-semibold mb-2">Vos chiens</h3>
+    <ng-container *ngIf="dogs && dogs.length; else noDogs">
+      <ul>
+        <li *ngFor="let chien of dogs">
+          <span class="font-medium">{{ chien.nom }}</span>
+          <span class="text-xs text-gray-500 ml-2">({{ chien.race }})</span>
+        </li>
+      </ul>
+    </ng-container>
+    <ng-template #noDogs>
+      <div class="text-gray-400 mb-2">Aucun chien enregistré.</div>
+    </ng-template>
+    <button class="btn btn-primary mt-2" routerLink="/dogs/add">Ajouter un chien</button>
+  </div>
+
+  <!-- Corsi disponibili (link) -->
+  <div class="bg-white rounded-2xl shadow p-4 mb-6">
+    <h3 class="font-semibold mb-2">S’inscrire à un cours</h3>
+    <button class="btn btn-primary" routerLink="/courses">Voir les cours disponibles</button>
+  </div>
+
+  <!-- Storico iscrizioni -->
+  <div class="bg-white rounded-2xl shadow p-4">
+    <h3 class="font-semibold mb-2">Dernières inscriptions</h3>
+    <table class="w-full">
+      <thead>
+      <tr>
+        <th>Cours</th>
+        <th>Date</th>
+        <th>Chien</th>
+        <th>Statut</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let insc of inscriptions">
+        <td>{{ insc.session.cours.nom }}</td>
+        <td>{{ insc.session.date | date:'shortDate' }}</td>
+        <td>{{ insc.chien.nom }}</td>
+        <td>
+            <span [ngClass]="{
+                'text-green-700': insc.statut === 'Confirmée',
+                'text-yellow-600': insc.statut === 'En attente',
+                'text-red-600': insc.statut === 'Annulée'
+              }">{{ insc.statut }}</span>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+    <div *ngIf="!inscriptions || inscriptions.length === 0" class="text-gray-400 mt-2">
+      Aucune inscription récente.
+    </div>
+  </div>
+</div>
+<div *ngIf="loading" class="text-center py-10">Chargement...</div>

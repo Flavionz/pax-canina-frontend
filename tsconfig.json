@@ -24,11 +24,10 @@
       "@shared/*": ["app/shared/*"],
       "@features/*": ["app/features/*"],
       "@environments/*": ["environments/*"],
-      "@models/*": ["app/core/models/*"]
-
-
-
+      "@models/*": ["app/core/models/*"],
+      "@services/*": ["app/core/services/*"]
     }
+
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,
