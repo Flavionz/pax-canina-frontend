@@ -39,6 +39,5 @@ export class DashboardProprietaireComponent implements OnInit {
         this.loading = false;
       }
     });
-    // Se vuoi puoi anche usare direttamente dogService.getMyDogs()
   }
 }
