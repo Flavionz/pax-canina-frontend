@@ -1,4 +1,113 @@
-/* You can add global styles to this file, and also import other style files */
-
+/* Global Styles */
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+/* Button Base */
+.btn {
+  display: inline-block;
+  font-family: inherit;
+  font-size: 1rem;
+  font-weight: 600;
+  border-radius: 8px;
+  padding: 0.6em 1.5em;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  box-shadow: 0 1px 8px rgba(34, 197, 94, 0.08);
+  transition: background 0.16s, color 0.16s, border-color 0.16s, box-shadow 0.16s;
+  text-align: center;
+  text-decoration: none;
+  line-height: 1.2;
+  margin: 0.2em 0.4em 0.2em 0;
+  &:disabled,
+  &.is-disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+}
+
+/* Verde Primario */
+$primary-color: #22c55e;
+$primary-dark: #1ea84b;
+
+/* Blu secondario per eventuali info/azioni extra */
+$secondary-color: #176cb5;
+$secondary-dark: #155188;
+
+/* BUTTON: VERDE SU BIANCO (sfondo chiaro, bottone verde pieno) */
+.btn-primary {
+  background: $primary-color;
+  color: #fff;
+  border: 2px solid $primary-color;
+  &:hover, &:focus {
+    background: $primary-dark;
+    border-color: $primary-dark;
+    color: #fff;
+  }
+}
+
+/* BUTTON: BIANCO SU VERDE (sfondo verde, bottone bianco outline verde) */
+.btn-inverse {
+  background: #fff;
+  color: $primary-color;
+  border: 2px solid #fff;
+  &:hover, &:focus {
+    background: #e7ffe9;
+    color: $primary-dark;
+    border-color: $primary-color;
+  }
+}
+
+/* BUTTON: OUTLINE su bianco (bianco, bordo verde, testo verde) */
+.btn-outline {
+  background: #fff;
+  color: $primary-color;
+  border: 2px solid $primary-color;
+  &:hover, &:focus {
+    background: $primary-color;
+    color: #fff;
+    border-color: $primary-dark;
+  }
+}
+
+/* BUTTON: SECONDARIO (blu) */
+.btn-secondary {
+  background: $secondary-color;
+  color: #fff;
+  border: 2px solid $secondary-color;
+  &:hover, &:focus {
+    background: $secondary-dark;
+    border-color: $secondary-dark;
+    color: #fff;
+  }
+}
+
+/* BUTTON: LINK STYLE */
+.btn-link {
+  background: none;
+  color: $secondary-color;
+  border: none;
+  text-decoration: underline;
+  padding: 0.1em 0.3em;
+  font-weight: 500;
+  box-shadow: none;
+  &:hover, &:focus {
+    color: $secondary-dark;
+    text-decoration: underline;
+    background: none;
+  }
+}
+
+/* Dimensioni */
+.btn-xs { font-size: 0.89rem; padding: 0.3em 0.95em; }
+.btn-sm { font-size: 0.96rem; padding: 0.45em 1.2em; }
+.btn-md { font-size: 1rem; padding: 0.6em 1.5em; }
+.btn-lg { font-size: 1.18rem; padding: 0.8em 2.3em; }
+
+/* Icone */
+.btn .material-icons, .btn .mat-icon {
+  vertical-align: middle;
+  margin-right: 0.5em;
+  font-size: 1.2em;
+}
