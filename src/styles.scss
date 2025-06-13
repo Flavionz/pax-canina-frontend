@@ -99,6 +99,50 @@ $secondary-dark: #155188;
   }
 }
 
+.btn-cta {
+  font-weight: 700;
+  background: #fff;
+  color: #22c55e;
+  border: 2px solid #22c55e;
+  border-radius: 24px;
+  box-shadow: 0 2px 6px 0 #22c55e11;
+  padding: 0.65em 1.7em;
+  font-size: 1.07em;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.7em;
+  transition:
+    background 0.17s,
+    color 0.17s,
+    box-shadow 0.22s,
+    border-color 0.15s;
+
+  img {
+    width: 1.22em;
+    height: 1.22em;
+    margin-right: 0.32em;
+    transition: transform 0.17s;
+  }
+
+  &:hover, &:focus {
+    background: #22c55e;
+    color: #fff;
+    border-color: #22c55e;
+    box-shadow: 0 4px 18px 0 #22c55e33;
+    text-decoration: none;
+    img {
+      transform: scale(1.13);
+    }
+  }
+
+  &.active {
+    background: #22c55e;
+    color: #fff;
+    border-color: #22c55e;
+  }
+}
+
+
 /* Dimensioni */
 .btn-xs { font-size: 0.89rem; padding: 0.3em 0.95em; }
 .btn-sm { font-size: 0.96rem; padding: 0.45em 1.2em; }
