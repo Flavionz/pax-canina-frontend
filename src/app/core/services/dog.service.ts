@@ -3,6 +3,8 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Dog } from '@models/dog.model';
 import { environment } from '@environments/environment';
+import { map } from 'rxjs/operators';
+
 
 @Injectable({
   providedIn: 'root'
@@ -42,6 +44,7 @@ export class DogService {
     const formData = new FormData();
     formData.append('file', file);
     formData.append('isPublic', 'true');
-    return this.http.post(this.uploadUrl, formData, { responseType: 'text' });
+    return this.http.post<{ url: string }>(this.uploadUrl, formData)
+      .pipe(map(res => res.url));
   }
 }

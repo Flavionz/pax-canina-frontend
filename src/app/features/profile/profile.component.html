@@ -29,12 +29,12 @@
           <img
             class="profile-avatar"
             [src]="avatarPreview || getAvatarUrl(user)"
-            [alt]="'Avatar de ' + user.prenom"
+            alt="Avatar de {{ user.prenom }}"
           />
-          <!-- Icona camera sovrapposta in basso a destra -->
+          <!-- Overlay rettangolare grigio trasparente con icona camera -->
           <button
             *ngIf="editingProfile"
-            class="avatar-camera-btn"
+            class="avatar-overlay-btn"
             (click)="avatarFileInput.click()"
             [disabled]="loading"
             aria-label="Changer l'avatar"
@@ -50,6 +50,7 @@
             (change)="onAvatarSelected($event)"
           />
         </div>
+
 
         <!-- Bottoni per la gestione della preview -->
         <div *ngIf="avatarPreview" class="avatar-preview-actions">
