@@ -6,11 +6,13 @@ $background-color: #f8f9fa;
 $cancel-color: #64748b;
 $cancel-color-hover: #334155;
 
+// ========================
+// Profilo - HEADER & BANNER
+// ========================
 .profile-welcome {
   max-width: 1100px;
   margin: 0 auto 24px auto;
   padding: 16px 0 0 0;
-
   h1 {
     font-size: 2.2rem;
     font-weight: bold;
@@ -41,110 +43,99 @@ $cancel-color-hover: #334155;
   background: $primary-color;
   height: 140px;
   border-radius: 16px 16px 0 0;
-  position: relative;
   display: flex;
   justify-content: flex-end;
   align-items: flex-start;
   padding: 24px;
+  gap: 8px;
 
-  .profile-edit-btn {
-    background: #fff !important;
-    color: $primary-color !important;
-    border: 2px solid $primary-color !important;
-    border-radius: 10px !important;
-    font-weight: 600 !important;
+  .btn {
     min-width: 120px;
-    box-shadow: none !important;
-    margin-left: 8px;
+    border-radius: 10px;
+    font-weight: 600;
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: background 0.2s, color 0.2s, border-color 0.2s;
-
-    .mat-icon {
-      color: $primary-color !important;
+    box-shadow: none;
+    .material-icons, .mat-icon {
       margin-right: 6px;
       font-size: 1.2em;
-      vertical-align: middle;
-      transition: color 0.2s;
-    }
-
-    &:hover,
-    &:focus {
-      background: #f3fef6 !important;
-      border-color: color.adjust($primary-color, $lightness: -10%) !important;
-      color: color.adjust($primary-color, $lightness: -10%) !important;
-
-      .mat-icon {
-        color: color.adjust($primary-color, $lightness: -10%) !important;
-      }
-    }
-  }
-
-  .profile-save-btn {
-    background: $primary-color !important;
-    color: #fff !important;
-    border-radius: 10px !important;
-    font-weight: 600 !important;
-    min-width: 120px;
-    margin-left: 8px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    .mat-icon {
-      color: #fff !important;
-      margin-right: 6px;
-      font-size: 1.2em;
-      vertical-align: middle;
-    }
-    &:hover,
-    &:focus {
-      background: color.adjust($primary-color, $lightness: -10%) !important;
-    }
-  }
-
-  .profile-cancel-btn {
-    background: #fff !important;
-    color: $cancel-color !important;
-    border: 2px solid $cancel-color !important;
-    border-radius: 10px !important;
-    font-weight: 600 !important;
-    min-width: 120px;
-    margin-left: 8px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    .mat-icon {
-      color: $cancel-color !important;
-      margin-right: 6px;
-      font-size: 1.2em;
-      vertical-align: middle;
-    }
-    &:hover,
-    &:focus {
-      background: #f1f5f9 !important;
-      border-color: $cancel-color-hover !important;
-      color: $cancel-color-hover !important;
-      .mat-icon {
-        color: $cancel-color-hover !important;
-      }
     }
   }
 }
 
-.profile-avatar {
-  width: 96px;
-  height: 96px;
-  border-radius: 50%;
-  object-fit: cover;
-  border: 5px solid #fff;
-  position: absolute;
-  left: 36px;
-  top: 70px;
-  background: #fff;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+// ========================
+// Profilo - AVATAR MODERNO
+// ========================
+.profile-avatar-container {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-top: -60px;
+  margin-left: 36px;
+
+  .avatar-wrapper {
+    position: relative;
+    display: inline-block;
+
+    .profile-avatar {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 5px solid #fff;
+      background: #fff;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+      display: block;
+      z-index: 1;
+    }
+
+    .avatar-camera-btn {
+      position: absolute;
+      right: 6px;
+      bottom: 8px;
+      background: $primary-color;
+      color: #fff;
+      border: none;
+      border-radius: 50%;
+      width: 44px;
+      height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 8px rgba(34,197,94,0.13);
+      font-size: 1.5em;
+      cursor: pointer;
+      transition: background 0.2s;
+      z-index: 2;
+
+      .mat-icon {
+        color: #fff;
+        font-size: 1.7em;
+      }
+
+      &:hover,
+      &:focus {
+        background: color.adjust($primary-color, $lightness: -12%);
+      }
+    }
+  }
+
+  .avatar-preview-actions {
+    margin-top: 22px;
+    display: flex;
+    gap: 18px;
+    align-items: center;
+    .btn {
+      min-width: 128px;
+    }
+  }
 }
 
+// ========================
+// Profilo - CONTENUTO
+// ========================
 .profile-content {
   background: #fff;
   max-width: 1100px;
@@ -190,30 +181,27 @@ $cancel-color-hover: #334155;
       box-shadow: 0 0 0 2px rgba(34, 197, 94, 0.15);
     }
   }
-
   textarea {
     resize: vertical;
     min-height: 60px;
   }
 }
 
-.profile-info-grid {
-  .ng-container:not(:has(input)):not(:has(textarea)),
-  .ng-container:empty {
-    color: $text-color;
-  }
-}
-
+// ========================
+// Profilo - DOGS & CARDS
+// ========================
 .dogs-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 16px 0 8px 0;
-
   h3 {
     font-weight: bold;
     margin: 0;
     font-size: 1.15rem;
+  }
+  .btn {
+    margin-left: 16px;
   }
 }
 
@@ -310,6 +298,9 @@ $cancel-color-hover: #334155;
   }
 }
 
+// ========================
+// RESPONSIVE
+// ========================
 @media (max-width: 900px) {
   .profile-content,
   .profile-header {
@@ -320,8 +311,7 @@ $cancel-color-hover: #334155;
     grid-template-columns: 1fr;
     gap: 20px;
   }
-  .profile-avatar {
-    left: 12px;
-    top: 90px;
+  .profile-avatar-container {
+    margin-left: 12px;
   }
 }
