@@ -13,6 +13,7 @@ import { DogService } from '@core/services/dog.service';
 import { AddDogDialogComponent } from '@features/dog/add-dog-dialog/add-dog-dialog.component';
 import { Dog } from '@models/dog.model';
 import { User } from '@models/user.model';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-profile',
@@ -38,13 +39,27 @@ export class ProfileComponent implements OnInit {
   avatarPreview: string | null = null;
   selectedAvatarFile: File | null = null;
 
+  selectedTabIndex = 0; // 0 = info, 1 = chiens, 2 = inscriptions
+
   constructor(
     private userService: UserService,
     private dogService: DogService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private route: ActivatedRoute,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
+    this.route.queryParams.subscribe(params => {
+      if (params['tab'] === 'dogs') {
+        this.selectedTabIndex = 1;
+        if (params['addDog']) {
+          setTimeout(() => this.openAddDogDialog(), 400);
+          // Dopo apertura, rimuovi i query params per evitare riapertura dialog al refresh
+          this.router.navigate([], { queryParams: {}, replaceUrl: true });
+        }
+      }
+    });
     this.loadUserProfile();
   }
 
@@ -67,12 +82,10 @@ export class ProfileComponent implements OnInit {
       });
   }
 
-  // ------ Avatar upload/preview ------
   onAvatarSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
     if (input.files?.length) {
       const file = input.files[0];
-      // Dimensione massima: 2MB esempio
       if (file.size > 2 * 1024 * 1024) {
         alert("L'image est trop grande (max 2MB)");
         return;
@@ -115,7 +128,6 @@ export class ProfileComponent implements OnInit {
     return `${environment.mediaUrl}/${user.avatarUrl}`;
   }
 
-  // ------ Profilo ------
   startEditProfile(): void {
     this.backupUser = this.user ? { ...this.user } : null;
     this.editingProfile = true;
@@ -145,7 +157,6 @@ export class ProfileComponent implements OnInit {
     this.errorMsg = null;
   }
 
-  // ------ CRUD cani ------
   openAddDogDialog(): void {
     const dialogRef = this.dialog.open(AddDogDialogComponent, {
       width: '500px',

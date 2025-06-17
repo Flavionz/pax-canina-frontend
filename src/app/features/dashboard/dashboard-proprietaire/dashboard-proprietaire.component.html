@@ -1,36 +1,36 @@
 <div class="dashboard-proprietaire" *ngIf="!loading && user">
-  <!-- Header compatto -->
   <div class="dashboard-header">
-    <img [src]="user.avatarUrl || 'assets/avatar.png'" alt="Avatar" class="avatar"/>
+    <img [src]="getAvatarUrl(user)" alt="Avatar" class="avatar"/>
     <div class="info">
       <h2>Bonjour {{ user.prenom }}</h2>
       <p class="welcome-msg">
         Heureux de vous revoir sur <strong>Pax Canina</strong> !
       </p>
     </div>
-    <button class="btn btn-link" routerLink="/profile">Gérer mon profil</button>
+    <button class="btn btn-outline btn-md" routerLink="/profile">Gérer mon profil</button>
   </div>
 
-  <!-- Bloc info rapide -->
   <div class="quick-cards">
     <div class="card quick-card">
       <div class="quick-title">Vos chiens</div>
       <div class="quick-value">{{ dogs.length }}</div>
-      <button class="btn btn-xs" routerLink="/profile" title="Gérer les chiens">Gérer</button>
+      <button class="btn btn-outline btn-xs" routerLink="/profile" title="Gérer les chiens">Gérer</button>
     </div>
     <div class="card quick-card">
       <div class="quick-title">Inscriptions récentes</div>
       <div class="quick-value">{{ inscriptions.length }}</div>
-      <button class="btn btn-xs" routerLink="/profile" title="Voir l’historique">Voir</button>
+      <button class="btn btn-outline btn-xs" routerLink="/profile" title="Voir l’historique">Voir</button>
     </div>
     <div class="card quick-card add-dog">
-      <button class="btn btn-add" routerLink="/dogs/add">
+      <button
+        class="btn btn-primary btn-add"
+        (click)="goToAddDogTab()"
+      >
         + Ajouter un chien
       </button>
     </div>
   </div>
 
-  <!-- Dernières inscriptions (max 3, solo info) -->
   <div class="dashboard-section">
     <h3>Vos 3 dernières inscriptions</h3>
     <table class="recap-table" *ngIf="inscriptions.length > 0; else noReg">
@@ -50,10 +50,10 @@
         <td>
             <span class="badge"
                   [ngClass]="{
-                    'badge-success': insc.statut === 'Confirmée',
-                    'badge-pending': insc.statut === 'En attente',
-                    'badge-cancel': insc.statut === 'Annulée'
-                  }">{{ insc.statut }}</span>
+                'badge-success': insc.statut === 'Confirmée',
+                'badge-pending': insc.statut === 'En attente',
+                'badge-cancel': insc.statut === 'Annulée'
+              }">{{ insc.statut }}</span>
         </td>
       </tr>
       </tbody>
@@ -61,13 +61,12 @@
     <ng-template #noReg>
       <div class="text-muted">Aucune inscription récente.</div>
     </ng-template>
-    <button class="btn btn-xs btn-link" routerLink="/profile">Voir tout l’historique</button>
+    <button class="btn btn-link btn-xs" routerLink="/profile">Voir tout l’historique</button>
   </div>
 
-  <!-- Action centrale -->
   <div class="dashboard-section">
     <h3>Participer à un cours</h3>
-    <button class="btn btn-primary" routerLink="/courses">
+    <button class="btn btn-primary btn-lg" routerLink="/courses">
       Voir les sessions disponibles
     </button>
   </div>

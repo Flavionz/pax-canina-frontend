@@ -4,9 +4,9 @@ import { Dog } from '@models/dog.model';
 import { Registration } from '@models/registration.model';
 import { UserService } from '@core/services/user.service';
 import { DogService } from '@core/services/dog.service';
-
+import { environment } from '@environments/environment';
 import { CommonModule } from '@angular/common';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-dashboard-proprietaire',
@@ -23,7 +23,8 @@ export class DashboardProprietaireComponent implements OnInit {
 
   constructor(
     private userService: UserService,
-    private dogService: DogService
+    private dogService: DogService,
+    private router: Router // aggiunto
   ) {}
 
   ngOnInit() {
@@ -37,6 +38,20 @@ export class DashboardProprietaireComponent implements OnInit {
       },
       error: () => {
         this.loading = false;
+      }
+    });
+  }
+
+  getAvatarUrl(user: User | null): string {
+    if (!user?.avatarUrl) return 'assets/images/default-avatar.png';
+    return `${environment.mediaUrl}/${user.avatarUrl}`;
+  }
+
+  goToAddDogTab() {
+    this.router.navigate(['/profile'], {
+      queryParams: {
+        tab: 'dogs',
+        addDog: 1
       }
     });
   }
