@@ -1,0 +1,23 @@
+<ng-container *ngIf="!error; else notFound">
+  <ng-container *ngIf="course; else loading">
+    <h2 class="title">{{ course.nom }}</h2>
+    <img [src]="course.imgUrl" alt="{{ course.nom }}" class="detail-img"/>
+    <p class="description">{{ course.description }}</p>
+    <p><strong>Statut :</strong> <span class="badge">{{ course.statut }}</span></p>
+
+    <button routerLink="/courses" class="btn btn-outline btn-sm">
+      ← Retour aux cours
+    </button>
+  </ng-container>
+</ng-container>
+
+<ng-template #loading>
+  <p>Chargement du cours…</p>
+</ng-template>
+
+<ng-template #notFound>
+  <p class="error">Cours introuvable.</p>
+  <button routerLink="/courses" class="btn btn-outline btn-sm">
+    ← Retour aux cours
+  </button>
+</ng-template>

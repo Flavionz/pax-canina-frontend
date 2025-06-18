@@ -52,7 +52,7 @@ $card-border-color: #ddd;
     .hero-buttons {
       display: flex;
       justify-content: flex-start;
-      gap: 18px; // spaziatura tra i bottoni
+      gap: 18px;
     }
   }
 
@@ -69,7 +69,6 @@ $card-border-color: #ddd;
   }
 }
 
-/* ABOUT & MISSION */
 .about-us,
 .our-mission {
   width: 100%;
@@ -104,7 +103,6 @@ $card-border-color: #ddd;
   }
 }
 
-/* SERVICES */
 .our-services {
   text-align: center;
   padding: 40px;
@@ -144,7 +142,6 @@ $card-border-color: #ddd;
   }
 }
 
-/* AVAILABLE COURSES */
 .available-courses {
   text-align: center;
   padding: 40px;
@@ -152,7 +149,6 @@ $card-border-color: #ddd;
   box-sizing: border-box;
 }
 
-/* CALL TO ACTION */
 .call-to-action {
   text-align: center;
   width: 100%;
@@ -184,7 +180,6 @@ $card-border-color: #ddd;
   }
 }
 
-/* RESPONSIVE */
 @media (max-width: 900px) {
   .about-us,
   .our-mission,
