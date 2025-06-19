@@ -1,43 +1,67 @@
+// src/app/features/dashboard/dashboard-admin/dashboard-admin.component.ts
 import { Component, OnInit } from '@angular/core';
-import { UserService } from '@services/user.service';
-import { CourseService } from '@services/course.service';
-import { SessionService } from '@services/session.service';
-import { User } from '@models/user.model';
-import { Course } from '@models/course.model';
-import { Session } from '@models/session.model';
-
 import { CommonModule } from '@angular/common';
-import {RouterLink} from '@angular/router';
+import { RouterLink, RouterOutlet } from '@angular/router';
+import { forkJoin } from 'rxjs';
+
+import { CourseService } from '@core/services/course.service';
+import { SessionService } from '@core/services/session.service';
+import { CoachService } from '@core/services/coach.service';
+import { UserService } from '@core/services/user.service';
+import { DogService } from '@core/services/dog.service';
+import { RaceService } from '@core/services/race.service';
+import { AgeRangeService } from '@core/services/age-range.service';
+import { SpecialisationService } from '@core/services/specialisation.service';
 
 @Component({
   selector: 'app-dashboard-admin',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, RouterOutlet],
   templateUrl: './dashboard-admin.component.html',
-  styleUrl: './dashboard-admin.component.scss'
+  styleUrls: ['./dashboard-admin.component.scss']
 })
 export class DashboardAdminComponent implements OnInit {
-  users: User[] = [];
-  courses: Course[] = [];
-  sessions: Session[] = [];
-  loading = true;
+  counts = {
+    cours: 0,
+    sessions: 0,
+    coaches: 0,
+    users: 0,
+    dogs: 0,
+    races: 0,
+    ageRanges: 0,
+    specialisations: 0
+  };
 
   constructor(
-    private userService: UserService,
     private courseService: CourseService,
-    private sessionService: SessionService
+    private sessionService: SessionService,
+    private coachService: CoachService,
+    private userService: UserService,
+    private dogService: DogService,
+    private raceService: RaceService,
+    private ageRangeService: AgeRangeService,
+    private specialisationService: SpecialisationService
   ) {}
 
-  ngOnInit() {
-    this.loading = true;
-    // Adatta queste chiamate: in produzione vorrai chiamate paginazione o contatori, qui usiamo tutto per semplicità
-    this.courseService.getCourses().subscribe(courses => this.courses = courses || []);
-    this.sessionService.getSessions().subscribe(sessions => this.sessions = sessions || []);
-    // Se vuoi il totale utenti, adatta con un servizio apposito; qui placeholder
-    this.userService.getUserProfile().subscribe(user => {
-      // placeholder, aggiorna con vera logica admin
-      this.users = [user];
-      this.loading = false;
+  ngOnInit(): void {
+    forkJoin({
+      cours:          this.courseService.getCourses(),
+      sessions:       this.sessionService.getSessions(),
+      coaches:        this.coachService.getCoaches(),
+      users:          this.userService.getAllUsers(),
+      dogs:           this.dogService.getAllDogs(),
+      races:          this.raceService.getRaces(),
+      ageRanges:      this.ageRangeService.getAgeRanges(),
+      specialisations:this.specialisationService.getSpecialisations()
+    }).subscribe(res => {
+      this.counts.cours           = res.cours.length;
+      this.counts.sessions        = res.sessions.length;
+      this.counts.coaches         = res.coaches.length;
+      this.counts.users           = res.users.length;
+      this.counts.dogs            = res.dogs.length;
+      this.counts.races           = res.races.length;
+      this.counts.ageRanges       = res.ageRanges.length;
+      this.counts.specialisations = res.specialisations.length;
     });
   }
 }

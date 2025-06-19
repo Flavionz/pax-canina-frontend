@@ -25,7 +25,12 @@ export class UserService {
       map(data => mapUserFromBackend(data))
     );
   }
-
+  getAllUsers(): Observable<User[]> {
+    //GET /api/admin/users
+    return this.http.get<any[]>(`${environment.apiUrl}/admin/users`).pipe(
+      map(list => list.map(data => mapUserFromBackend(data)))
+    );
+  }
   /**
    * Upload avatar (immagine del profilo)
    * Restituisce la stringa (path relativo o url) da salvare su user.avatarUrl
