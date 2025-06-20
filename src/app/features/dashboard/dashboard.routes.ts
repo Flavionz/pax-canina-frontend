@@ -11,8 +11,7 @@ export const DASHBOARD_ROUTES: Routes = [
     children: [
       { path: 'admin', component: DashboardAdminComponent },
       { path: 'coach', component: DashboardCoachComponent },
-      { path: 'proprietaire', component: DashboardProprietaireComponent },
-      { path: '', redirectTo: 'proprietaire', pathMatch: 'full' } // default route se nessun child
+      { path: 'proprietaire', component: DashboardProprietaireComponent }
     ]
   }
 ];
