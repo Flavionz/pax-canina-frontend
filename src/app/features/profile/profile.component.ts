@@ -63,7 +63,6 @@ export class ProfileComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    // Gestione tab/query params
     this.route.queryParams.subscribe(params => {
       if (params['tab'] === 'dogs') {
         this.selectedTabIndex = 1;
@@ -108,7 +107,6 @@ export class ProfileComponent implements OnInit {
       });
   }
 
-  // Helpers di ruolo
   isProprietaire(): boolean { return this.auth.role === 'PROPRIETAIRE'; }
   isCoach(): boolean { return this.auth.role === 'COACH'; }
   isAdmin(): boolean { return this.auth.role === 'ADMIN'; }
@@ -121,7 +119,6 @@ export class ProfileComponent implements OnInit {
     return this.isCoach() ? (this.user as Coach) : null;
   }
 
-  // Selezione file avatar
   onAvatarSelected(evt: Event) {
     const input = evt.target as HTMLInputElement;
     if (!input.files?.length) return;
@@ -136,7 +133,6 @@ export class ProfileComponent implements OnInit {
     reader.readAsDataURL(file);
   }
 
-  // Upload avatar
   confirmAvatarUpload() {
     if (!this.selectedAvatarFile) return;
     this.loading = true;
@@ -170,7 +166,6 @@ export class ProfileComponent implements OnInit {
     return `${environment.mediaUrl}/${u.avatarUrl}`;
   }
 
-  // Edit / Save profile
   startEditProfile() {
     this.backupUser = this.user ? { ...this.user } : null;
     this.editingProfile = true;
@@ -209,7 +204,6 @@ export class ProfileComponent implements OnInit {
     this.errorMsg = null;
   }
 
-  // SOLO PROPRIETAIRE: CRUD cani
   openAddDogDialog() {
     if (!this.isProprietaire()) return;
     const dialogRef = this.dialog.open(AddDogDialogComponent, {
@@ -261,7 +255,6 @@ export class ProfileComponent implements OnInit {
     });
   }
 
-  // Helpers per card cane
   getDogPhotoUrl(d: Dog): string {
     return d.photoUrl
       ? `${environment.mediaUrl}/${d.photoUrl}`
@@ -287,7 +280,6 @@ export class ProfileComponent implements OnInit {
     return years > 0 ? `${years} an(s) et ${months} mois` : `${months} mois`;
   }
 
-  // Solo Coach: helper lista specializzazioni
   isLastSpec(spec: any): boolean {
     const specs = (this.coach?.specialisations) || [];
     return specs[specs.length - 1] === spec;

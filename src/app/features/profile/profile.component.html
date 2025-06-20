@@ -1,15 +1,11 @@
-<!-- Loading State -->
 <div *ngIf="loading && !user">
   <p>Chargement du profil en cours...</p>
 </div>
 
-<!-- Error Message -->
 <div *ngIf="errorMsg" class="error-msg">{{ errorMsg }}</div>
 
-<!-- Main Profile Content -->
 <div *ngIf="user">
 
-  <!-- Welcome -->
   <div class="profile-welcome">
     <h1>Bienvenue {{ user.prenom }}</h1>
     <p>
@@ -22,7 +18,6 @@
   <div class="profile-page">
     <div class="profile-header">
 
-      <!-- Banner: Edit/Save/Cancel buttons -->
       <div class="profile-banner">
         <button *ngIf="!editingProfile" class="btn btn-outline btn-md" (click)="startEditProfile()">
           <span class="material-icons">edit</span> Modifier
@@ -35,7 +30,6 @@
         </button>
       </div>
 
-      <!-- Avatar (Upload when editing) -->
       <div class="profile-avatar-container">
         <div class="avatar-wrapper">
           <img
@@ -71,15 +65,12 @@
         </div>
       </div>
 
-      <!-- Main Profile Tabs -->
       <div class="profile-content">
         <mat-tab-group [(selectedIndex)]="selectedTabIndex">
 
-          <!-- Tab 1: Infos personnelles -->
           <mat-tab label="Informations personnelles">
             <form class="profile-info-grid" autocomplete="off">
 
-              <!-- Bloc 1: Info -->
               <div>
                 <h3>Informations personnelles</h3>
                 <div>
@@ -150,7 +141,6 @@
                   </div>
                 </ng-container>
 
-                <!-- Coach Only (usando la getter coach) -->
                 <ng-container *ngIf="coach">
                   <div>
                     <strong>Spécialisations</strong><br>
@@ -165,13 +155,11 @@
                   </div>
                 </ng-container>
 
-                <!-- Admin Only -->
                 <div *ngIf="isAdmin()">
                   <strong>Rôle :</strong> Administrateur
                 </div>
               </div>
 
-              <!-- Bloc 2: Bio & Date -->
               <div>
                 <h3>À propos de moi</h3>
                 <div>
@@ -191,7 +179,6 @@
             </form>
           </mat-tab>
 
-          <!-- Tab 2: Proprietaire - Mes chiens -->
           <mat-tab *ngIf="proprietaire" label="Mes chiens">
             <div class="dogs-header">
               <h3>Mes chiens</h3>
@@ -236,7 +223,6 @@
             </div>
           </mat-tab>
 
-          <!-- Tab 3: Proprietaire - Mes inscriptions -->
           <mat-tab *ngIf="proprietaire" label="Mes inscriptions">
             <div class="p-6 space-y-4" *ngIf="proprietaire.inscriptions && proprietaire.inscriptions.length > 0; else noRegistrations">
               <div *ngFor="let reg of proprietaire.inscriptions" class="border rounded p-4 shadow-sm">
