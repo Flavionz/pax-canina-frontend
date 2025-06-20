@@ -1,7 +1,7 @@
 // src/app/features/dashboard/dashboard-admin/dashboard-admin.component.ts
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink, RouterOutlet } from '@angular/router';
+import {RouterLink, RouterLinkActive, RouterOutlet} from '@angular/router';
 import { forkJoin } from 'rxjs';
 
 import { CourseService } from '@core/services/course.service';
@@ -16,7 +16,7 @@ import { SpecialisationService } from '@core/services/specialisation.service';
 @Component({
   selector: 'app-dashboard-admin',
   standalone: true,
-  imports: [CommonModule, RouterLink, RouterOutlet],
+  imports: [CommonModule, RouterLink, RouterOutlet, RouterLinkActive],
   templateUrl: './dashboard-admin.component.html',
   styleUrls: ['./dashboard-admin.component.scss']
 })

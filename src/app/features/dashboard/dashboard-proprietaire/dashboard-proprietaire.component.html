@@ -1,8 +1,8 @@
-<div class="dashboard-proprietaire" *ngIf="!loading && user">
+<div class="dashboard-proprietaire" *ngIf="!loading && proprietaire">
   <div class="dashboard-header">
-    <img [src]="getAvatarUrl(user)" alt="Avatar" class="avatar"/>
+    <img [src]="getAvatarUrl(proprietaire)" alt="Avatar" class="avatar"/>
     <div class="info">
-      <h2>Bonjour {{ user.prenom }}</h2>
+      <h2>Bonjour {{ proprietaire.prenom }}</h2>
       <p class="welcome-msg">
         Heureux de vous revoir sur <strong>Pax Canina</strong> !
       </p>

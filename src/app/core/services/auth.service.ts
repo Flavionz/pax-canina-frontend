@@ -7,31 +7,38 @@ import { environment } from '@environments/environment';
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   private loggedIn = new BehaviorSubject<boolean>(false);
-  isLoggedIn$: Observable<boolean> = this.loggedIn.asObservable();
+  /** Observable per sapere se sono loggato */
+  public isLoggedIn$: Observable<boolean> = this.loggedIn.asObservable();
+
+  /** Ruolo dell’utente corrente */
   private _role: string | null = null;
 
-  baseUrl = environment.apiUrl;
-
-  get role(): string | null {
-    return this._role;
-  }
+  /** Base URL per /auth */
+  public baseUrl = environment.apiUrl + '/auth';
 
   constructor(private http: HttpClient) {
     const jwt = localStorage.getItem('jwt');
-    if (jwt) {
-      this.decodeJwt(jwt);
+    const storedRole = localStorage.getItem('role');
+    if (jwt && storedRole) {
+      this._role = storedRole;
       this.loggedIn.next(true);
     }
   }
 
+  public get role(): string | null {
+    return this._role;
+  }
+
+
   login(email: string, password: string): Observable<boolean> {
-    return this.http.post<{ token: string, role: string }>(
-      `${this.baseUrl}/auth/login`,
+    return this.http.post<{ token: string; role: string }>(
+      `${this.baseUrl}/login`,
       { email, password }
     ).pipe(
       map(response => {
-        if (response && response.token) {
-          this.decodeJwt(response.token);
+        if (response.token && response.role) {
+          localStorage.setItem('jwt', response.token);
+          localStorage.setItem('role', response.role);
           this._role = response.role;
           this.loggedIn.next(true);
           return true;
@@ -46,6 +53,7 @@ export class AuthService {
     );
   }
 
+
   registerProprietaire(data: {
     prenom: string;
     nom: string;
@@ -56,24 +64,9 @@ export class AuthService {
     return this.http.post(`${this.baseUrl}/register/proprietaire`, data);
   }
 
-  decodeJwt(jwt: string) {
-    localStorage.setItem('jwt', jwt);
-    const splitJwt = jwt.split('.');
-    if (splitJwt.length !== 3) return;
-    try {
-      const jwtBody = splitJwt[1];
-      const jsonBody = atob(jwtBody);
-      const body = JSON.parse(jsonBody);
-      this._role = body.role;
-      this.loggedIn.next(true);
-    } catch (e) {
-      this._role = null;
-      this.loggedIn.next(false);
-    }
-  }
-
-  logout() {
+  logout(): void {
     localStorage.removeItem('jwt');
+    localStorage.removeItem('role');
     this._role = null;
     this.loggedIn.next(false);
   }
@@ -83,6 +76,6 @@ export class AuthService {
   }
 
   isAuthenticated(): boolean {
-    return this.loggedIn.value;
+    return !!localStorage.getItem('jwt') && !!this._role;
   }
 }

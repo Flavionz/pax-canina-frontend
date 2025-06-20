@@ -16,12 +16,10 @@ export class DogService {
 
   constructor(private http: HttpClient) {}
 
-  /** torna tutti i cani (richiesto dal dashboard “admin”) */
   getAllDogs(): Observable<Dog[]> {
     return this.http.get<Dog[]>(this.baseUrl);
   }
 
-  /** miei cani (proprietario loggato) */
   getMyDogs(): Observable<Dog[]> {
     return this.http.get<Dog[]>(this.myDogsUrl);
   }

@@ -8,17 +8,25 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { finalize } from 'rxjs/operators';
 import { environment } from '@environments/environment';
 
-import { UserService } from '@core/services/user.service';
+import { AuthService } from '@core/services/auth.service';
+import { ProprietaireService } from '@core/services/proprietaire.service';
+import { CoachService } from '@core/services/coach.service';
+import { AdminService } from '@core/services/admin.service';
 import { DogService } from '@core/services/dog.service';
 import { AddDogDialogComponent } from '@features/dog/add-dog-dialog/add-dog-dialog.component';
+
 import { Dog } from '@models/dog.model';
-import { User } from '@models/user.model';
+import { Proprietaire } from '@models/proprietaire.model';
+import { Coach } from '@models/coach.model';
+import { Admin } from '@models/admin.model';
+
 import { ActivatedRoute, Router } from '@angular/router';
+import { Observable } from 'rxjs';
+
+type AnyUser = Proprietaire | Coach | Admin;
 
 @Component({
   selector: 'app-profile',
-  templateUrl: './profile.component.html',
-  styleUrls: ['./profile.component.scss'],
   standalone: true,
   imports: [
     CommonModule,
@@ -27,22 +35,27 @@ import { ActivatedRoute, Router } from '@angular/router';
     MatButtonModule,
     MatIconModule,
     MatDialogModule,
-  ]
+  ],
+  templateUrl: './profile.component.html',
+  styleUrls: ['./profile.component.scss']
 })
 export class ProfileComponent implements OnInit {
-  user: User | null = null;
+  user: AnyUser | null = null;
   editingProfile = false;
-  backupUser: User | null = null;
+  backupUser: AnyUser | null = null;
   loading = false;
   errorMsg: string | null = null;
 
   avatarPreview: string | null = null;
   selectedAvatarFile: File | null = null;
 
-  selectedTabIndex = 0; // 0 = info, 1 = chiens, 2 = inscriptions
+  selectedTabIndex = 0; // 0 = infos, 1 = chiens, 2 = inscriptions
 
   constructor(
-    private userService: UserService,
+    private auth: AuthService,
+    private proprietaireService: ProprietaireService,
+    private coachService: CoachService,
+    private adminService: AdminService,
     private dogService: DogService,
     private dialog: MatDialog,
     private route: ActivatedRoute,
@@ -50,29 +63,42 @@ export class ProfileComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    // Gestione tab/query params
     this.route.queryParams.subscribe(params => {
       if (params['tab'] === 'dogs') {
         this.selectedTabIndex = 1;
         if (params['addDog']) {
           setTimeout(() => this.openAddDogDialog(), 400);
-          // Dopo apertura, rimuovi i query params per evitare riapertura dialog al refresh
           this.router.navigate([], { queryParams: {}, replaceUrl: true });
         }
       }
     });
-    this.loadUserProfile();
+    this.loadUser();
   }
 
-  loadUserProfile(): void {
+  private loadUser(): void {
     this.loading = true;
     this.errorMsg = null;
-    this.userService.getUserProfile()
-      .pipe(finalize(() => this.loading = false))
+
+    const role = this.auth.role;
+    let obs$: Observable<AnyUser>;
+
+    if (role === 'PROPRIETAIRE') {
+      obs$ = this.proprietaireService.getProfile();
+    } else if (role === 'COACH') {
+      obs$ = this.coachService.getProfile();
+    } else {
+      obs$ = this.adminService.getProfile();
+    }
+
+    obs$
+      .pipe(finalize(() => (this.loading = false)))
       .subscribe({
-        next: user => {
-          this.user = user;
-          if (!this.user.chiens) {
-            this.user.chiens = [];
+        next: u => {
+          this.user = u;
+          // Inizializza array dei cani se proprietario
+          if (this.isProprietaire() && !(this.user as Proprietaire).chiens) {
+            (this.user as Proprietaire).chiens = [];
           }
         },
         error: err => {
@@ -82,136 +108,164 @@ export class ProfileComponent implements OnInit {
       });
   }
 
-  onAvatarSelected(event: Event): void {
-    const input = event.target as HTMLInputElement;
-    if (input.files?.length) {
-      const file = input.files[0];
-      if (file.size > 2 * 1024 * 1024) {
-        alert("L'image est trop grande (max 2MB)");
-        return;
-      }
-      this.selectedAvatarFile = file;
-      const reader = new FileReader();
-      reader.onload = () => {
-        this.avatarPreview = reader.result as string;
-      };
-      reader.readAsDataURL(file);
-    }
+  // Helpers di ruolo
+  isProprietaire(): boolean { return this.auth.role === 'PROPRIETAIRE'; }
+  isCoach(): boolean { return this.auth.role === 'COACH'; }
+  isAdmin(): boolean { return this.auth.role === 'ADMIN'; }
+
+  get proprietaire(): Proprietaire | null {
+    return this.isProprietaire() ? (this.user as Proprietaire) : null;
   }
 
-  confirmAvatarUpload(): void {
+  get coach(): Coach | null {
+    return this.isCoach() ? (this.user as Coach) : null;
+  }
+
+  // Selezione file avatar
+  onAvatarSelected(evt: Event) {
+    const input = evt.target as HTMLInputElement;
+    if (!input.files?.length) return;
+    const file = input.files[0];
+    if (file.size > 2 * 1024 * 1024) {
+      alert("L'image est trop grande (max 2MB)");
+      return;
+    }
+    this.selectedAvatarFile = file;
+    const reader = new FileReader();
+    reader.onload = () => (this.avatarPreview = reader.result as string);
+    reader.readAsDataURL(file);
+  }
+
+  // Upload avatar
+  confirmAvatarUpload() {
     if (!this.selectedAvatarFile) return;
     this.loading = true;
-    this.userService.uploadAvatar(this.selectedAvatarFile).subscribe({
-      next: (avatarUrl: string) => {
-        if (this.user) {
-          this.user.avatarUrl = avatarUrl;
-        }
-        this.loading = false;
-        this.avatarPreview = null;
-        this.selectedAvatarFile = null;
-      },
-      error: () => {
-        this.loading = false;
-        alert("Erreur lors de l'upload de l'avatar");
-      }
-    });
+
+    let upload$: Observable<string>;
+    if (this.isProprietaire()) {
+      upload$ = this.proprietaireService.uploadAvatar(this.selectedAvatarFile);
+    } else if (this.isCoach()) {
+      upload$ = this.coachService.uploadAvatar(this.selectedAvatarFile);
+    } else {
+      upload$ = this.adminService.uploadAvatar(this.selectedAvatarFile);
+    }
+
+    upload$
+      .pipe(finalize(() => (this.loading = false)))
+      .subscribe({
+        next: url => {
+          if (this.user) this.user.avatarUrl = url;
+          this.avatarPreview = this.selectedAvatarFile = null;
+        },
+        error: () => alert("Erreur lors de l'upload de l'avatar")
+      });
   }
 
-  cancelAvatarSelection(): void {
-    this.avatarPreview = null;
-    this.selectedAvatarFile = null;
+  cancelAvatarSelection() {
+    this.avatarPreview = this.selectedAvatarFile = null;
   }
 
-  getAvatarUrl(user: User | null): string {
-    if (!user?.avatarUrl) return 'assets/images/default-avatar.png';
-    return `${environment.mediaUrl}/${user.avatarUrl}`;
+  getAvatarUrl(u: AnyUser | null): string {
+    if (!u?.avatarUrl) return 'assets/images/default-avatar.png';
+    return `${environment.mediaUrl}/${u.avatarUrl}`;
   }
 
-  startEditProfile(): void {
+  // Edit / Save profile
+  startEditProfile() {
     this.backupUser = this.user ? { ...this.user } : null;
     this.editingProfile = true;
   }
 
-  saveProfile(): void {
-    if (this.user) {
-      this.loading = true;
-      this.userService.updateUserProfile(this.user)
-        .pipe(finalize(() => this.loading = false))
-        .subscribe({
-          next: updatedUser => {
-            this.user = updatedUser;
-            this.editingProfile = false;
-          },
-          error: err => {
-            console.error('Erreur sauvegarde profil:', err);
-            this.errorMsg = "Erreur lors de la sauvegarde.";
-          }
-        });
+  saveProfile() {
+    if (!this.user) return;
+    this.loading = true;
+
+    let save$: Observable<AnyUser>;
+    if (this.isProprietaire()) {
+      save$ = this.proprietaireService.updateProfile(this.user as Proprietaire);
+    } else if (this.isCoach()) {
+      save$ = this.coachService.updateProfile(this.user as Coach);
+    } else {
+      save$ = this.adminService.updateProfile(this.user as Admin);
     }
+
+    save$
+      .pipe(finalize(() => (this.loading = false)))
+      .subscribe({
+        next: u => {
+          this.user = u;
+          this.editingProfile = false;
+        },
+        error: err => {
+          console.error('Errore salvataggio profilo:', err);
+          this.errorMsg = "Erreur lors de la sauvegarde.";
+        }
+      });
   }
 
-  cancelEditProfile(): void {
-    this.user = this.backupUser ? { ...this.backupUser } : null;
+  cancelEditProfile() {
+    this.user = this.backupUser;
     this.editingProfile = false;
     this.errorMsg = null;
   }
 
-  openAddDogDialog(): void {
+  // SOLO PROPRIETAIRE: CRUD cani
+  openAddDogDialog() {
+    if (!this.isProprietaire()) return;
     const dialogRef = this.dialog.open(AddDogDialogComponent, {
       width: '500px',
       disableClose: true
     });
-
-    dialogRef.afterClosed().subscribe((result: Dog) => {
-      if (result && result.nom && result.race) {
+    dialogRef.afterClosed().subscribe((dog: Dog) => {
+      if (dog?.nom && dog?.race) {
         this.loading = true;
-        this.dogService.addDog(result)
-          .pipe(finalize(() => this.loading = false))
+        this.dogService.addDog(dog)
+          .pipe(finalize(() => (this.loading = false)))
           .subscribe(() => this.reloadDogs());
       }
     });
   }
 
-  editDog(dog: Dog): void {
-    const dialogRef = this.dialog.open(AddDogDialogComponent, {
+  editDog(dog: Dog) {
+    if (!this.isProprietaire()) return;
+    const ref = this.dialog.open(AddDogDialogComponent, {
       width: '500px',
       disableClose: true,
       data: { dog }
     });
-
-    dialogRef.afterClosed().subscribe((result: Dog) => {
-      if (result && result.nom && result.race && dog.idChien) {
+    ref.afterClosed().subscribe((res: Dog) => {
+      if (res && dog.idChien) {
         this.loading = true;
-        this.dogService.updateDog({ ...dog, ...result })
-          .pipe(finalize(() => this.loading = false))
+        this.dogService.updateDog({ ...dog, ...res })
+          .pipe(finalize(() => (this.loading = false)))
           .subscribe(() => this.reloadDogs());
       }
     });
   }
 
-  deleteDog(dog: Dog): void {
-    if (dog.idChien && confirm(`Supprimer le chien "${dog.nom}" ? Cette action est irréversible.`)) {
+  deleteDog(dog: Dog) {
+    if (!this.isProprietaire() || !dog.idChien) return;
+    if (confirm(`Supprimer le chien "${dog.nom}" ?`)) {
       this.loading = true;
       this.dogService.deleteDog(dog.idChien)
-        .pipe(finalize(() => this.loading = false))
+        .pipe(finalize(() => (this.loading = false)))
         .subscribe(() => this.reloadDogs());
     }
   }
 
-  reloadDogs(): void {
-    this.dogService.getMyDogs().subscribe((dogs: Dog[]) => {
-      if (this.user) {
-        this.user.chiens = dogs;
+  private reloadDogs() {
+    this.dogService.getMyDogs().subscribe((list: Dog[]) => {
+      if (this.user && this.isProprietaire()) {
+        (this.user as Proprietaire).chiens = list;
       }
     });
   }
 
-  getDogPhotoUrl(dog: Dog): string {
-    if (!dog.photoUrl) {
-      return 'assets/images/default-dog.png';
-    }
-    return `${environment.mediaUrl}/${dog.photoUrl}`;
+  // Helpers per card cane
+  getDogPhotoUrl(d: Dog): string {
+    return d.photoUrl
+      ? `${environment.mediaUrl}/${d.photoUrl}`
+      : 'assets/images/default-dog.png';
   }
 
   getDogAge(dateNaissance: string | Date): string {
@@ -224,17 +278,18 @@ export class ProfileComponent implements OnInit {
 
     if (days < 0) {
       months--;
-      const prevMonth = new Date(now.getFullYear(), now.getMonth(), 0);
-      days += prevMonth.getDate();
+      days += new Date(now.getFullYear(), now.getMonth(), 0).getDate();
     }
     if (months < 0) {
       years--;
       months += 12;
     }
-    if (years > 0) {
-      return `${years} an(s) et ${months} mois`;
-    } else {
-      return `${months} mois`;
-    }
+    return years > 0 ? `${years} an(s) et ${months} mois` : `${months} mois`;
+  }
+
+  // Solo Coach: helper lista specializzazioni
+  isLastSpec(spec: any): boolean {
+    const specs = (this.coach?.specialisations) || [];
+    return specs[specs.length - 1] === spec;
   }
 }

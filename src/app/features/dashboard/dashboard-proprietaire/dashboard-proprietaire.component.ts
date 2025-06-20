@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { User } from '@models/user.model';
+import { Proprietaire } from '@models/proprietaire.model';
 import { Dog } from '@models/dog.model';
 import { Registration } from '@models/registration.model';
-import { UserService } from '@core/services/user.service';
+import { ProprietaireService } from '@core/services/proprietaire.service';
 import { DogService } from '@core/services/dog.service';
 import { environment } from '@environments/environment';
 import { CommonModule } from '@angular/common';
@@ -16,24 +16,24 @@ import { Router, RouterLink } from '@angular/router';
   styleUrl: './dashboard-proprietaire.component.scss'
 })
 export class DashboardProprietaireComponent implements OnInit {
-  user: User | null = null;
+  proprietaire: Proprietaire | null = null;
   dogs: Dog[] = [];
   inscriptions: Registration[] = [];
   loading = true;
 
   constructor(
-    private userService: UserService,
+    private proprietaireService: ProprietaireService,
     private dogService: DogService,
-    private router: Router // aggiunto
+    private router: Router
   ) {}
 
   ngOnInit() {
     this.loading = true;
-    this.userService.getUserProfile().subscribe({
-      next: (user: User) => {
-        this.user = user;
-        this.dogs = user.chiens || [];
-        this.inscriptions = user.inscriptions || [];
+    this.proprietaireService.getProfile().subscribe({
+      next: (proprietaire: Proprietaire) => {
+        this.proprietaire = proprietaire;
+        this.dogs = proprietaire.chiens || [];
+        this.inscriptions = proprietaire.inscriptions || [];
         this.loading = false;
       },
       error: () => {
@@ -42,9 +42,9 @@ export class DashboardProprietaireComponent implements OnInit {
     });
   }
 
-  getAvatarUrl(user: User | null): string {
-    if (!user?.avatarUrl) return 'assets/images/default-avatar.png';
-    return `${environment.mediaUrl}/${user.avatarUrl}`;
+  getAvatarUrl(proprietaire: Proprietaire | null): string {
+    if (!proprietaire?.avatarUrl) return 'assets/images/default-avatar.png';
+    return `${environment.mediaUrl}/${proprietaire.avatarUrl}`;
   }
 
   goToAddDogTab() {

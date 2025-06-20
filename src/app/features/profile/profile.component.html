@@ -1,17 +1,28 @@
+<!-- Loading State -->
 <div *ngIf="loading && !user">
   <p>Chargement du profil en cours...</p>
 </div>
 
+<!-- Error Message -->
 <div *ngIf="errorMsg" class="error-msg">{{ errorMsg }}</div>
 
+<!-- Main Profile Content -->
 <div *ngIf="user">
+
+  <!-- Welcome -->
   <div class="profile-welcome">
     <h1>Bienvenue {{ user.prenom }}</h1>
-    <p>Gérez vos informations personnelles et vos chiens enregistrés</p>
+    <p>
+      Gérez vos informations personnelles
+      <span *ngIf="proprietaire">et vos chiens enregistrés</span>
+      <span *ngIf="coach">et vos spécialisations</span>
+    </p>
   </div>
 
   <div class="profile-page">
     <div class="profile-header">
+
+      <!-- Banner: Edit/Save/Cancel buttons -->
       <div class="profile-banner">
         <button *ngIf="!editingProfile" class="btn btn-outline btn-md" (click)="startEditProfile()">
           <span class="material-icons">edit</span> Modifier
@@ -24,6 +35,7 @@
         </button>
       </div>
 
+      <!-- Avatar (Upload when editing) -->
       <div class="profile-avatar-container">
         <div class="avatar-wrapper">
           <img
@@ -31,7 +43,6 @@
             [src]="avatarPreview || getAvatarUrl(user)"
             alt="Avatar de {{ user.prenom }}"
           />
-          <!-- Overlay rettangolare grigio trasparente con icona camera -->
           <button
             *ngIf="editingProfile"
             class="avatar-overlay-btn"
@@ -50,9 +61,6 @@
             (change)="onAvatarSelected($event)"
           />
         </div>
-
-
-        <!-- Bottoni per la gestione della preview -->
         <div *ngIf="avatarPreview" class="avatar-preview-actions">
           <button class="btn btn-primary btn-lg" (click)="confirmAvatarUpload()" [disabled]="loading">
             Sauvegarder l'avatar
@@ -63,11 +71,15 @@
         </div>
       </div>
 
+      <!-- Main Profile Tabs -->
       <div class="profile-content">
-        <mat-tab-group>
-          <!-- TAB 1: INFORMAZIONI PERSONALI -->
+        <mat-tab-group [(selectedIndex)]="selectedTabIndex">
+
+          <!-- Tab 1: Infos personnelles -->
           <mat-tab label="Informations personnelles">
             <form class="profile-info-grid" autocomplete="off">
+
+              <!-- Bloc 1: Info -->
               <div>
                 <h3>Informations personnelles</h3>
                 <div>
@@ -106,34 +118,60 @@
                     <input [(ngModel)]="user.telephone" name="telephone" />
                   </ng-template>
                 </div>
-                <div>
-                  <strong>Adresse</strong><br>
-                  <ng-container *ngIf="!editingProfile; else editAddress">
-                    {{ user.adresse }}
-                  </ng-container>
-                  <ng-template #editAddress>
-                    <input [(ngModel)]="user.adresse" name="adresse" />
-                  </ng-template>
-                </div>
-                <div>
-                  <strong>Ville</strong><br>
-                  <ng-container *ngIf="!editingProfile; else editCity">
-                    {{ user.ville }}
-                  </ng-container>
-                  <ng-template #editCity>
-                    <input [(ngModel)]="user.ville" name="ville" />
-                  </ng-template>
-                </div>
-                <div>
-                  <strong>Code postal</strong><br>
-                  <ng-container *ngIf="!editingProfile; else editPostal">
-                    {{ user.codePostal }}
-                  </ng-container>
-                  <ng-template #editPostal>
-                    <input [(ngModel)]="user.codePostal" name="codePostal" />
-                  </ng-template>
+
+                <!-- Proprietaire Only (usando la getter proprietaire) -->
+                <ng-container *ngIf="proprietaire">
+                  <div>
+                    <strong>Adresse</strong><br>
+                    <ng-container *ngIf="!editingProfile; else editAddress">
+                      {{ proprietaire.adresse }}
+                    </ng-container>
+                    <ng-template #editAddress>
+                      <input [(ngModel)]="proprietaire.adresse" name="adresse" />
+                    </ng-template>
+                  </div>
+                  <div>
+                    <strong>Ville</strong><br>
+                    <ng-container *ngIf="!editingProfile; else editCity">
+                      {{ proprietaire.ville }}
+                    </ng-container>
+                    <ng-template #editCity>
+                      <input [(ngModel)]="proprietaire.ville" name="ville" />
+                    </ng-template>
+                  </div>
+                  <div>
+                    <strong>Code postal</strong><br>
+                    <ng-container *ngIf="!editingProfile; else editPostal">
+                      {{ proprietaire.codePostal }}
+                    </ng-container>
+                    <ng-template #editPostal>
+                      <input [(ngModel)]="proprietaire.codePostal" name="codePostal" />
+                    </ng-template>
+                  </div>
+                </ng-container>
+
+                <!-- Coach Only (usando la getter coach) -->
+                <ng-container *ngIf="coach">
+                  <div>
+                    <strong>Spécialisations</strong><br>
+                    <span *ngIf="coach.specialisations?.length; else noSpecs">
+                      <span *ngFor="let spec of coach.specialisations; let last = last">
+                        {{ spec.nom }}<span *ngIf="!last">, </span>
+                      </span>
+                    </span>
+                    <ng-template #noSpecs>
+                      <span class="text-gray-500">Aucune</span>
+                    </ng-template>
+                  </div>
+                </ng-container>
+
+                <!-- Admin Only -->
+                <div *ngIf="isAdmin()">
+                  <strong>Rôle :</strong> Administrateur
                 </div>
               </div>
+
+              <!-- Bloc 2: Bio & Date -->
               <div>
                 <h3>À propos de moi</h3>
                 <div>
@@ -153,8 +191,8 @@
             </form>
           </mat-tab>
 
-          <!-- TAB 2: CHIENS -->
-          <mat-tab label="Mes chiens">
+          <!-- Tab 2: Proprietaire - Mes chiens -->
+          <mat-tab *ngIf="proprietaire" label="Mes chiens">
             <div class="dogs-header">
               <h3>Mes chiens</h3>
               <button class="btn btn-primary btn-md" (click)="openAddDogDialog()">
@@ -162,8 +200,8 @@
               </button>
             </div>
             <div class="dog-list">
-              <ng-container *ngIf="user.chiens && user.chiens.length > 0; else noDogs">
-                <div class="dog-card" *ngFor="let dog of user.chiens">
+              <ng-container *ngIf="proprietaire.chiens && proprietaire.chiens.length > 0; else noDogs">
+                <div class="dog-card" *ngFor="let dog of proprietaire.chiens">
                   <div class="dog-photo" *ngIf="dog.photoUrl; else noPhoto">
                     <img [src]="getDogPhotoUrl(dog)" [alt]="'Photo de ' + dog.nom" />
                   </div>
@@ -198,10 +236,10 @@
             </div>
           </mat-tab>
 
-          <!-- TAB 3: INSCRIPTIONS -->
-          <mat-tab label="Mes inscriptions">
-            <div class="p-6 space-y-4" *ngIf="user.inscriptions && user.inscriptions.length > 0; else noRegistrations">
-              <div *ngFor="let reg of user.inscriptions" class="border rounded p-4 shadow-sm">
+          <!-- Tab 3: Proprietaire - Mes inscriptions -->
+          <mat-tab *ngIf="proprietaire" label="Mes inscriptions">
+            <div class="p-6 space-y-4" *ngIf="proprietaire.inscriptions && proprietaire.inscriptions.length > 0; else noRegistrations">
+              <div *ngFor="let reg of proprietaire.inscriptions" class="border rounded p-4 shadow-sm">
                 <p><strong>Activité :</strong> {{ reg.session.cours.nom }}</p>
                 <p><strong>Date :</strong> {{ reg.session.date | date }}</p>
                 <p><strong>Statut :</strong> {{ reg.statut }}</p>
@@ -211,6 +249,7 @@
               <p class="text-gray-600">Vous n'avez aucune inscription pour le moment.</p>
             </ng-template>
           </mat-tab>
+
         </mat-tab-group>
       </div>
     </div>

@@ -1,36 +1,32 @@
-// src/app/core/services/coach.service.ts
+// src/app/core/services/admin.service.ts
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { Coach } from '@models/coach.model';
+import { Admin } from '@models/admin.model';
 import { environment } from '@environments/environment';
 import { UploadService } from './upload.service';
 
 @Injectable({ providedIn: 'root' })
-export class CoachService {
-  private baseUrl = `${environment.apiUrl}/coach`;
+export class AdminService {
+  private baseUrl = `${environment.apiUrl}/admin`;
 
   constructor(
     private http: HttpClient,
     private uploadService: UploadService
   ) {}
 
-  getProfile(): Observable<Coach> {
-    return this.http.get<Coach>(`${this.baseUrl}/me`);
+  getProfile(): Observable<Admin> {
+    return this.http.get<Admin>(`${this.baseUrl}/me`);
   }
 
-  updateProfile(data: Partial<Coach>): Observable<Coach> {
-    return this.http.put<Coach>(`${this.baseUrl}/me`, data);
+  updateProfile(data: Partial<Admin>): Observable<Admin> {
+    return this.http.put<Admin>(`${this.baseUrl}/me`, data);
   }
 
   uploadAvatar(file: File): Observable<string> {
     return this.uploadService
       .uploadAvatar(file)
       .pipe(map(url => url));
-  }
-
-  getCoaches(): Observable<Coach[]> {
-    return this.http.get<Coach[]>(`${this.baseUrl}`);
   }
 }
