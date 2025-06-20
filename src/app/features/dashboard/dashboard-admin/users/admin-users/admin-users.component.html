@@ -1,0 +1,53 @@
+<div class="admin-users">
+
+  <div class="users-header">
+    <h2>Gestion des utilisateurs</h2>
+    <button class="btn btn-primary" (click)="onAddUser()">
+      + Ajouter un membre
+    </button>
+  </div>
+
+  <div *ngIf="loading" class="loading-msg">
+    Chargement des utilisateurs...
+  </div>
+  <div *ngIf="error" class="error-msg">{{ error }}</div>
+
+  <table class="users-table" *ngIf="!loading && users.length">
+    <thead>
+    <tr>
+      <th>Prénom</th>
+      <th>Nom</th>
+      <th>Email</th>
+      <th>Téléphone</th>
+      <th>Rôle</th>
+      <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let u of users">
+      <td>{{ u.prenom }}</td>
+      <td>{{ u.nom }}</td>
+      <td>{{ u.email }}</td>
+      <td>{{ u.telephone || '-' }}</td>
+      <td>
+          <span class="role-badge" [ngClass]="{
+            'badge-admin': u.role === 'ADMIN',
+            'badge-coach': u.role === 'COACH',
+            'badge-proprietaire': u.role === 'PROPRIETAIRE'
+          }">
+            {{ u.role || 'PROPRIETAIRE' }}
+          </span>
+      </td>
+      <td>
+        <button class="btn btn-outline btn-xs">Modifier</button>
+        <button class="btn btn-outline btn-xs btn-danger">Supprimer</button>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+
+  <div *ngIf="!loading && !users.length" class="empty-state">
+    Aucun utilisateur trouvé.
+  </div>
+
+</div>
