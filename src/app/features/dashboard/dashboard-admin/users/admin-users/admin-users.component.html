@@ -7,12 +7,21 @@
     </button>
   </div>
 
+  <!-- FORM -->
+  <app-user-form
+    *ngIf="showForm"
+    [user]="userToEdit"
+    (save)="onSaveUser($event)"
+    (cancel)="onCancelForm()"
+  ></app-user-form>
+
+  <!-- TABELLA UTENTI -->
   <div *ngIf="loading" class="loading-msg">
     Chargement des utilisateurs...
   </div>
   <div *ngIf="error" class="error-msg">{{ error }}</div>
 
-  <table class="users-table" *ngIf="!loading && users.length">
+  <table class="users-table" *ngIf="!loading && users.length && !showForm">
     <thead>
     <tr>
       <th>Prénom</th>
@@ -34,20 +43,17 @@
             'badge-admin': u.role === 'ADMIN',
             'badge-coach': u.role === 'COACH',
             'badge-proprietaire': u.role === 'PROPRIETAIRE'
-          }">
-            {{ u.role || 'PROPRIETAIRE' }}
-          </span>
+          }">{{ u.role || 'PROPRIETAIRE' }}</span>
       </td>
       <td>
-        <button class="btn btn-outline btn-xs">Modifier</button>
-        <button class="btn btn-outline btn-xs btn-danger">Supprimer</button>
+        <button class="btn btn-outline btn-xs" (click)="onEditUser(u)">Modifier</button>
+        <button class="btn btn-outline btn-xs btn-danger" (click)="onDeleteUser(u)">Supprimer</button>
       </td>
     </tr>
     </tbody>
   </table>
 
-  <div *ngIf="!loading && !users.length" class="empty-state">
+  <div *ngIf="!loading && !users.length && !showForm" class="empty-state">
     Aucun utilisateur trouvé.
   </div>
-
 </div>

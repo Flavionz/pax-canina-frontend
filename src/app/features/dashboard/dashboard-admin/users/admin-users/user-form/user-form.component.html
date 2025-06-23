@@ -1,0 +1,49 @@
+<div class="user-form">
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <div>
+      <label>Prénom</label>
+      <input formControlName="prenom" type="text" />
+    </div>
+    <div>
+      <label>Nom</label>
+      <input formControlName="nom" type="text" />
+    </div>
+    <div>
+      <label>Email</label>
+      <input formControlName="email" type="email" />
+    </div>
+    <div>
+      <label>Téléphone</label>
+      <input formControlName="telephone" type="text" />
+    </div>
+    <div>
+      <label>Rôle</label>
+      <select formControlName="role">
+        <option value="PROPRIETAIRE">Propriétaire</option>
+        <option value="COACH">Coach</option>
+        <option value="ADMIN">Admin</option>
+      </select>
+    </div>
+    <div *ngIf="form.value.role === 'COACH'">
+      <label>Spécialisation</label>
+      <select formControlName="specialisation">
+        <option value="" disabled>Choisir...</option>
+        <option *ngFor="let s of specialisations" [value]="s.nom">{{ s.nom }}</option>
+      </select>
+    </div>
+    <div>
+      <label>Bio</label>
+      <textarea formControlName="bio"></textarea>
+    </div>
+    <div>
+      <label>Avatar (URL)</label>
+      <input formControlName="avatarUrl" type="text" />
+    </div>
+    <div class="actions">
+      <button type="submit" class="btn btn-primary" [disabled]="form.invalid">
+        {{ user ? 'Enregistrer' : 'Créer' }}
+      </button>
+      <button type="button" class="btn btn-outline" (click)="cancel.emit()">Annuler</button>
+    </div>
+  </form>
+</div>

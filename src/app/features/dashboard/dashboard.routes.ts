@@ -1,7 +1,7 @@
 import { Routes } from '@angular/router';
 import { DashboardComponent } from './dashboard.component';
 import { DashboardAdminComponent } from './dashboard-admin/dashboard-admin.component';
-import { AdminUsersComponent } from './dashboard-admin/admin-users/admin-users.component'; // importa qui!
+import { AdminUsersComponent } from './dashboard-admin/users/admin-users/admin-users.component';
 import { DashboardCoachComponent } from './dashboard-coach/dashboard-coach.component';
 import { DashboardProprietaireComponent } from './dashboard-proprietaire/dashboard-proprietaire.component';
 

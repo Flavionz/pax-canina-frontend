@@ -1,0 +1,23 @@
+.user-form {
+  max-width: 430px;
+  margin: 1.5rem auto;
+  background: #f8fafc;
+  border-radius: 12px;
+  padding: 2rem 2rem 1rem 2rem;
+  box-shadow: 0 2px 8px 0 #1879c210;
+  label { font-weight: 600; color: #1e3346; }
+  input, textarea, select {
+    width: 100%;
+    padding: .6em .7em;
+    margin-bottom: 1.2em;
+    border: 1px solid #d8e0ea;
+    border-radius: 7px;
+    font-size: 1em;
+    background: #fff;
+  }
+  .actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1em;
+  }
+}
