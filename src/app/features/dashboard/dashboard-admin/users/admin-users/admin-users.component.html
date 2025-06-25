@@ -7,7 +7,6 @@
     </button>
   </div>
 
-  <!-- FORM -->
   <app-user-form
     *ngIf="showForm"
     [user]="userToEdit"
@@ -15,7 +14,6 @@
     (cancel)="onCancelForm()"
   ></app-user-form>
 
-  <!-- TABELLA UTENTI -->
   <div *ngIf="loading" class="loading-msg">
     Chargement des utilisateurs...
   </div>

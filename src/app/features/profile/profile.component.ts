@@ -119,6 +119,14 @@ export class ProfileComponent implements OnInit {
     return this.isCoach() ? (this.user as Coach) : null;
   }
 
+  maskEmail(email: string | undefined): string {
+    if (!email) return '';
+    const [user, domain] = email.split('@');
+    if (!user || !domain) return email;
+    const visible = user.slice(0, 3);
+    return `${visible}${'*'.repeat(Math.max(user.length - 3, 0))}@${domain}`;
+  }
+
   onAvatarSelected(evt: Event) {
     const input = evt.target as HTMLInputElement;
     if (!input.files?.length) return;

@@ -1,11 +1,15 @@
+<!-- Show loading spinner/message while profile is loading -->
 <div *ngIf="loading && !user">
   <p>Chargement du profil en cours...</p>
 </div>
 
+<!-- Show error message if any -->
 <div *ngIf="errorMsg" class="error-msg">{{ errorMsg }}</div>
 
+<!-- Main profile section, rendered if user data is present -->
 <div *ngIf="user">
 
+  <!-- Welcome title -->
   <div class="profile-welcome">
     <h1>Bienvenue {{ user.prenom }}</h1>
     <p>
@@ -18,18 +22,34 @@
   <div class="profile-page">
     <div class="profile-header">
 
+      <!-- Top action bar: Edit/Save/Cancel -->
       <div class="profile-banner">
-        <button *ngIf="!editingProfile" class="btn btn-outline btn-md" (click)="startEditProfile()">
+        <button
+          *ngIf="!editingProfile"
+          class="btn btn-outline btn-md"
+          (click)="startEditProfile()"
+        >
           <span class="material-icons">edit</span> Modifier
         </button>
-        <button *ngIf="editingProfile" class="btn btn-primary btn-md" (click)="saveProfile()" [disabled]="loading">
+        <button
+          *ngIf="editingProfile"
+          class="btn btn-primary btn-md"
+          (click)="saveProfile()"
+          [disabled]="loading"
+        >
           <span class="material-icons">save</span> Enregistrer
         </button>
-        <button *ngIf="editingProfile" class="btn btn-outline btn-md" (click)="cancelEditProfile()" [disabled]="loading">
+        <button
+          *ngIf="editingProfile"
+          class="btn btn-outline btn-md"
+          (click)="cancelEditProfile()"
+          [disabled]="loading"
+        >
           <span class="material-icons">close</span> Annuler
         </button>
       </div>
 
+      <!-- Avatar with change/upload overlay -->
       <div class="profile-avatar-container">
         <div class="avatar-wrapper">
           <img
@@ -37,6 +57,7 @@
             [src]="avatarPreview || getAvatarUrl(user)"
             alt="Avatar de {{ user.prenom }}"
           />
+          <!-- Show upload button only when editing -->
           <button
             *ngIf="editingProfile"
             class="avatar-overlay-btn"
@@ -55,6 +76,7 @@
             (change)="onAvatarSelected($event)"
           />
         </div>
+        <!-- Show avatar preview actions when a new avatar is selected -->
         <div *ngIf="avatarPreview" class="avatar-preview-actions">
           <button class="btn btn-primary btn-lg" (click)="confirmAvatarUpload()" [disabled]="loading">
             Sauvegarder l'avatar
@@ -65,14 +87,18 @@
         </div>
       </div>
 
+      <!-- Profile content: Tabs with personal info, dogs, registrations -->
       <div class="profile-content">
         <mat-tab-group [(selectedIndex)]="selectedTabIndex">
 
+          <!-- PERSONAL INFO TAB -->
           <mat-tab label="Informations personnelles">
             <form class="profile-info-grid" autocomplete="off">
 
               <div>
                 <h3>Informations personnelles</h3>
+
+                <!-- First name field (editable) -->
                 <div>
                   <strong>Prénom</strong><br>
                   <ng-container *ngIf="!editingProfile; else editFirstName">
@@ -82,6 +108,8 @@
                     <input [(ngModel)]="user.prenom" name="prenom" required />
                   </ng-template>
                 </div>
+
+                <!-- Last name field (editable) -->
                 <div>
                   <strong>Nom</strong><br>
                   <ng-container *ngIf="!editingProfile; else editLastName">
@@ -91,15 +119,23 @@
                     <input [(ngModel)]="user.nom" name="nom" required />
                   </ng-template>
                 </div>
+
+                <!-- Email: Read-only, masked and locked for admin -->
                 <div>
                   <strong>Email</strong><br>
-                  <ng-container *ngIf="!editingProfile; else editEmail">
-                    {{ user.email }}
-                  </ng-container>
-                  <ng-template #editEmail>
-                    <input [(ngModel)]="user.email" name="email" type="email" required />
-                  </ng-template>
+                  <span style="display: flex; align-items: center; gap: 4px;">
+                    <!-- Show masked email + lock icon for admin, otherwise plain email -->
+                    <ng-container *ngIf="isAdmin(); else normalEmail">
+                      {{ maskEmail(user.email) }}
+                      <mat-icon style="font-size:1em;color:#999;" aria-label="Non editable">lock</mat-icon>
+                    </ng-container>
+                    <ng-template #normalEmail>
+                      {{ user.email }}
+                    </ng-template>
+                  </span>
                 </div>
+
+                <!-- Phone field (editable) -->
                 <div>
                   <strong>Téléphone</strong><br>
                   <ng-container *ngIf="!editingProfile; else editTel">
@@ -110,7 +146,7 @@
                   </ng-template>
                 </div>
 
-                <!-- Proprietaire Only (usando la getter proprietaire) -->
+                <!-- Proprietaire-specific address fields -->
                 <ng-container *ngIf="proprietaire">
                   <div>
                     <strong>Adresse</strong><br>
@@ -141,6 +177,7 @@
                   </div>
                 </ng-container>
 
+                <!-- Coach-specific: specializations list -->
                 <ng-container *ngIf="coach">
                   <div>
                     <strong>Spécialisations</strong><br>
@@ -155,6 +192,7 @@
                   </div>
                 </ng-container>
 
+                <!-- Admin role label -->
                 <div *ngIf="isAdmin()">
                   <strong>Rôle :</strong> Administrateur
                 </div>
@@ -162,6 +200,7 @@
 
               <div>
                 <h3>À propos de moi</h3>
+                <!-- Bio (editable) -->
                 <div>
                   <strong>Bio</strong><br>
                   <ng-container *ngIf="!editingProfile; else editBio">
@@ -171,6 +210,7 @@
                     <textarea [(ngModel)]="user.bio" name="bio" rows="3"></textarea>
                   </ng-template>
                 </div>
+                <!-- Member since -->
                 <div>
                   <strong>Membre depuis</strong><br>
                   {{ user.dateInscription | date:'MMMM yyyy' }}
@@ -179,6 +219,7 @@
             </form>
           </mat-tab>
 
+          <!-- DOGS TAB (only for proprietaire) -->
           <mat-tab *ngIf="proprietaire" label="Mes chiens">
             <div class="dogs-header">
               <h3>Mes chiens</h3>
@@ -223,6 +264,7 @@
             </div>
           </mat-tab>
 
+          <!-- REGISTRATIONS TAB (only for proprietaire) -->
           <mat-tab *ngIf="proprietaire" label="Mes inscriptions">
             <div class="p-6 space-y-4" *ngIf="proprietaire.inscriptions && proprietaire.inscriptions.length > 0; else noRegistrations">
               <div *ngFor="let reg of proprietaire.inscriptions" class="border rounded p-4 shadow-sm">
