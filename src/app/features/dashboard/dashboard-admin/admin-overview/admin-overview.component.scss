@@ -1,0 +1,63 @@
+.dashboard-welcome {
+  margin-bottom: 2rem;
+  h2 {
+    font-size: 2.1rem;
+    color: #1879c2;
+    margin-bottom: 0.6rem;
+  }
+  p {
+    color: #446174;
+    font-size: 1.15rem;
+    opacity: .9;
+  }
+}
+
+.dashboard-overview {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem;
+
+  .overview-card {
+    flex: 1 1 230px;
+    min-width: 220px;
+    max-width: 340px;
+    background: #fff;
+    border-radius: 16px;
+    padding: 1.5rem 1.7rem;
+    box-shadow: 0 2px 12px 0 #c1c1c119;
+    cursor: pointer;
+    transition: box-shadow .2s, transform .14s;
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+
+    .icon {
+      font-size: 2.2rem;
+      margin-right: 0.6rem;
+      color: #20c962;
+    }
+    h3 {
+      font-size: 1.18rem;
+      color: #1879c2;
+      margin: 0 0 0.2rem 0;
+    }
+    p {
+      color: #4d6380;
+      font-size: 1rem;
+      margin: 0 0 0.6rem 0;
+    }
+    .badge {
+      display: inline-block;
+      padding: .24em .7em;
+      font-size: 0.96rem;
+      background: #e6f2fa;
+      color: #156da5;
+      border-radius: 9px;
+    }
+    &:hover {
+      box-shadow: 0 4px 18px 0 #20c96232;
+      transform: translateY(-4px) scale(1.035);
+      .icon { color: #1879c2; }
+    }
+  }
+}

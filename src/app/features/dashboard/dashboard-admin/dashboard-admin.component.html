@@ -2,21 +2,17 @@
   <aside class="sidebar">
     <nav>
       <ul>
-        <li routerLinkActive="active"><a routerLink=".">Vue d'ensemble</a></li>
-        <li routerLinkActive="active"><a routerLink="cours">Cours <span>{{ counts.cours }}</span></a></li>
-        <li routerLinkActive="active"><a routerLink="sessions">Sessions <span>{{ counts.sessions }}</span></a></li>
-        <li routerLinkActive="active"><a routerLink="coaches">Coaches <span>{{ counts.coaches }}</span></a></li>
-        <li routerLinkActive="active"><a routerLink="utilisateurs">Utilisateurs <span>{{ counts.users }}</span></a></li>
-        <li routerLinkActive="active"><a routerLink="chiens">Chiens <span>{{ counts.dogs }}</span></a></li>
-        <li routerLinkActive="active"><a routerLink="races">Races <span>{{ counts.races }}</span></a></li>
-        <li routerLinkActive="active"><a routerLink="tranches-age">Tranches d'âge <span>{{ counts.ageRanges }}</span></a></li>
-        <li routerLinkActive="active"><a routerLink="specialisations">Spécialisations <span>{{ counts.specialisations }}</span></a></li>
+        <li routerLinkActive="active"><a routerLink=".">Tableau de bord</a></li>
+        <li routerLinkActive="active"><a routerLink="utilisateurs">Utilisateurs</a></li>
+        <li routerLinkActive="active"><a routerLink="cours">Cours</a></li>
+        <li routerLinkActive="active"><a routerLink="sessions">Sessions</a></li>
+        <li routerLinkActive="active"><a routerLink="chiens">Chiens</a></li>
+        <li routerLinkActive="active"><a routerLink="specialisations">Spécialisations</a></li>
       </ul>
     </nav>
   </aside>
 
   <section class="content">
-    <h1>Administration</h1>
     <router-outlet></router-outlet>
   </section>
 </div>
