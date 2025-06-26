@@ -1,1 +1,52 @@
-<p>admin-courses works!</p>
+
+<div class="admin-courses">
+  <div class="header">
+    <h2>Cours proposés</h2>
+    <button class="btn btn-primary" (click)="openForm()">+ Nouveau cours</button>
+  </div>
+
+  <table class="courses-table" *ngIf="courses?.length; else emptyState">
+    <thead>
+    <tr>
+      <th>Nom</th>
+      <th>Description</th>
+      <th>Statut</th>
+      <th>Image</th>
+      <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let course of courses">
+      <td>{{ course.nom }}</td>
+      <td class="desc">{{ course.description | slice:0:50 }}...</td>
+      <td>
+          <span class="badge" [ngClass]="{
+            'badge-success': course.statut === 'OUVERT',
+            'badge-danger': course.statut === 'FERME'
+          }">{{ course.statut }}</span>
+      </td>
+      <td>
+        <img *ngIf="course.imgUrl" [src]="course.imgUrl" alt="img" class="course-img" />
+      </td>
+      <td>
+        <button class="btn btn-sm btn-secondary" (click)="editCourse(course)">Modifier</button>
+        <button class="btn btn-sm btn-danger" (click)="deleteCourse(course.idCours)">Supprimer</button>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+
+  <ng-template #emptyState>
+    <div class="empty-state">
+      <p>Aucun cours pour l’instant.</p>
+    </div>
+  </ng-template>
+
+  <!-- Modale per il form (puoi aggiungere un overlay se vuoi) -->
+  <app-course-form
+    *ngIf="formOpen"
+    [course]="selectedCourse"
+    (close)="closeForm($event)"
+    (save)="handleSave($event)">
+  </app-course-form>
+</div>

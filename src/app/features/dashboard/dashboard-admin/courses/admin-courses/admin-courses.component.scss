@@ -1,0 +1,102 @@
+
+.admin-courses {
+  padding: 2rem;
+
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    h2 {
+      font-size: 2rem;
+      color: #1d3557;
+    }
+    .btn-primary {
+      background: #27c383;
+      border-radius: 1.5rem;
+      padding: 0.6rem 1.5rem;
+      color: #fff;
+      font-weight: 600;
+      border: none;
+      font-size: 1rem;
+      box-shadow: 0 2px 8px 0 #e3f7e7;
+      transition: 0.2s;
+      &:hover {
+        background: #23b078;
+      }
+    }
+  }
+
+  .courses-table {
+    width: 100%;
+    background: #f9fcff;
+    border-radius: 2rem;
+    box-shadow: 0 2px 12px #e5eefa;
+    overflow: hidden;
+    th, td {
+      padding: 1rem;
+      text-align: left;
+    }
+    th {
+      background: #f3f9fa;
+      color: #246bad;
+      font-size: 1.1rem;
+    }
+    td {
+      font-size: 1rem;
+      .desc {
+        color: #3e5574;
+      }
+    }
+    .badge {
+      display: inline-block;
+      border-radius: 1rem;
+      padding: 0.3em 1em;
+      font-size: 0.85em;
+      font-weight: 600;
+      &.badge-success {
+        background: #e2faed;
+        color: #27c383;
+      }
+      &.badge-danger {
+        background: #ffe1e3;
+        color: #e3545a;
+      }
+    }
+    .course-img {
+      width: 40px;
+      height: 40px;
+      object-fit: cover;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px #e6e6e6;
+      background: #fff;
+    }
+    .btn-sm {
+      font-size: 0.95em;
+      padding: 0.35em 1em;
+      border-radius: 1rem;
+      margin-right: 0.5em;
+      background: #f6f6f9;
+      border: 1px solid #ddd;
+      color: #3374b8;
+      cursor: pointer;
+      &:hover {
+        background: #eaf2fb;
+      }
+      &.btn-danger {
+        color: #e3545a;
+        border-color: #ffd4d6;
+        &:hover {
+          background: #ffe7e9;
+        }
+      }
+    }
+  }
+
+  .empty-state {
+    padding: 2rem;
+    text-align: center;
+    color: #7c8491;
+    font-size: 1.2rem;
+  }
+}

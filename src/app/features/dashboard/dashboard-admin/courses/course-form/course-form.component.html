@@ -1,0 +1,31 @@
+
+<div class="course-form-overlay">
+  <div class="course-form-modal">
+    <h3>{{ course ? 'Modifier le cours' : 'Nouveau cours' }}</h3>
+    <form [formGroup]="form" (ngSubmit)="submit()">
+      <div class="form-group">
+        <label>Nom *</label>
+        <input formControlName="nom" type="text" required />
+      </div>
+      <div class="form-group">
+        <label>Description</label>
+        <textarea formControlName="description"></textarea>
+      </div>
+      <div class="form-group">
+        <label>Statut</label>
+        <select formControlName="statut">
+          <option value="OUVERT">Ouvert</option>
+          <option value="FERME">Fermé</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Image (URL)</label>
+        <input formControlName="imgUrl" type="url" />
+      </div>
+      <div class="form-actions">
+        <button class="btn btn-primary" type="submit" [disabled]="form.invalid">Enregistrer</button>
+        <button class="btn btn-secondary" type="button" (click)="closeModal()">Annuler</button>
+      </div>
+    </form>
+  </div>
+</div>

@@ -39,18 +39,18 @@ export class AdminOverviewComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    forkJoin({
-      cours:          this.courseService.getCourses(),
-      sessions:       this.sessionService.getSessions(),
-      users:          this.userService.getAllUsers(),
-      dogs:           this.dogService.getAllDogs(),
-      specialisations:this.specialisationService.getSpecialisations()
-    }).subscribe(res => {
-      this.counts.cours           = res.cours.length;
-      this.counts.sessions        = res.sessions.length;
-      this.counts.users           = res.users.length;
-      this.counts.dogs            = res.dogs.length;
-      this.counts.specialisations = res.specialisations.length;
+    forkJoin([
+      this.courseService.getCourses(),
+      this.sessionService.getSessions(),
+      this.userService.getAllUsers(),
+      this.dogService.getAllDogs(),
+      this.specialisationService.getSpecialisations()
+    ]).subscribe(([cours, sessions, users, dogs, specialisations]) => {
+      this.counts.cours           = cours.length;
+      this.counts.sessions        = sessions.length;
+      this.counts.users           = users.length;
+      this.counts.dogs            = dogs.length;
+      this.counts.specialisations = specialisations.length;
     });
 
     this.adminService.getProfile().subscribe({
