@@ -1,0 +1,44 @@
+.admin-sessions {
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+  }
+  .sessions-table {
+    width: 100%;
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 2px 8px #e5e7eb;
+    overflow: hidden;
+    th, td {
+      padding: 0.9rem 1rem;
+      text-align: left;
+    }
+    th {
+      background: #f8fafb;
+      font-weight: 600;
+      color: #222;
+    }
+    td {
+      vertical-align: middle;
+    }
+    .badge {
+      border-radius: 8px;
+      padding: .3em .8em;
+      font-size: .85em;
+      font-weight: 600;
+      &.badge-success { background: #e5ffe7; color: #1DCB4F; }
+      &.badge-danger { background: #ffeaea; color: #e74c3c; }
+    }
+    .avatar {
+      width: 2rem; height: 2rem; border-radius: 50%; margin-right: .5rem; vertical-align: middle;
+      box-shadow: 0 1px 2px #ccc;
+    }
+  }
+  .empty-state {
+    margin: 3rem 0;
+    text-align: center;
+    color: #888;
+  }
+}

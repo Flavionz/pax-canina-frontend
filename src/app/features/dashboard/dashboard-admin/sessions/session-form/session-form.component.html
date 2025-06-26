@@ -1,0 +1,66 @@
+<div class="form-overlay">
+  <form [formGroup]="form" class="session-form" (ngSubmit)="submit()">
+    <h3>{{ session ? 'Modifier une session' : 'Nouvelle session' }}</h3>
+
+    <div class="form-group">
+      <label>Cours *</label>
+      <select formControlName="cours" required>
+        <option [ngValue]="null" disabled>Sélectionner...</option>
+        <option *ngFor="let c of courses" [ngValue]="c.idCours">{{ c.nom }}</option>
+      </select>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label>Date *</label>
+        <input type="date" formControlName="date" required />
+      </div>
+      <div class="form-group">
+        <label>Heure début *</label>
+        <input type="time" formControlName="heureDebut" required />
+      </div>
+      <div class="form-group">
+        <label>Heure fin *</label>
+        <input type="time" formControlName="heureFin" required />
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label>Niveau *</label>
+        <input type="text" formControlName="niveau" required />
+      </div>
+      <div class="form-group">
+        <label>Capacité max *</label>
+        <input type="number" formControlName="capaciteMax" min="1" required />
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label>Lieu</label>
+        <input type="text" formControlName="lieu" />
+      </div>
+      <div class="form-group">
+        <label>Image (URL)</label>
+        <input type="text" formControlName="imgUrl" />
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>Description</label>
+      <textarea formControlName="description" rows="2"></textarea>
+    </div>
+
+    <div class="form-group">
+      <label>Tranche d’âge *</label>
+      <input type="text" formControlName="trancheAge" required placeholder="ex. Junior, Adulte..." />
+      <!-- In futuro: select collegato alle tranche reali -->
+    </div>
+
+    <div class="btn-row">
+      <button class="btn btn-primary" type="submit" [disabled]="form.invalid">Enregistrer</button>
+      <button class="btn btn-secondary" type="button" (click)="closeModal()">Annuler</button>
+    </div>
+  </form>
+</div>

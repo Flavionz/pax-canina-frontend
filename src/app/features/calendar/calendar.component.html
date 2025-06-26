@@ -1,8 +1,9 @@
+<!-- src/app/features/calendar/calendar.component.html -->
+
 <div class="calendar-page">
   <div class="calendar-grid">
-
     <div class="calendar-panel mat-elevation-z2">
-      <h2>Calendrier</h2>
+      <h2>Calendrier des sessions</h2>
       <mat-calendar
         [(selected)]="selectedDate"
         (selectedChange)="onDateChange($event)"
@@ -14,11 +15,19 @@
       <h2>Sessions du {{ selectedDate | date:'d MMMM':'':'fr' }}</h2>
       <ng-container *ngIf="sessionsForSelectedDate.length; else noSessions">
         <ul>
-          <li *ngFor="let s of sessionsForSelectedDate">
-            {{ s.title }}
-            <span class="status" [class.full]="s.status==='full'">
-              ({{ s.status==='full' ? 'Complet' : 'Disponible' }})
-            </span>
+          <li *ngFor="let s of sessionsForSelectedDate" (click)="openSessionDetail(s)" tabindex="0">
+            <div class="session-card" [class.full]="s.status === 'full'">
+              <div>
+                <span class="title">{{ s.cours.nom }}</span>
+                <span class="hour">{{ s.heureDebut }}-{{ s.heureFin }}</span>
+                <span class="place">{{ s.lieu }}</span>
+              </div>
+              <div>
+                <span class="badge" [ngClass]="{'badge-success': s.status==='available', 'badge-danger': s.status==='full'}">
+                  {{ s.status==='full' ? 'Complet' : 'Disponible' }}
+                </span>
+              </div>
+            </div>
           </li>
         </ul>
       </ng-container>
@@ -29,7 +38,47 @@
         </div>
       </ng-template>
     </div>
+  </div>
 
+  <!-- Dettaglio sessione -->
+  <div class="session-detail-panel" *ngIf="selectedSession">
+    <button class="close-btn" (click)="closeDetail()">
+      <mat-icon>close</mat-icon>
+    </button>
+    <h3>{{ selectedSession.cours.nom }}</h3>
+    <div class="detail-row">
+      <mat-icon>event</mat-icon>
+      {{ selectedSession.date | date:'fullDate':'':'fr' }}
+    </div>
+    <div class="detail-row">
+      <mat-icon>schedule</mat-icon>
+      {{ selectedSession.heureDebut }} - {{ selectedSession.heureFin }}
+    </div>
+    <div class="detail-row">
+      <mat-icon>place</mat-icon>
+      {{ selectedSession.lieu }}
+    </div>
+    <div class="detail-row">
+      <mat-icon>groups</mat-icon>
+      {{ selectedSession.inscriptionsCount }}/{{ selectedSession.capaciteMax }} inscrits
+    </div>
+    <div class="detail-row">
+      <mat-icon>account_circle</mat-icon>
+      Coach : {{ selectedSession.coach?.prenom }} {{ selectedSession.coach?.nom }}
+    </div>
+    <div class="detail-row">
+      <mat-icon>info</mat-icon>
+      {{ selectedSession.description }}
+    </div>
+    <div class="detail-row">
+      <mat-icon>child_care</mat-icon>
+      Tranche d'âge : {{ selectedSession.trancheAge.nom }} ({{ selectedSession.trancheAge.ageMin }}-{{ selectedSession.trancheAge.ageMax }} ans)
+    </div>
+    <img *ngIf="selectedSession.imgUrl" [src]="selectedSession.imgUrl" class="session-img" alt="">
+    <div class="actions">
+      <button mat-raised-button color="primary" *ngIf="selectedSession.status==='available'">S'inscrire</button>
+      <button mat-stroked-button color="accent">Détails du cours</button>
+    </div>
   </div>
 
   <div class="calendar-legend mat-elevation-z2">

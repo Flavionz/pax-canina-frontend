@@ -1,1 +1,61 @@
-<p>admin-sessions works!</p>
+<div class="admin-sessions">
+  <div class="header">
+    <h2>Sessions programmées</h2>
+    <button class="btn btn-primary" (click)="openForm()">+ Nouvelle session</button>
+  </div>
+
+  <table class="sessions-table" *ngIf="sessions?.length; else emptyState">
+    <thead>
+    <tr>
+      <th>Cours</th>
+      <th>Date</th>
+      <th>Heure</th>
+      <th>Coach</th>
+      <th>Lieu</th>
+      <th>Capacité</th>
+      <th>Statut</th>
+      <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let s of sessions">
+      <td>{{ s.cours.nom }}</td>
+      <td>{{ s.date | date:'d MMMM yyyy':'':'fr' }}</td>
+      <td>{{ s.heureDebut }} - {{ s.heureFin }}</td>
+      <td>
+          <span *ngIf="s.coach">
+            <img *ngIf="s.coach.avatarUrl" [src]="s.coach.avatarUrl" alt="coach" class="avatar"/>
+            {{ s.coach.prenom }} {{ s.coach.nom }}
+          </span>
+        <span *ngIf="!s.coach">-</span>
+      </td>
+      <td>{{ s.lieu || '-' }}</td>
+      <td>{{ s.inscriptionsCount || 0 }}/{{ s.capaciteMax }}</td>
+      <td>
+          <span class="badge" [ngClass]="{
+            'badge-success': s.status === 'available',
+            'badge-danger': s.status === 'full'
+          }">{{ s.status === 'full' ? 'Complet' : 'Disponible' }}</span>
+      </td>
+      <td>
+        <button class="btn btn-sm btn-secondary" (click)="editSession(s)">Modifier</button>
+        <button class="btn btn-sm btn-danger" (click)="deleteSession(s.idSession)">Supprimer</button>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+
+  <ng-template #emptyState>
+    <div class="empty-state">
+      <p>Aucune session programmée.</p>
+    </div>
+  </ng-template>
+
+  <app-session-form
+    *ngIf="formOpen"
+    [session]="selectedSession"
+    [courses]="courses"
+    (close)="closeForm($event)"
+    (save)="handleSave($event)">
+  </app-session-form>
+</div>
