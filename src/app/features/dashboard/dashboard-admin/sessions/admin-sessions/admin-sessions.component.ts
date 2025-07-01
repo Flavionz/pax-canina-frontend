@@ -1,15 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { SessionService } from '@core/services/session.service';
 import { CourseService } from '@core/services/course.service';
+import { AgeGroupService } from '@core/services/age-group.service';
 import { Session } from '@core/models/session.model';
 import { Course } from '@core/models/course.model';
+import { AgeGroup } from '@core/models/age-group.model';
 import { SessionFormComponent } from '../session-form/session-form.component';
 import { CommonModule, NgClass } from '@angular/common';
 
-/**
- * Admin sessions management component.
- * Handles display, creation, edit and delete of training sessions.
- */
 @Component({
   selector: 'app-admin-sessions',
   standalone: true,
@@ -20,17 +18,20 @@ import { CommonModule, NgClass } from '@angular/common';
 export class AdminSessionsComponent implements OnInit {
   sessions: Session[] = [];
   courses: Course[] = [];
+  ageGroups: AgeGroup[] = [];
   formOpen = false;
   selectedSession: Session | null = null;
 
   constructor(
     private sessionService: SessionService,
-    private courseService: CourseService
+    private courseService: CourseService,
+    private ageGroupService: AgeGroupService
   ) {}
 
   ngOnInit(): void {
     this.loadSessions();
     this.loadCourses();
+    this.loadAgeGroups();
   }
 
   /** Loads all sessions from the API. */
@@ -46,6 +47,14 @@ export class AdminSessionsComponent implements OnInit {
     this.courseService.getCourses().subscribe({
       next: res => this.courses = res,
       error: () => this.courses = []
+    });
+  }
+
+  /** Loads all age groups for the select. */
+  loadAgeGroups(): void {
+    this.ageGroupService.getAgeGroups().subscribe({
+      next: res => this.ageGroups = res,
+      error: () => this.ageGroups = []
     });
   }
 
