@@ -6,17 +6,16 @@
 <div *ngIf="previewMode" class="course-list preview-grid">
   <div *ngFor="let course of displayedCourses" class="course-card">
     <img
-      [src]="course.imgUrl"
+      [src]="course.imageUrl"
       alt="Image du cours"
       class="course-image"
     />
     <div class="course-details">
-      <h3 class="course-title">{{ course.nom }}</h3>
+      <h3 class="course-title">{{ course.name }}</h3>
       <p class="course-description">{{ course.description }}</p>
-      <!-- → Linka al dettaglio (sessions) -->
       <button
         class="course-button"
-        [routerLink]="['/courses', course.idCours]"
+        [routerLink]="['/courses', course.idCourse]"
       >
         Voir les sessions
       </button>
@@ -43,9 +42,9 @@
       class="status-filter"
     >
       <option value="">Tous les statuts</option>
-      <option value="Actif">Actif</option>
-      <option value="Inactif">Inactif</option>
-      <option value="Brouillon">Brouillon</option>
+      <option value="active">Actif</option>
+      <option value="inactive">Inactif</option>
+      <option value="draft">Brouillon</option>
     </select>
     <button
       *ngIf="canAddCourse"
@@ -68,44 +67,49 @@
       </thead>
       <tbody>
       <tr *ngFor="let course of filteredCourses">
-        <!-- Colonna Cours -->
+        <!-- Course column -->
         <td>
           <img
-            [src]="course.imgUrl"
+            [src]="course.imageUrl"
             alt="img"
             class="course-img"
           />
           <div>
-            <strong>{{ course.nom }}</strong>
+            <strong>{{ course.name }}</strong>
             <div class="desc">{{ course.description }}</div>
           </div>
         </td>
 
-        <!-- Colonna Statut -->
+        <!-- Status column -->
         <td>
-            <span
-              [ngClass]="{
-                'status-actif':    course.statut === 'Actif',
-                'status-inactif':  course.statut === 'Inactif',
-                'status-brouillon':course.statut === 'Brouillon'
-              }"
-            >
-              {{ course.statut }}
-            </span>
+          <span
+            [ngClass]="{
+              'status-actif':    course.status === 'active',
+              'status-inactif':  course.status === 'inactive',
+              'status-brouillon':course.status === 'draft'
+            }"
+          >
+            {{
+              course.status === 'active' ? 'Actif'
+                : course.status === 'inactive' ? 'Inactif'
+                  : course.status === 'draft' ? 'Brouillon'
+                    : course.status
+            }}
+          </span>
         </td>
 
-        <!-- Colonna Sessions -->
+        <!-- Sessions column -->
         <td class="sessions-col">
           <button
             class="icon-btn"
-            [routerLink]="['/courses', course.idCours]"
+            [routerLink]="['/courses', course.idCourse]"
             title="Voir sessions"
           >
             <mat-icon>calendar_today</mat-icon>
           </button>
         </td>
 
-        <!-- Colonna Azioni -->
+        <!-- Actions column -->
         <td>
           <button
             class="icon-btn"

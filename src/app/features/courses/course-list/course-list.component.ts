@@ -7,6 +7,9 @@ import { MatIconModule } from '@angular/material/icon';
 import { CourseService } from '@core/services/course.service';
 import { Course } from '@core/models/course.model';
 
+/**
+ * Component for listing courses (preview or full CRUD table).
+ */
 @Component({
   selector: 'app-course-list',
   standalone: true,
@@ -23,6 +26,7 @@ export class CourseListComponent implements OnInit {
   searchTerm = '';
   selectedStatus = '';
 
+  // You should get the userRole from an AuthService in production
   userRole = 'admin';
 
   get canAddCourse() {
@@ -41,6 +45,9 @@ export class CourseListComponent implements OnInit {
     this.loadCourses();
   }
 
+  /**
+   * Loads the list of courses from the API.
+   */
   loadCourses(): void {
     this.courseService.getCourses().subscribe({
       next: (data) => {
@@ -48,25 +55,37 @@ export class CourseListComponent implements OnInit {
         this.applyFilters();
       },
       error: (err) => {
-        console.error('Errore caricamento corsi:', err);
+        console.error('Error loading courses:', err);
       }
     });
   }
 
+  /**
+   * Courses to display in preview mode.
+   */
   get displayedCourses(): Course[] {
     return this.previewMode
       ? this.courses.slice(0, this.previewCount)
       : this.courses;
   }
 
+  /**
+   * Filters courses based on search term and status.
+   */
   applyFilters(): void {
     this.filteredCourses = this.courses.filter(course =>
-      (!this.searchTerm || course.nom.toLowerCase().includes(this.searchTerm.toLowerCase())) &&
-      (!this.selectedStatus || course.statut === this.selectedStatus)
+      (!this.searchTerm || course.name.toLowerCase().includes(this.searchTerm.toLowerCase())) &&
+      (!this.selectedStatus || course.status === this.selectedStatus)
     );
   }
 
-  onAddCourse(): void { /*...*/ }
-  onEditCourse(course: Course): void { /*...*/ }
-  onDeleteCourse(course: Course): void { /*...*/ }
+  onAddCourse(): void {
+    // To implement: open add course dialog or route
+  }
+  onEditCourse(course: Course): void {
+    // To implement: open edit dialog or route
+  }
+  onDeleteCourse(course: Course): void {
+    // To implement: confirmation and delete
+  }
 }

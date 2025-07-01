@@ -21,6 +21,9 @@ export class CourseDetailComponent implements OnInit {
     private courseService: CourseService
   ) {}
 
+  /**
+   * Load the course details on init, based on route param.
+   */
   ngOnInit(): void {
     const id = Number(this.route.snapshot.paramMap.get('id'));
     this.courseService.getCourseById(id)

@@ -1,14 +1,13 @@
 export interface User {
-  idUtilisateur: number;
-  nom: string;
-  prenom: string;
+  idUser: number;
+  lastName: string;
+  firstName: string;
   email: string;
-  telephone?: string;
-  dateInscription?: Date | string;
+  phone?: string;
+  registrationDate?: Date | string;
   lastLogin?: Date | string;
   avatarUrl?: string;
   bio?: string;
 
-  role?: 'ADMIN' | 'COACH' | 'PROPRIETAIRE';
-
+  role: 'ADMIN' | 'COACH' | 'OWNER';
 }

@@ -2,8 +2,9 @@
   <h2>Bienvenue {{ adminName }} 👋</h2>
   <p>Que souhaitez-vous gérer aujourd'hui ?</p>
 </div>
+
 <div class="dashboard-overview">
-  <div class="overview-card" routerLink="utilisateurs">
+  <div class="overview-card" routerLink="users">
     <div class="icon">👤</div>
     <div>
       <h3>Utilisateurs</h3>
@@ -11,12 +12,12 @@
       <span class="badge">{{ counts.users }} utilisateurs</span>
     </div>
   </div>
-  <div class="overview-card" routerLink="cours">
+  <div class="overview-card" routerLink="courses">
     <div class="icon">📚</div>
     <div>
       <h3>Cours</h3>
       <p>Gérer les programmes de formation canine</p>
-      <span class="badge">{{ counts.cours }} cours</span>
+      <span class="badge">{{ counts.courses }} cours</span>
     </div>
   </div>
   <div class="overview-card" routerLink="sessions">
@@ -27,7 +28,7 @@
       <span class="badge">{{ counts.sessions }} sessions</span>
     </div>
   </div>
-  <div class="overview-card" routerLink="chiens">
+  <div class="overview-card" routerLink="dogs">
     <div class="icon">🐶</div>
     <div>
       <h3>Chiens</h3>

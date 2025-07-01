@@ -1,18 +1,18 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Race } from '@models/race.model';
+import { Breed } from '@models/breed.model';
 import { environment } from '@environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
-export class RaceService {
-  private baseUrl = `${environment.apiUrl}/race`; // adatta se il tuo endpoint è /races
+export class BreedService {
+  private baseUrl = `${environment.apiUrl}/breeds`;
 
   constructor(private http: HttpClient) {}
 
-  getRaces(): Observable<Race[]> {
-    return this.http.get<Race[]>(this.baseUrl);
+  getBreeds(): Observable<Breed[]> {
+    return this.http.get<Breed[]>(this.baseUrl);
   }
 }

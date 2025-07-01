@@ -1,9 +1,11 @@
 <ng-container *ngIf="!error; else notFound">
   <ng-container *ngIf="course; else loading">
-    <h2 class="title">{{ course.nom }}</h2>
-    <img [src]="course.imgUrl" alt="{{ course.nom }}" class="detail-img"/>
+    <h2 class="title">{{ course.name }}</h2>
+    <img [src]="course.imageUrl" alt="{{ course.name }}" class="detail-img"/>
     <p class="description">{{ course.description }}</p>
-    <p><strong>Statut :</strong> <span class="badge">{{ course.statut }}</span></p>
+    <p><strong>Statut :</strong>
+      <span class="badge">{{ course.status === 'active' ? 'Actif' : 'Inactif' }}</span>
+    </p>
 
     <button routerLink="/courses" class="btn btn-outline btn-sm">
       ← Retour aux cours

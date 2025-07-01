@@ -38,10 +38,10 @@ export class RegisterComponent {
     private http: HttpClient
   ) {
     this.registerForm = this.fb.group({
-      prenom: ['', Validators.required],
-      nom: ['', Validators.required],
+      firstName: ['', Validators.required],
+      lastName: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
-      telephone: ['', Validators.required],
+      phone: ['', Validators.required],
       password: ['', [Validators.required, Validators.minLength(6)]],
       confirmPassword: ['', Validators.required],
       conditions: [false, Validators.requiredTrue]
@@ -58,10 +58,10 @@ export class RegisterComponent {
     };
   }
 
-  get prenom(): AbstractControl { return this.registerForm.get('prenom')!; }
-  get nom(): AbstractControl { return this.registerForm.get('nom')!; }
+  get firstName(): AbstractControl { return this.registerForm.get('firstName')!; }
+  get lastName(): AbstractControl { return this.registerForm.get('lastName')!; }
   get email(): AbstractControl { return this.registerForm.get('email')!; }
-  get telephone(): AbstractControl { return this.registerForm.get('telephone')!; }
+  get phone(): AbstractControl { return this.registerForm.get('phone')!; }
   get password(): AbstractControl { return this.registerForm.get('password')!; }
   get confirmPassword(): AbstractControl { return this.registerForm.get('confirmPassword')!; }
   get conditions(): AbstractControl { return this.registerForm.get('conditions')!; }
@@ -78,17 +78,17 @@ export class RegisterComponent {
     this.error = null;
     if (this.registerForm.valid) {
       this.loading = true;
-      const { prenom, nom, email, telephone, password } = this.registerForm.value;
+      const { firstName, lastName, email, phone, password } = this.registerForm.value;
 
-      this.http.post(`${this.authService.baseUrl}/register/proprietaire`, {
-        prenom, nom, email, telephone, password
+      this.http.post(`${this.authService.baseUrl}/register/owner`, {
+        firstName, lastName, email, phone, password
       }).subscribe({
         next: () => {
           this.authService.login(email, password).subscribe({
             next: (success) => {
               this.loading = false;
               if (success) {
-                this.router.navigate(['/dashboard']);
+                this.router.navigate(['/profile']);
               } else {
                 this.error = "Erreur lors de la connexion automatique.";
               }
@@ -99,7 +99,7 @@ export class RegisterComponent {
             }
           });
         },
-        error: (err) => {
+        error: () => {
           this.loading = false;
           this.error = "Erreur lors de l'inscription. Vérifiez vos informations.";
         }

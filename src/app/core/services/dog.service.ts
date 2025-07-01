@@ -1,4 +1,3 @@
-// src/app/core/services/dog.service.ts
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
@@ -10,8 +9,8 @@ import { environment } from '@environments/environment';
   providedIn: 'root'
 })
 export class DogService {
-  private baseUrl    = `${environment.apiUrl}/chien`;    // GET /api/chien → tutti i cani (admin)
-  private myDogsUrl  = `${environment.apiUrl}/chien/me`; // GET /api/chien/me → miei cani
+  private baseUrl    = `${environment.apiUrl}/dogs`;
+  private myDogsUrl  = `${environment.apiUrl}/dogs/me`;
   private uploadUrl  = `${environment.apiUrl}/upload`;
 
   constructor(private http: HttpClient) {}
@@ -29,14 +28,14 @@ export class DogService {
   }
 
   updateDog(dog: Dog): Observable<Dog> {
-    if (!dog.idChien) {
+    if (!dog.idDog) {
       throw new Error('Dog ID is required for update');
     }
-    return this.http.put<Dog>(`${this.baseUrl}/me/${dog.idChien}`, dog);
+    return this.http.put<Dog>(`${this.baseUrl}/me/${dog.idDog}`, dog);
   }
 
-  deleteDog(idChien: number): Observable<void> {
-    return this.http.delete<void>(`${this.baseUrl}/me/${idChien}`);
+  deleteDog(idDog: number): Observable<void> {
+    return this.http.delete<void>(`${this.baseUrl}/me/${idDog}`);
   }
 
   uploadDogPhoto(file: File): Observable<string> {

@@ -1,24 +1,28 @@
-<div class="p-8 max-w-3xl mx-auto" *ngIf="!loading">
-  <h2 class="text-2xl font-bold mb-4">Bonjour Coach {{ coachName }}</h2>
+<div class="dashboard-coach" *ngIf="!loading">
+  <div class="dashboard-header">
+    <h2>Bonjour Coach {{ coach?.firstName }} {{ coach?.lastName }}</h2>
+  </div>
 
-  <div class="mb-4 bg-white rounded-2xl shadow p-4">
-    <h3 class="font-semibold mb-2">Vos sessions</h3>
+  <div class="card">
+    <h3 class="card-title">Vos sessions</h3>
     <button class="btn btn-primary mb-2" routerLink="/sessions/add">Créer une nouvelle session</button>
-    <ul>
-      <li *ngFor="let session of sessions">
-        <span class="font-medium">{{ session.cours.nom }}</span>
-        <span class="text-xs text-gray-500 ml-2">({{ session.date | date:'shortDate' }})</span>
-        <span class="text-xs text-gray-400 ml-2">| {{ session.niveau }}</span>
+    <ul class="session-list">
+      <li *ngFor="let session of sessions" class="session-item">
+        <span class="session-course">{{ session.course?.name }}</span>
+        <span class="session-date">
+          ({{ session.date | date:'shortDate' }})
+        </span>
+        <span class="session-level" *ngIf="session.level">| {{ session.level }}</span>
       </li>
     </ul>
-    <div *ngIf="!sessions || sessions.length === 0" class="text-gray-400 mt-2">
+    <div *ngIf="!sessions || sessions.length === 0" class="text-muted mt-2">
       Aucune session trouvée.
     </div>
   </div>
 
-  <div class="bg-white rounded-2xl shadow p-4">
-    <h3 class="font-semibold mb-2">Statistiques de participation (à venir)</h3>
-    <p>Placeholder...</p>
+  <div class="card">
+    <h3 class="card-title">Statistiques de participation (à venir)</h3>
+    <p class="text-muted">Fonctionnalité en cours de développement...</p>
   </div>
 </div>
-<div *ngIf="loading" class="text-center py-10">Chargement...</div>
+<div *ngIf="loading" class="loading-message">Chargement...</div>

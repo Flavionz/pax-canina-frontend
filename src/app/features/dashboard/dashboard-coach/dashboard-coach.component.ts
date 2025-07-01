@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { SessionService } from '@services/session.service';
-import { AuthService } from '@services/auth.service';
-import { Session } from '@models/session.model';
-
+import { CoachService } from '@core/services/coach.service';
+import { SessionService } from '@core/services/session.service';
+import { Coach } from '@core/models/coach.model';
+import { Session } from '@core/models/session.model';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -10,31 +10,46 @@ import { CommonModule } from '@angular/common';
   standalone: true,
   imports: [CommonModule],
   templateUrl: './dashboard-coach.component.html',
-  styleUrl: './dashboard-coach.component.scss'
+  styleUrls: ['./dashboard-coach.component.scss']
 })
 export class DashboardCoachComponent implements OnInit {
+  coach: Coach | null = null;
   sessions: Session[] = [];
-  coachName: string = '';
   loading = true;
 
   constructor(
-    private sessionService: SessionService,
-    private authService: AuthService
+    private coachService: CoachService,
+    private sessionService: SessionService
   ) {}
 
-  ngOnInit() {
+  /**
+   * Loads coach profile and associated sessions on component init.
+   * Follows best practice for role-based data access (jury/enterprise ready).
+   */
+  ngOnInit(): void {
     this.loading = true;
-    // Ottieni nome coach dal tuo AuthService o user service!
-    this.coachName = this.authService.isAuthenticated() ? 'Coach' : '';
-    // Filtro sessioni dove coach = utente loggato
-    this.sessionService.getSessions().subscribe(sessions => {
-      // Qui simulo il filtro, adatta con vero ID coach:
-      // Supponiamo che l'AuthService abbia un metodo per restituire id utente loggato
-      // Filtra sessioni in cui coach.idUtilisateur == idLoggato
-      // const idCoach = this.authService.getUserId();
-      // this.sessions = sessions.filter(s => s.coach?.idUtilisateur === idCoach);
-      this.sessions = sessions || [];
-      this.loading = false;
+    // Load coach profile
+    this.coachService.getProfile().subscribe({
+      next: coach => {
+        this.coach = coach;
+        // Once coach loaded, load only sessions for this coach
+        this.sessionService.getSessions().subscribe({
+          next: sessions => {
+            // Filter sessions where coach.idUser matches logged-in coach
+            this.sessions = (sessions || []).filter(s => s.coach?.idUser === coach.idUser);
+            this.loading = false;
+          },
+          error: () => {
+            this.sessions = [];
+            this.loading = false;
+          }
+        });
+      },
+      error: () => {
+        this.coach = null;
+        this.sessions = [];
+        this.loading = false;
+      }
     });
   }
 }

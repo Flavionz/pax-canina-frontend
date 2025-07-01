@@ -1,4 +1,3 @@
-
 <div class="admin-courses">
   <div class="header">
     <h2>Cours proposés</h2>
@@ -17,20 +16,22 @@
     </thead>
     <tbody>
     <tr *ngFor="let course of courses">
-      <td>{{ course.nom }}</td>
+      <td>{{ course.name }}</td>
       <td class="desc">{{ course.description | slice:0:50 }}...</td>
       <td>
-          <span class="badge" [ngClass]="{
-            'badge-success': course.statut === 'OUVERT',
-            'badge-danger': course.statut === 'FERME'
-          }">{{ course.statut }}</span>
+          <span class="badge"
+                [ngClass]="{
+              'badge-success': course.status === 'OPEN',
+              'badge-danger': course.status === 'CLOSED'
+            }"
+          >{{ course.status === 'OPEN' ? 'OUVERT' : 'FERMÉ' }}</span>
       </td>
       <td>
-        <img *ngIf="course.imgUrl" [src]="course.imgUrl" alt="img" class="course-img" />
+        <img *ngIf="course.imageUrl" [src]="course.imageUrl" alt="img" class="course-img" />
       </td>
       <td>
         <button class="btn btn-sm btn-secondary" (click)="editCourse(course)">Modifier</button>
-        <button class="btn btn-sm btn-danger" (click)="deleteCourse(course.idCours)">Supprimer</button>
+        <button class="btn btn-sm btn-danger" (click)="deleteCourse(course.idCourse)">Supprimer</button>
       </td>
     </tr>
     </tbody>
@@ -42,7 +43,7 @@
     </div>
   </ng-template>
 
-  <!-- Modale per il form (puoi aggiungere un overlay se vuoi) -->
+  <!-- Inline modal for the course form -->
   <app-course-form
     *ngIf="formOpen"
     [course]="selectedCourse"

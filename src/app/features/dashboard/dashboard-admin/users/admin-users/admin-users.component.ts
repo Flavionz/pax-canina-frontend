@@ -4,10 +4,14 @@ import { User } from '@core/models/user.model';
 import { UserService } from '@core/services/user.service';
 import { UserFormComponent } from './user-form/user-form.component';
 
+/**
+ * Admin Users Management Component
+ * Handles display, creation, editing, and deletion of users (admin, coach, owner).
+ */
 @Component({
   selector: 'app-admin-users',
   standalone: true,
-  imports: [CommonModule,UserFormComponent],
+  imports: [CommonModule, UserFormComponent],
   templateUrl: './admin-users.component.html',
   styleUrls: ['./admin-users.component.scss']
 })
@@ -33,9 +37,10 @@ export class AdminUsersComponent implements OnInit {
         this.users = users;
         this.loading = false;
       },
-      error: () => {
+      error: (err) => {
         this.error = "Erreur lors du chargement des utilisateurs.";
         this.loading = false;
+        console.error(err);
       }
     });
   }
@@ -46,41 +51,64 @@ export class AdminUsersComponent implements OnInit {
   }
 
   onEditUser(user: User): void {
-    // Attenzione: clona l'oggetto per non mutare la tabella direttamente!
     this.userToEdit = { ...user };
     this.showForm = true;
   }
 
   onSaveUser(user: User): void {
-    if (user.idUtilisateur) {
-      this.userService.updateUser(user.idUtilisateur, user).subscribe({
+    if (user.idUser) {
+      this.userService.updateUser(user.idUser, user).subscribe({
         next: () => {
           this.fetchUsers();
           this.showForm = false;
+          this.userToEdit = null;
         },
-        error: () => this.error = "Erreur lors de la mise à jour de l'utilisateur."
+        error: (err) => {
+          this.error = "Erreur lors de la mise à jour de l'utilisateur.";
+          console.error(err);
+        }
       });
     } else {
       this.userService.createUser(user).subscribe({
         next: () => {
           this.fetchUsers();
           this.showForm = false;
+          this.userToEdit = null;
         },
-        error: () => this.error = "Erreur lors de la création de l'utilisateur."
+        error: (err) => {
+          this.error = "Erreur lors de la création de l'utilisateur.";
+          console.error(err);
+        }
       });
     }
   }
 
   onCancelForm(): void {
     this.showForm = false;
+    this.userToEdit = null;
   }
 
   onDeleteUser(user: User): void {
     if (confirm(`Supprimer l'utilisateur ${user.email} ?`)) {
-      this.userService.deleteUser(user.idUtilisateur).subscribe({
+      this.userService.deleteUser(user.idUser).subscribe({
         next: () => this.fetchUsers(),
-        error: () => this.error = "Erreur lors de la suppression."
+        error: (err) => {
+          this.error = "Erreur lors de la suppression.";
+          console.error(err);
+        }
       });
+    }
+  }
+
+  /**
+   * Translate backend role to French label for UI
+   */
+  translateRole(role: string): string {
+    switch (role) {
+      case 'ADMIN': return 'Administrateur';
+      case 'COACH': return 'Coach';
+      case 'OWNER': return 'Propriétaire';
+      default: return 'Utilisateur';
     }
   }
 }

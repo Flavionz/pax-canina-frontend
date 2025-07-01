@@ -1,7 +1,12 @@
+import { Specialization } from './specialization.model';
+import { Session } from './session.model';
+
 export interface Course {
-  idCours: number;
-  nom: string;
-  description: string;
-  statut: string;
-  imgUrl?: string;
+  idCourse: number;
+  name: string;
+  description?: string;
+  status?: string;
+  imageUrl?: string;
+  specializations?: Specialization[];
+  sessions?: Session[];
 }

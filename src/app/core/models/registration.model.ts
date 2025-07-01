@@ -1,25 +1,26 @@
 export interface Registration {
-  idInscription?: number;
-  dateInscription?: string;
-  statut: string;
-  dateAnnulation?: string;
-  motifAnnulation?: string;
+  idRegistration?: number;
+  registrationDate?: string;
+  status: string;
+
+  cancellationDate?: string;
+  cancellationReason?: string;
 
   session: {
     idSession: number;
     date: string;
-    niveau: string;
-    heureDebut: string;
-    heureFin: string;
-    cours: {
-      idCours: number;
-      nom: string;
+    level?: string;
+    startTime?: string;
+    endTime?: string;
+    course: {
+      idCourse: number;
+      name: string;
     }
   };
 
-  chien: {
-    idChien: number;
-    nom: string;
+  dog: {
+    idDog: number;
+    name: string;
     photoUrl?: string;
   };
 }

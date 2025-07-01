@@ -1,48 +1,34 @@
 export interface Session {
-  idSession: number;
-
+  idSession?: number;
   date: string;
-
-  niveau: string;
-
-  heureDebut: string;
-
-  heureFin: string;
-
-  capaciteMax: number;
-
-  inscriptionsCount?: number;
-
+  level?: string;
+  startTime?: string;
+  endTime?: string;
+  maxCapacity?: number;
+  registrationsCount?: number;
   description?: string;
+  location?: string;
+  imageUrl?: string;
 
-  lieu?: string;
-
-  imgUrl?: string;
-
-  cours: {
-    idCours: number;
-    nom: string;
-    imgUrl?: string;
+  course?: {
+    idCourse: number;
+    name: string;
+    imageUrl?: string;
   };
 
   coach?: {
-    idUtilisateur: number;
-    prenom: string;
-    nom: string;
+    idUser: number;
+    firstName: string;
+    lastName: string;
     avatarUrl?: string;
   };
 
-  trancheAge: {
-    idTranche: number;
-    nom: string;
-    ageMin: number;
-    ageMax: number;
+  ageGroup?: {
+    idAgeGroup: number;
+    name: string;
+    ageMin?: number;
+    ageMax?: number;
   };
 
-  /**
-   * Disponibilità calcolata:
-   * - “available” se inscriptionsCount < capaciteMax
-   * - “full” se >= capaciteMax
-   */
-  status: 'available' | 'full';
+  status?: 'available' | 'full';
 }

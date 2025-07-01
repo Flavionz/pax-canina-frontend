@@ -22,16 +22,8 @@ import {
 } from '@angular/material/core';
 
 import { DogService } from '@core/services/dog.service';
-
-export interface Dog {
-  nom: string;
-  race: string;
-  dateNaissance: string | Date;
-  sexe: string;
-  poids: number;
-  numeroPuce?: string;
-  photo_url?: string;
-}
+import { BreedService } from '@core/services/breed.service';
+import { Dog } from '@core/models/dog.model';
 
 export const FRENCH_DATE_FORMATS = {
   parse: { dateInput: 'DD/MM/YYYY' },
@@ -56,9 +48,7 @@ export const FRENCH_DATE_FORMATS = {
     MatIconModule,
     MatDatepickerModule,
     MatNativeDateModule,
-    MatDialogContent,
-    MatDialogTitle,
-    MatDialogActions
+
   ],
   providers: [
     provideNativeDateAdapter(),
@@ -72,43 +62,67 @@ export class AddDogDialogComponent implements OnInit {
   dogForm!: FormGroup;
   isEditMode = false;
   selectedPhotoFile: File | null = null;
+  breeds: { idBreed: number; name: string }[] = []; // List of available breeds
 
   constructor(
     private fb: FormBuilder,
     private dogService: DogService,
+    private breedService: BreedService, // inject the BreedService
     public dialogRef: MatDialogRef<AddDogDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: { dog?: Dog }
   ) {}
 
   ngOnInit(): void {
+    // Form fields follow the English backend model
     this.dogForm = this.fb.group({
-      nom: ['', Validators.required],
-      race: ['', Validators.required],
-      dateNaissance: ['', Validators.required],
-      sexe: ['', Validators.required],
-      poids: ['', [Validators.required, Validators.min(0)]],
-      numeroPuce: [''],
+      name: ['', Validators.required],
+      idBreed: ['', Validators.required], // breed select, required
+      birthDate: ['', Validators.required],
+      sex: ['', Validators.required],
+      weight: ['', [Validators.required, Validators.min(0)]],
+      chipNumber: [''],
       photoUrl: ['']
+    });
+
+    // Load breeds from backend for select
+    this.breedService.getBreeds().subscribe(breeds => {
+      this.breeds = breeds;
     });
 
     if (this.data?.dog) {
       this.isEditMode = true;
-      this.dogForm.patchValue(this.data.dog);
+      // Patch only fields that exist in the form
+      this.dogForm.patchValue({
+        name: this.data.dog.name,
+        idBreed: this.data.dog.idBreed,
+        birthDate: this.data.dog.birthDate,
+        sex: this.data.dog.sex,
+        weight: this.data.dog.weight,
+        chipNumber: this.data.dog.chipNumber,
+        photoUrl: this.data.dog.photoUrl
+      });
     }
   }
 
+  /**
+   * Handles file selection for photo upload
+   */
   onFileSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
     if (input.files?.length) {
       this.selectedPhotoFile = input.files[0];
-      this.dogForm.patchValue({ photo_url: this.selectedPhotoFile.name });
+      // We don't set photoUrl now; it will be set after upload
     }
   }
 
+  /**
+   * Handles form submit: uploads photo if present, then emits dog data
+   */
   onSubmit(): void {
     if (this.dogForm.valid) {
       const dogData = this.dogForm.value;
 
+      // If user selected a photo, upload it before saving the dog
       if (this.selectedPhotoFile) {
         this.dogService.uploadDogPhoto(this.selectedPhotoFile).subscribe({
           next: (photoUrl: string) => {
@@ -117,7 +131,7 @@ export class AddDogDialogComponent implements OnInit {
           },
           error: () => {
             console.error("Erreur lors de l'upload de l'image");
-            this.dialogRef.close(dogData);
+            this.dialogRef.close(dogData); // fallback: return even if upload fails
           }
         });
       } else {
@@ -126,6 +140,9 @@ export class AddDogDialogComponent implements OnInit {
     }
   }
 
+  /**
+   * Closes the dialog without saving
+   */
   cancel(): void {
     this.dialogRef.close();
   }

@@ -1,6 +1,6 @@
 import { User } from './user.model';
-import { Specialisation } from './specialisation.model';
+import { Specialization } from './specialization.model';
 
 export interface Coach extends User {
-  specialisations?: Specialisation[];
+  specializations?: Specialization[];
 }

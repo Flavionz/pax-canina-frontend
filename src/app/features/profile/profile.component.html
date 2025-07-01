@@ -1,4 +1,4 @@
-<!-- Show loading spinner/message while profile is loading -->
+<!-- Show loading message while profile is loading -->
 <div *ngIf="loading && !user">
   <p>Chargement du profil en cours...</p>
 </div>
@@ -6,15 +6,15 @@
 <!-- Show error message if any -->
 <div *ngIf="errorMsg" class="error-msg">{{ errorMsg }}</div>
 
-<!-- Main profile section, rendered if user data is present -->
+<!-- Main profile content (displayed only if user exists) -->
 <div *ngIf="user">
 
-  <!-- Welcome title -->
+  <!-- Welcome section -->
   <div class="profile-welcome">
-    <h1>Bienvenue {{ user.prenom }}</h1>
+    <h1>Bienvenue {{ user.firstName }}</h1>
     <p>
       Gérez vos informations personnelles
-      <span *ngIf="proprietaire">et vos chiens enregistrés</span>
+      <span *ngIf="owner">et vos chiens enregistrés</span>
       <span *ngIf="coach">et vos spécialisations</span>
     </p>
   </div>
@@ -22,110 +22,98 @@
   <div class="profile-page">
     <div class="profile-header">
 
-      <!-- Top action bar: Edit/Save/Cancel -->
+      <!-- Action bar: edit, save, cancel -->
       <div class="profile-banner">
-        <button
-          *ngIf="!editingProfile"
-          class="btn btn-outline btn-md"
-          (click)="startEditProfile()"
-        >
+        <button *ngIf="!editingProfile"
+                class="btn btn-outline btn-md"
+                (click)="startEditProfile()">
           <span class="material-icons">edit</span> Modifier
         </button>
-        <button
-          *ngIf="editingProfile"
-          class="btn btn-primary btn-md"
-          (click)="saveProfile()"
-          [disabled]="loading"
-        >
+        <button *ngIf="editingProfile"
+                class="btn btn-primary btn-md"
+                (click)="saveProfile()"
+                [disabled]="loading">
           <span class="material-icons">save</span> Enregistrer
         </button>
-        <button
-          *ngIf="editingProfile"
-          class="btn btn-outline btn-md"
-          (click)="cancelEditProfile()"
-          [disabled]="loading"
-        >
+        <button *ngIf="editingProfile"
+                class="btn btn-outline btn-md"
+                (click)="cancelEditProfile()"
+                [disabled]="loading">
           <span class="material-icons">close</span> Annuler
         </button>
       </div>
 
-      <!-- Avatar with change/upload overlay -->
+      <!-- Avatar upload and preview -->
       <div class="profile-avatar-container">
         <div class="avatar-wrapper">
-          <img
-            class="profile-avatar"
-            [src]="avatarPreview || getAvatarUrl(user)"
-            alt="Avatar de {{ user.prenom }}"
-          />
-          <!-- Show upload button only when editing -->
-          <button
-            *ngIf="editingProfile"
-            class="avatar-overlay-btn"
-            (click)="avatarFileInput.click()"
-            [disabled]="loading"
-            aria-label="Changer l'avatar"
-            type="button"
-          >
+          <img class="profile-avatar"
+               [src]="avatarPreview || getAvatarUrl(user)"
+               [alt]="'Avatar de ' + user.firstName" />
+          <button *ngIf="editingProfile"
+                  class="avatar-overlay-btn"
+                  (click)="avatarFileInput.click()"
+                  [disabled]="loading"
+                  aria-label="Changer l'avatar"
+                  type="button">
             <mat-icon>camera_alt</mat-icon>
           </button>
-          <input
-            type="file"
-            #avatarFileInput
-            accept="image/*"
-            style="display: none"
-            (change)="onAvatarSelected($event)"
-          />
+          <input type="file"
+                 #avatarFileInput
+                 accept="image/*"
+                 style="display: none"
+                 (change)="onAvatarSelected($event)" />
         </div>
-        <!-- Show avatar preview actions when a new avatar is selected -->
         <div *ngIf="avatarPreview" class="avatar-preview-actions">
-          <button class="btn btn-primary btn-lg" (click)="confirmAvatarUpload()" [disabled]="loading">
+          <button class="btn btn-primary btn-lg"
+                  (click)="confirmAvatarUpload()"
+                  [disabled]="loading">
             Sauvegarder l'avatar
           </button>
-          <button class="btn btn-outline btn-lg" (click)="cancelAvatarSelection()" [disabled]="loading">
+          <button class="btn btn-outline btn-lg"
+                  (click)="cancelAvatarSelection()"
+                  [disabled]="loading">
             Annuler
           </button>
         </div>
       </div>
 
-      <!-- Profile content: Tabs with personal info, dogs, registrations -->
+      <!-- Tabbed profile content -->
       <div class="profile-content">
         <mat-tab-group [(selectedIndex)]="selectedTabIndex">
 
           <!-- PERSONAL INFO TAB -->
           <mat-tab label="Informations personnelles">
             <form class="profile-info-grid" autocomplete="off">
-
               <div>
                 <h3>Informations personnelles</h3>
 
-                <!-- First name field (editable) -->
+                <!-- First name (editable) -->
                 <div>
                   <strong>Prénom</strong><br>
                   <ng-container *ngIf="!editingProfile; else editFirstName">
-                    {{ user.prenom }}
+                    {{ user.firstName }}
                   </ng-container>
                   <ng-template #editFirstName>
-                    <input [(ngModel)]="user.prenom" name="prenom" required />
+                    <input [(ngModel)]="user.firstName" name="firstName" placeholder="Votre prénom" required />
                   </ng-template>
                 </div>
 
-                <!-- Last name field (editable) -->
+                <!-- Last name (editable) -->
                 <div>
                   <strong>Nom</strong><br>
                   <ng-container *ngIf="!editingProfile; else editLastName">
-                    {{ user.nom }}
+                    {{ user.lastName }}
                   </ng-container>
                   <ng-template #editLastName>
-                    <input [(ngModel)]="user.nom" name="nom" required />
+                    <input [(ngModel)]="user.lastName" name="lastName" placeholder="Votre nom" required />
                   </ng-template>
                 </div>
 
-                <!-- Email: Read-only, masked and locked for admin -->
+                <!-- Email (readonly, masked for admin) -->
                 <div>
                   <strong>Email</strong><br>
                   <span style="display: flex; align-items: center; gap: 4px;">
-                    <!-- Show masked email + lock icon for admin, otherwise plain email -->
-                    <ng-container *ngIf="isAdmin(); else normalEmail">
+                    <ng-container *ngIf="admin; else normalEmail">
                       {{ maskEmail(user.email) }}
                       <mat-icon style="font-size:1em;color:#999;" aria-label="Non editable">lock</mat-icon>
                     </ng-container>
@@ -135,55 +123,55 @@
                   </span>
                 </div>
 
-                <!-- Phone field (editable) -->
+                <!-- Phone (editable) -->
                 <div>
                   <strong>Téléphone</strong><br>
-                  <ng-container *ngIf="!editingProfile; else editTel">
-                    {{ user.telephone }}
+                  <ng-container *ngIf="!editingProfile; else editPhone">
+                    {{ user.phone }}
                   </ng-container>
-                  <ng-template #editTel>
-                    <input [(ngModel)]="user.telephone" name="telephone" />
+                  <ng-template #editPhone>
+                    <input [(ngModel)]="user.phone" name="phone" placeholder="Votre téléphone" />
                   </ng-template>
                 </div>
 
-                <!-- Proprietaire-specific address fields -->
-                <ng-container *ngIf="proprietaire">
+                <!-- Owner-only fields -->
+                <ng-container *ngIf="owner">
                   <div>
                     <strong>Adresse</strong><br>
                     <ng-container *ngIf="!editingProfile; else editAddress">
-                      {{ proprietaire.adresse }}
+                      {{ owner.address }}
                     </ng-container>
                     <ng-template #editAddress>
-                      <input [(ngModel)]="proprietaire.adresse" name="adresse" />
+                      <input [(ngModel)]="owner.address" name="address" placeholder="Votre adresse" />
                     </ng-template>
                   </div>
                   <div>
                     <strong>Ville</strong><br>
                     <ng-container *ngIf="!editingProfile; else editCity">
-                      {{ proprietaire.ville }}
+                      {{ owner.city }}
                     </ng-container>
                     <ng-template #editCity>
-                      <input [(ngModel)]="proprietaire.ville" name="ville" />
+                      <input [(ngModel)]="owner.city" name="city" placeholder="Votre ville" />
                     </ng-template>
                   </div>
                   <div>
                     <strong>Code postal</strong><br>
                     <ng-container *ngIf="!editingProfile; else editPostal">
-                      {{ proprietaire.codePostal }}
+                      {{ owner.postalCode }}
                     </ng-container>
                     <ng-template #editPostal>
-                      <input [(ngModel)]="proprietaire.codePostal" name="codePostal" />
+                      <input [(ngModel)]="owner.postalCode" name="postalCode" placeholder="Code postal" />
                     </ng-template>
                   </div>
                 </ng-container>
 
-                <!-- Coach-specific: specializations list -->
+                <!-- Coach-only: Specializations -->
                 <ng-container *ngIf="coach">
                   <div>
                     <strong>Spécialisations</strong><br>
-                    <span *ngIf="coach.specialisations?.length; else noSpecs">
-                      <span *ngFor="let spec of coach.specialisations; let last = last">
-                        {{ spec.nom }}<span *ngIf="!last">, </span>
+                    <span *ngIf="coach.specializations?.length; else noSpecs">
+                      <span *ngFor="let spec of coach.specializations; let last = last">
+                        {{ spec.name }}<span *ngIf="!last">, </span>
                       </span>
                     </span>
                     <ng-template #noSpecs>
@@ -192,8 +180,8 @@
                   </div>
                 </ng-container>
 
-                <!-- Admin role label -->
-                <div *ngIf="isAdmin()">
+                <!-- Admin-only: Role label -->
+                <div *ngIf="admin">
                   <strong>Rôle :</strong> Administrateur
                 </div>
               </div>
@@ -207,20 +195,19 @@
                     {{ user.bio }}
                   </ng-container>
                   <ng-template #editBio>
-                    <textarea [(ngModel)]="user.bio" name="bio" rows="3"></textarea>
+                    <textarea [(ngModel)]="user.bio" name="bio" rows="3" placeholder="Parlez de vous"></textarea>
                   </ng-template>
                 </div>
-                <!-- Member since -->
                 <div>
                   <strong>Membre depuis</strong><br>
-                  {{ user.dateInscription | date:'MMMM yyyy' }}
+                  {{ user.registrationDate | date:'MMMM yyyy' }}
                 </div>
               </div>
             </form>
           </mat-tab>
 
-          <!-- DOGS TAB (only for proprietaire) -->
-          <mat-tab *ngIf="proprietaire" label="Mes chiens">
+          <!-- DOGS TAB (owners only) -->
+          <mat-tab *ngIf="owner" label="Mes chiens">
             <div class="dogs-header">
               <h3>Mes chiens</h3>
               <button class="btn btn-primary btn-md" (click)="openAddDogDialog()">
@@ -228,10 +215,10 @@
               </button>
             </div>
             <div class="dog-list">
-              <ng-container *ngIf="proprietaire.chiens && proprietaire.chiens.length > 0; else noDogs">
-                <div class="dog-card" *ngFor="let dog of proprietaire.chiens">
+              <ng-container *ngIf="owner.dogs && owner.dogs.length > 0; else noDogs">
+                <div class="dog-card" *ngFor="let dog of owner.dogs">
                   <div class="dog-photo" *ngIf="dog.photoUrl; else noPhoto">
-                    <img [src]="getDogPhotoUrl(dog)" [alt]="'Photo de ' + dog.nom" />
+                    <img [src]="getDogPhotoUrl(dog)" [alt]="'Photo de ' + dog.name" />
                   </div>
                   <ng-template #noPhoto>
                     <div class="dog-photo placeholder" aria-label="Pas de photo disponible">
@@ -239,12 +226,12 @@
                     </div>
                   </ng-template>
                   <div class="dog-info">
-                    <h4>{{ dog.nom }}</h4>
-                    <div class="dog-breed-age">{{ dog.race }}, {{ getDogAge(dog.dateNaissance) }}</div>
+                    <h4>{{ dog.name }}</h4>
+                    <div class="dog-breed-age">{{ dog.breedName }}, {{ getDogAge(dog.birthDate) }}</div>
                     <div class="dog-details">
-                      <div><strong>Sexe</strong> <span>{{ dog.sexe }}</span></div>
-                      <div><strong>Poids</strong> <span>{{ dog.poids }} kg</span></div>
-                      <div *ngIf="dog.numeroPuce"><strong>Puce</strong> <span>{{ dog.numeroPuce }}</span></div>
+                      <div><strong>Sexe</strong> <span>{{ dog.sex }}</span></div>
+                      <div><strong>Poids</strong> <span>{{ dog.weight }} kg</span></div>
+                      <div *ngIf="dog.chipNumber"><strong>Puce</strong> <span>{{ dog.chipNumber }}</span></div>
                     </div>
                     <div class="dog-actions">
                       <button class="btn btn-outline btn-xs dog-edit" (click)="editDog(dog)">Modifier</button>
@@ -264,13 +251,14 @@
             </div>
           </mat-tab>
 
-          <!-- REGISTRATIONS TAB (only for proprietaire) -->
-          <mat-tab *ngIf="proprietaire" label="Mes inscriptions">
-            <div class="p-6 space-y-4" *ngIf="proprietaire.inscriptions && proprietaire.inscriptions.length > 0; else noRegistrations">
-              <div *ngFor="let reg of proprietaire.inscriptions" class="border rounded p-4 shadow-sm">
-                <p><strong>Activité :</strong> {{ reg.session.cours.nom }}</p>
-                <p><strong>Date :</strong> {{ reg.session.date | date }}</p>
-                <p><strong>Statut :</strong> {{ reg.statut }}</p>
+          <!-- REGISTRATIONS TAB (owners only) -->
+          <mat-tab *ngIf="owner" label="Mes inscriptions">
+            <div class="p-6 space-y-4"
+                 *ngIf="owner.registrations && owner.registrations.length > 0; else noRegistrations">
+              <div *ngFor="let reg of owner.registrations" class="border rounded p-4 shadow-sm">
+                <p><strong>Activité :</strong> {{ reg.session.course.name }}</p>
+                <p><strong>Date :</strong> {{ reg.session.date | date:'dd/MM/yyyy' }}</p>
+                <p><strong>Statut :</strong> {{ reg.status }}</p>
               </div>
             </div>
             <ng-template #noRegistrations>

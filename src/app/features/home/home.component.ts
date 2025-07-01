@@ -4,8 +4,11 @@ import { RouterModule } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { CourseListComponent } from '@features/courses/course-list/course-list.component';
-import { CoursesModule } from '@app/features/courses/courses.module';
 
+/**
+ * Home page of Pax Canina.
+ * Showcases a hero section, mission, services, and a featured preview of courses.
+ */
 @Component({
   selector: 'app-home',
   standalone: true,
@@ -14,8 +17,7 @@ import { CoursesModule } from '@app/features/courses/courses.module';
     RouterModule,
     MatCardModule,
     MatButtonModule,
-    CourseListComponent,
-    CoursesModule
+    CourseListComponent
   ],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss']

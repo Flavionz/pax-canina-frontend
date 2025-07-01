@@ -1,66 +1,70 @@
-<div class="form-overlay">
-  <form [formGroup]="form" class="session-form" (ngSubmit)="submit()">
-    <h3>{{ session ? 'Modifier une session' : 'Nouvelle session' }}</h3>
+<form [formGroup]="form" (ngSubmit)="submit()" class="session-form">
+  <div class="form-row">
+    <label>Cours *</label>
+    <select formControlName="courseId" required>
+      <option value="">Sélectionner...</option>
+      <option *ngFor="let c of courses" [value]="c.idCourse">
+        {{ c.name }}
+      </option>
+    </select>
+  </div>
 
-    <div class="form-group">
-      <label>Cours *</label>
-      <select formControlName="cours" required>
-        <option [ngValue]="null" disabled>Sélectionner...</option>
-        <option *ngFor="let c of courses" [ngValue]="c.idCours">{{ c.nom }}</option>
-      </select>
-    </div>
+  <div class="form-row">
+    <label>Date *</label>
+    <input type="date" formControlName="date" required>
+  </div>
 
-    <div class="form-row">
-      <div class="form-group">
-        <label>Date *</label>
-        <input type="date" formControlName="date" required />
-      </div>
-      <div class="form-group">
-        <label>Heure début *</label>
-        <input type="time" formControlName="heureDebut" required />
-      </div>
-      <div class="form-group">
-        <label>Heure fin *</label>
-        <input type="time" formControlName="heureFin" required />
-      </div>
-    </div>
+  <div class="form-row">
+    <label>Heure début *</label>
+    <input type="time" formControlName="startTime" required>
+    <label>Heure fin *</label>
+    <input type="time" formControlName="endTime" required>
+  </div>
 
-    <div class="form-row">
-      <div class="form-group">
-        <label>Niveau *</label>
-        <input type="text" formControlName="niveau" required />
-      </div>
-      <div class="form-group">
-        <label>Capacité max *</label>
-        <input type="number" formControlName="capaciteMax" min="1" required />
-      </div>
-    </div>
+  <div class="form-row">
+    <label>Niveau *</label>
+    <select formControlName="level" required>
+      <option value="">Sélectionner...</option>
+      <option value="DEBUTANT">Débutant</option>
+      <option value="INTERMEDIAIRE">Intermédiaire</option>
+      <option value="AVANCE">Avancé</option>
+    </select>
+    <label>Capacité max *</label>
+    <input type="number" formControlName="maxCapacity" min="1" required>
+  </div>
 
-    <div class="form-row">
-      <div class="form-group">
-        <label>Lieu</label>
-        <input type="text" formControlName="lieu" />
-      </div>
-      <div class="form-group">
-        <label>Image (URL)</label>
-        <input type="text" formControlName="imgUrl" />
-      </div>
-    </div>
+  <div class="form-row">
+    <label>Lieu</label>
+    <input type="text" formControlName="location">
+    <label>Image (URL)</label>
+    <input type="text" formControlName="imageUrl">
+  </div>
 
-    <div class="form-group">
-      <label>Description</label>
-      <textarea formControlName="description" rows="2"></textarea>
-    </div>
+  <div class="form-row">
+    <label>Description</label>
+    <textarea formControlName="description"></textarea>
+  </div>
 
-    <div class="form-group">
-      <label>Tranche d’âge *</label>
-      <input type="text" formControlName="trancheAge" required placeholder="ex. Junior, Adulte..." />
-      <!-- In futuro: select collegato alle tranche reali -->
-    </div>
+  <div class="form-row">
+    <label>Tranche d'âge *</label>
+    <select formControlName="ageGroupId" required>
+      <option value="">Sélectionner...</option>
+      <option *ngFor="let ag of ageGroups" [value]="ag.idAgeGroup">
+        {{ translateAgeGroup(ag.name) }}
+        <ng-container *ngIf="ag.minAge !== null && ag.minAge !== undefined">
+          <ng-container *ngIf="ag.maxAge !== null && ag.maxAge !== undefined">
+            ({{ ag.minAge }} - {{ ag.maxAge }} mois)
+          </ng-container>
+          <ng-container *ngIf="ag.maxAge === null || ag.maxAge === undefined">
+            ({{ ag.minAge }} mois+)
+          </ng-container>
+        </ng-container>
+      </option>
+    </select>
+  </div>
 
-    <div class="btn-row">
-      <button class="btn btn-primary" type="submit" [disabled]="form.invalid">Enregistrer</button>
-      <button class="btn btn-secondary" type="button" (click)="closeModal()">Annuler</button>
-    </div>
-  </form>
-</div>
+  <div class="actions">
+    <button type="submit" [disabled]="form.invalid">Enregistrer</button>
+    <button type="button" (click)="closeModal()">Annuler</button>
+  </div>
+</form>

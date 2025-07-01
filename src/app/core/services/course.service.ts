@@ -9,7 +9,7 @@ import { environment } from '@environments/environment';
 })
 export class CourseService {
 
-  private baseUrl = `${environment.apiUrl}/cours`;
+  private baseUrl = `${environment.apiUrl}/courses`;
 
   constructor(private http: HttpClient) {}
 
@@ -26,9 +26,8 @@ export class CourseService {
   }
 
   updateCourse(course: Course): Observable<Course> {
-    return this.http.put<Course>(`${this.baseUrl}/${course.idCours}`, course);
+    return this.http.put<Course>(`${this.baseUrl}/${course.idCourse}`, course);
   }
-
 
   deleteCourse(id: number): Observable<void> {
     return this.http.delete<void>(`${this.baseUrl}/${id}`);

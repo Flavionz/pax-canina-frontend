@@ -1,18 +1,18 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { AgeRange } from '@models/age-range.model';
+import { AgeGroup } from '@core/models/age-group.model';
 import { environment } from '@environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
-export class AgeRangeService {
-  private baseUrl = `${environment.apiUrl}/tranche-age`; // adatta in base al tuo controller
+export class AgeGroupService {
+  private baseUrl = `${environment.apiUrl}/age-group`;
 
   constructor(private http: HttpClient) {}
 
-  getAgeRanges(): Observable<AgeRange[]> {
-    return this.http.get<AgeRange[]>(this.baseUrl);
+  getAgeGroups(): Observable<AgeGroup[]> {
+    return this.http.get<AgeGroup[]>(this.baseUrl);
   }
 }

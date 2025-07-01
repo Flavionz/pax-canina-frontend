@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Specialisation } from '@models/specialisation.model';
+import { Specialization } from '@models/specialization.model';
 import { environment } from '@environments/environment';
 
 @Injectable({
@@ -12,7 +12,7 @@ export class SpecialisationService {
 
   constructor(private http: HttpClient) {}
 
-  getSpecialisations(): Observable<Specialisation[]> {
-    return this.http.get<Specialisation[]>(this.baseUrl);
+  getSpecialisations(): Observable<Specialization[]> {
+    return this.http.get<Specialization[]>(this.baseUrl);
   }
 }

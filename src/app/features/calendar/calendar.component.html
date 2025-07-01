@@ -1,5 +1,3 @@
-<!-- src/app/features/calendar/calendar.component.html -->
-
 <div class="calendar-page">
   <div class="calendar-grid">
     <div class="calendar-panel mat-elevation-z2">
@@ -18,9 +16,9 @@
           <li *ngFor="let s of sessionsForSelectedDate" (click)="openSessionDetail(s)" tabindex="0">
             <div class="session-card" [class.full]="s.status === 'full'">
               <div>
-                <span class="title">{{ s.cours.nom }}</span>
-                <span class="hour">{{ s.heureDebut }}-{{ s.heureFin }}</span>
-                <span class="place">{{ s.lieu }}</span>
+                <span class="title">{{ s.course?.name }}</span>
+                <span class="hour">{{ s.startTime }}-{{ s.endTime }}</span>
+                <span class="place">{{ s.location }}</span>
               </div>
               <div>
                 <span class="badge" [ngClass]="{'badge-success': s.status==='available', 'badge-danger': s.status==='full'}">
@@ -40,31 +38,31 @@
     </div>
   </div>
 
-  <!-- Dettaglio sessione -->
+  <!-- Session detail modal -->
   <div class="session-detail-panel" *ngIf="selectedSession">
-    <button class="close-btn" (click)="closeDetail()">
+    <button class="close-btn" (click)="closeDetail()" aria-label="Close detail">
       <mat-icon>close</mat-icon>
     </button>
-    <h3>{{ selectedSession.cours.nom }}</h3>
+    <h3>{{ selectedSession.course?.name }}</h3>
     <div class="detail-row">
       <mat-icon>event</mat-icon>
       {{ selectedSession.date | date:'fullDate':'':'fr' }}
     </div>
     <div class="detail-row">
       <mat-icon>schedule</mat-icon>
-      {{ selectedSession.heureDebut }} - {{ selectedSession.heureFin }}
+      {{ selectedSession.startTime }} - {{ selectedSession.endTime }}
     </div>
     <div class="detail-row">
       <mat-icon>place</mat-icon>
-      {{ selectedSession.lieu }}
+      {{ selectedSession.location }}
     </div>
     <div class="detail-row">
       <mat-icon>groups</mat-icon>
-      {{ selectedSession.inscriptionsCount }}/{{ selectedSession.capaciteMax }} inscrits
+      {{ selectedSession.registrationsCount }}/{{ selectedSession.maxCapacity }} inscrits
     </div>
     <div class="detail-row">
       <mat-icon>account_circle</mat-icon>
-      Coach : {{ selectedSession.coach?.prenom }} {{ selectedSession.coach?.nom }}
+      Coach : {{ selectedSession.coach?.firstName }} {{ selectedSession.coach?.lastName }}
     </div>
     <div class="detail-row">
       <mat-icon>info</mat-icon>
@@ -72,12 +70,41 @@
     </div>
     <div class="detail-row">
       <mat-icon>child_care</mat-icon>
-      Tranche d'âge : {{ selectedSession.trancheAge.nom }} ({{ selectedSession.trancheAge.ageMin }}-{{ selectedSession.trancheAge.ageMax }} ans)
+      Tranche d'âge : {{ selectedSession.ageGroup?.name }} ({{ selectedSession.ageGroup?.ageMin }}-{{ selectedSession.ageGroup?.ageMax }} ans)
     </div>
-    <img *ngIf="selectedSession.imgUrl" [src]="selectedSession.imgUrl" class="session-img" alt="">
+    <img *ngIf="selectedSession.imageUrl" [src]="selectedSession.imageUrl" class="session-img" alt="">
     <div class="actions">
-      <button mat-raised-button color="primary" *ngIf="selectedSession.status==='available'">S'inscrire</button>
-      <button mat-stroked-button color="accent">Détails du cours</button>
+      <!-- Enrollment logic and feedback -->
+      <ng-container *ngIf="selectedSession.status === 'available'">
+        <div *ngIf="myDogs.length === 0" class="no-dog-msg">
+          <mat-icon>warning</mat-icon>
+          <span>
+            Vous devez <b>enregistrer un chien</b> avant de pouvoir vous inscrire à une session.
+          </span>
+        </div>
+        <div *ngIf="myDogs.length > 1" class="dog-select-group">
+          <label for="dog-select">Choisissez un chien à inscrire :</label>
+          <select id="dog-select" [(ngModel)]="selectedDogId">
+            <option [ngValue]="null" disabled selected>-- Sélectionner --</option>
+            <option *ngFor="let d of myDogs" [value]="d.idDog">{{ d.name }}</option>
+          </select>
+        </div>
+        <button
+          mat-raised-button
+          color="primary"
+          class="enroll-btn"
+          (click)="enrollToSession()"
+          [disabled]="enrolling || !selectedDogId || myDogs.length === 0"
+          *ngIf="myDogs.length > 0"
+        >
+          <span *ngIf="!enrolling && !enrollSuccess">S'inscrire</span>
+          <span *ngIf="enrolling">Inscription...</span>
+          <span *ngIf="enrollSuccess">Inscrit !</span>
+        </button>
+        <div class="enroll-error" *ngIf="enrollError">{{ enrollError }}</div>
+        <div class="enroll-success" *ngIf="enrollSuccess">Inscription réussie !</div>
+      </ng-container>
+      <button mat-stroked-button color="accent" (click)="closeDetail()">Fermer</button>
     </div>
   </div>
 

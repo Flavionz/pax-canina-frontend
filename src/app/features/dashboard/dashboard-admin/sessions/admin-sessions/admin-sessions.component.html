@@ -19,23 +19,28 @@
     </thead>
     <tbody>
     <tr *ngFor="let s of sessions">
-      <td>{{ s.cours.nom }}</td>
+      <td>{{ s.course?.name }}</td>
       <td>{{ s.date | date:'d MMMM yyyy':'':'fr' }}</td>
-      <td>{{ s.heureDebut }} - {{ s.heureFin }}</td>
       <td>
-          <span *ngIf="s.coach">
-            <img *ngIf="s.coach.avatarUrl" [src]="s.coach.avatarUrl" alt="coach" class="avatar"/>
-            {{ s.coach.prenom }} {{ s.coach.nom }}
-          </span>
-        <span *ngIf="!s.coach">-</span>
+        {{ s.startTime || '-' }} - {{ s.endTime || '-' }}
       </td>
-      <td>{{ s.lieu || '-' }}</td>
-      <td>{{ s.inscriptionsCount || 0 }}/{{ s.capaciteMax }}</td>
       <td>
-          <span class="badge" [ngClass]="{
-            'badge-success': s.status === 'available',
-            'badge-danger': s.status === 'full'
-          }">{{ s.status === 'full' ? 'Complet' : 'Disponible' }}</span>
+        <span *ngIf="s.coach; else noCoach">
+          <img *ngIf="s.coach.avatarUrl" [src]="s.coach.avatarUrl" alt="coach" class="avatar"/>
+          {{ s.coach.firstName }} {{ s.coach.lastName }}
+        </span>
+        <ng-template #noCoach>-</ng-template>
+      </td>
+      <td>{{ s.location || '-' }}</td>
+      <td>{{ s.registrationsCount || 0 }}/{{ s.maxCapacity || 0 }}</td>
+      <td>
+        <span class="badge"
+              [ngClass]="{
+                'badge-success': s.status === 'available',
+                'badge-danger': s.status === 'full'
+              }">
+          {{ s.status === 'full' ? 'Complet' : 'Disponible' }}
+        </span>
       </td>
       <td>
         <button class="btn btn-sm btn-secondary" (click)="editSession(s)">Modifier</button>
@@ -55,7 +60,7 @@
     *ngIf="formOpen"
     [session]="selectedSession"
     [courses]="courses"
-    (close)="closeForm($event)"
+    (close)="closeForm()"
     (save)="handleSave($event)">
   </app-session-form>
 </div>

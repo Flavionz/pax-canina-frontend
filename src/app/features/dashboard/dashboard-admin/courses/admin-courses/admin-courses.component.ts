@@ -4,6 +4,10 @@ import { CourseService } from '@core/services/course.service';
 import { Course } from '@core/models/course.model';
 import { CourseFormComponent } from '../course-form/course-form.component';
 
+/**
+ * Admin panel to manage courses.
+ * Allows CRUD operations on all courses.
+ */
 @Component({
   selector: 'app-admin-courses',
   standalone: true,
@@ -27,6 +31,9 @@ export class AdminCoursesComponent implements OnInit {
     this.loadCourses();
   }
 
+  /**
+   * Loads all courses for admin view.
+   */
   loadCourses() {
     this.courseService.getCourses().subscribe({
       next: res => this.courses = res,
@@ -34,27 +41,48 @@ export class AdminCoursesComponent implements OnInit {
     });
   }
 
+  /**
+   * Opens the form for creating a new course.
+   */
   openForm() {
     this.selectedCourse = null;
     this.formOpen = true;
   }
+
+  /**
+   * Opens the form for editing an existing course.
+   * @param course Course to edit
+   */
   editCourse(course: Course) {
     this.selectedCourse = course;
     this.formOpen = true;
   }
+
+  /**
+   * Closes the course form and reloads the list if needed.
+   * @param refresh If true, reload courses after closing
+   */
   closeForm(refresh: boolean = false) {
     this.formOpen = false;
     if (refresh) this.loadCourses();
   }
+
+  /**
+   * Deletes a course by id after confirmation.
+   * @param id Course id to delete
+   */
   deleteCourse(id: number) {
     if (confirm('Supprimer ce cours ?')) {
       this.courseService.deleteCourse(id).subscribe(() => this.loadCourses());
     }
   }
 
+  /**
+   * Handles saving a course (create or update).
+   * @param course Course data from the form
+   */
   handleSave(course: Course) {
-    // Differenzia tra creazione e modifica!
-    if (course.idCours) {
+    if (course.idCourse) {
       this.courseService.updateCourse(course).subscribe({
         next: () => this.closeForm(true),
         error: () => alert("Erreur lors de la modification du cours.")

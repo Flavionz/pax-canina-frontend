@@ -6,16 +6,16 @@
     <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
       <div class="form-row">
         <div class="form-group">
-          <label for="prenom">Prénom</label>
-          <input id="prenom" type="text" formControlName="prenom" placeholder="Votre prénom" />
-          <div class="error" *ngIf="prenom.invalid && (prenom.dirty || prenom.touched)">
+          <label for="firstName">Prénom</label>
+          <input id="firstName" type="text" formControlName="firstName" placeholder="Votre prénom" />
+          <div class="error" *ngIf="firstName.invalid && (firstName.dirty || firstName.touched)">
             Le prénom est requis
           </div>
         </div>
         <div class="form-group">
-          <label for="nom">Nom</label>
-          <input id="nom" type="text" formControlName="nom" placeholder="Votre nom" />
-          <div class="error" *ngIf="nom.invalid && (nom.dirty || nom.touched)">
+          <label for="lastName">Nom</label>
+          <input id="lastName" type="text" formControlName="lastName" placeholder="Votre nom" />
+          <div class="error" *ngIf="lastName.invalid && (lastName.dirty || lastName.touched)">
             Le nom est requis
           </div>
         </div>
@@ -30,9 +30,9 @@
       </div>
 
       <div class="form-group">
-        <label for="telephone">Téléphone</label>
-        <input id="telephone" type="tel" formControlName="telephone" placeholder="Votre téléphone" />
-        <div class="error" *ngIf="telephone.invalid && (telephone.dirty || telephone.touched)">
+        <label for="phone">Téléphone</label>
+        <input id="phone" type="tel" formControlName="phone" placeholder="Votre téléphone" />
+        <div class="error" *ngIf="phone.invalid && (phone.dirty || phone.touched)">
           Le téléphone est requis
         </div>
       </div>
@@ -101,9 +101,12 @@
         </div>
       </div>
 
-      <button class="register-btn" type="submit">
-        Créer un compte
+      <button class="register-btn" type="submit" [disabled]="loading">
+        <span *ngIf="!loading">Créer un compte</span>
+        <span *ngIf="loading">Création...</span>
       </button>
+
+      <div class="error" *ngIf="error">{{ error }}</div>
     </form>
 
     <div class="login-link">

@@ -1,12 +1,15 @@
 export interface Dog {
-  idChien?: number;
-  nom: string;
-  dateNaissance: string;
-  sexe: string;
+  idDog?: number;
+  name: string;
+  birthDate: string;
+  sex: string;
   photoUrl?: string;
-  numeroPuce?: string;
-  poids: number;
-  idProprietaire?: number;
-  idRace?: number;
-  race?: string;
+  chipNumber?: string;
+  weight: number;
+  idOwner?: number;
+  idBreed?: number;
+  breedName?: string;
+
+  ownerName?: string; // for admin-table
+
 }

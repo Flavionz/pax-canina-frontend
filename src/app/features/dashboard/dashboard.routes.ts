@@ -1,7 +1,7 @@
 import { Routes } from '@angular/router';
 import { DashboardComponent } from './dashboard.component';
 
-// --- COMPONENTI ADMIN ---
+// --- ADMIN COMPONENTS ---
 import { DashboardAdminComponent } from './dashboard-admin/dashboard-admin.component';
 import { AdminOverviewComponent } from './dashboard-admin/admin-overview/admin-overview.component';
 import { AdminUsersComponent } from './dashboard-admin/users/admin-users/admin-users.component';
@@ -10,9 +10,9 @@ import { AdminSessionsComponent } from './dashboard-admin/sessions/admin-session
 import { AdminDogsComponent } from './dashboard-admin/dogs/admin-dogs/admin-dogs.component';
 import { AdminSpecialisationsComponent } from './dashboard-admin/specialisations/admin-specialisations/admin-specialisations.component';
 
-// --- DASHBOARD RUOLI ---
+// --- ROLE DASHBOARDS ---
 import { DashboardCoachComponent } from './dashboard-coach/dashboard-coach.component';
-import { DashboardProprietaireComponent } from './dashboard-proprietaire/dashboard-proprietaire.component';
+import { DashboardOwnerComponent } from './dashboard-owner/dashboard-owner.component';
 
 export const DASHBOARD_ROUTES: Routes = [
   {
@@ -23,15 +23,12 @@ export const DASHBOARD_ROUTES: Routes = [
         path: 'admin',
         component: DashboardAdminComponent,
         children: [
-          // Overview home (shortcut cards)
           { path: '', component: AdminOverviewComponent, pathMatch: 'full' },
-
-          // Sezioni gestionali
-          { path: 'utilisateurs', component: AdminUsersComponent },
-          { path: 'cours', component: AdminCoursesComponent },
+          { path: 'users', component: AdminUsersComponent },
+          { path: 'courses', component: AdminCoursesComponent },
           { path: 'sessions', component: AdminSessionsComponent },
-          { path: 'chiens', component: AdminDogsComponent },
-          { path: 'specialisations', component: AdminSpecialisationsComponent },
+          { path: 'dogs', component: AdminDogsComponent },
+          { path: 'specialisations', component: AdminSpecialisationsComponent }
         ]
       },
       {
@@ -39,10 +36,10 @@ export const DASHBOARD_ROUTES: Routes = [
         component: DashboardCoachComponent
       },
       {
-        path: 'proprietaire',
-        component: DashboardProprietaireComponent
-      },
-      // (Opzionale) Redirect automatico se vuoi andare sulla dashboard corretta
+        path: 'owner',
+        component: DashboardOwnerComponent
+      }
+      // Optional: default redirect
       // { path: '', redirectTo: 'admin', pathMatch: 'full' }
     ]
   }

@@ -32,16 +32,20 @@
     </thead>
     <tbody>
     <tr *ngFor="let u of users">
-      <td>{{ u.prenom }}</td>
-      <td>{{ u.nom }}</td>
+      <td>{{ u.firstName }}</td>
+      <td>{{ u.lastName }}</td>
       <td>{{ u.email }}</td>
-      <td>{{ u.telephone || '-' }}</td>
+      <td>{{ u.phone || '-' }}</td>
       <td>
-          <span class="role-badge" [ngClass]="{
-            'badge-admin': u.role === 'ADMIN',
-            'badge-coach': u.role === 'COACH',
-            'badge-proprietaire': u.role === 'PROPRIETAIRE'
-          }">{{ u.role || 'PROPRIETAIRE' }}</span>
+    <span class="role-badge" [ngClass]="{
+  'badge-admin': u.role === 'ADMIN',
+  'badge-coach': u.role === 'COACH',
+  'badge-owner': u.role === 'OWNER'
+}">
+  {{ translateRole(u.role) }}
+</span>
+
+
       </td>
       <td>
         <button class="btn btn-outline btn-xs" (click)="onEditUser(u)">Modifier</button>

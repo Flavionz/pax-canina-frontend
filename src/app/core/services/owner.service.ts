@@ -1,29 +1,27 @@
-// src/app/core/services/proprietaire.service.ts
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { Proprietaire } from '@models/proprietaire.model';
+import { Owner } from '@models/owner.model';
 import { environment } from '@environments/environment';
 import { UploadService } from './upload.service';
 
 @Injectable({ providedIn: 'root' })
-export class ProprietaireService {
-  private baseUrl = `${environment.apiUrl}/proprietaire`;
+export class OwnerService {
+  private baseUrl = `${environment.apiUrl}/owner`;
 
   constructor(
     private http: HttpClient,
     private uploadService: UploadService
   ) {}
 
-  getProfile(): Observable<Proprietaire> {
-    return this.http.get<Proprietaire>(`${this.baseUrl}/me`);
+  getProfile(): Observable<Owner> {
+    return this.http.get<Owner>(`${this.baseUrl}/me`);
   }
 
-  updateProfile(data: Partial<Proprietaire>): Observable<Proprietaire> {
-    return this.http.put<Proprietaire>(`${this.baseUrl}/me`, data);
+  updateProfile(data: Partial<Owner>): Observable<Owner> {
+    return this.http.put<Owner>(`${this.baseUrl}/me`, data);
   }
-
 
   uploadAvatar(file: File): Observable<string> {
     return this.uploadService

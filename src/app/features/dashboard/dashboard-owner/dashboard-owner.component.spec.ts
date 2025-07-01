@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { DashboardProprietaireComponent } from './dashboard-proprietaire.component';
+import { DashboardProprietaireComponent } from './dashboard-owner.component';
 
 describe('DashboardProprietaireComponent', () => {
   let component: DashboardProprietaireComponent;

@@ -1,0 +1,60 @@
+.admin-dogs {
+  padding: 2rem;
+
+  h2 {
+    color: #1976d2;
+    font-size: 2rem;
+    margin-bottom: 2rem;
+  }
+
+  .loading {
+    font-size: 1.1rem;
+    color: #7c8491;
+    margin: 1.5rem 0;
+  }
+
+  .error {
+    color: #e3545a;
+    font-size: 1.1rem;
+    margin: 1.5rem 0;
+  }
+
+  .dogs-table {
+    width: 100%;
+    background: #f9fcff;
+    border-radius: 2rem;
+    box-shadow: 0 2px 12px #e5eefa;
+    overflow: hidden;
+    th, td {
+      padding: 1rem;
+      text-align: left;
+    }
+    th {
+      background: #f3f9fa;
+      color: #1976d2;
+      font-size: 1.07rem;
+    }
+    td {
+      font-size: 1rem;
+    }
+    .btn-danger {
+      background: #ffe1e3;
+      color: #e3545a;
+      border: none;
+      border-radius: 1rem;
+      padding: 0.4em 1em;
+      font-weight: 600;
+      cursor: pointer;
+      &:hover {
+        background: #ffd4d6;
+      }
+    }
+  }
+
+  .empty-state {
+    padding: 2rem 0;
+    text-align: center;
+    color: #7c8491;
+    font-size: 1.2rem;
+  }
+}

@@ -7,13 +7,13 @@ import { environment } from '@environments/environment';
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   private loggedIn = new BehaviorSubject<boolean>(false);
-  /** Observable per sapere se sono loggato */
+  /** Observable to know if the user is logged in */
   public isLoggedIn$: Observable<boolean> = this.loggedIn.asObservable();
 
-  /** Ruolo dell’utente corrente */
+  /** Current user's role */
   private _role: string | null = null;
 
-  /** Base URL per /auth */
+  /** Base URL for /auth */
   public baseUrl = environment.apiUrl + '/auth';
 
   constructor(private http: HttpClient) {
@@ -28,7 +28,6 @@ export class AuthService {
   public get role(): string | null {
     return this._role;
   }
-
 
   login(email: string, password: string): Observable<boolean> {
     return this.http.post<{ token: string; role: string }>(
@@ -53,15 +52,17 @@ export class AuthService {
     );
   }
 
-
-  registerProprietaire(data: {
-    prenom: string;
-    nom: string;
+  registerOwner(data: {
+    firstName: string;
+    lastName: string;
     email: string;
-    telephone: string;
     password: string;
+    phone: string;
+    address?: string;
+    city?: string;
+    postalCode?: string;
   }): Observable<any> {
-    return this.http.post(`${this.baseUrl}/register/proprietaire`, data);
+    return this.http.post(`${this.baseUrl}/register/owner`, data);
   }
 
   logout(): void {
