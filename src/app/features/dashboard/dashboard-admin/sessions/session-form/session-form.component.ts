@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import { Session } from '@core/models/session.model';
 import { Course } from '@core/models/course.model';
 import { AgeGroup } from '@core/models/age-group.model';
-
+import { Coach } from '@core/models/coach.model';
 
 @Component({
   selector: 'app-session-form',
@@ -20,6 +20,7 @@ export class SessionFormComponent implements OnInit {
   @Input() session: Session | null = null;
   @Input() courses: Course[] = [];
   @Input() ageGroups: AgeGroup[] = [];
+  @Input() coaches: Coach[] = [];
   @Output() save = new EventEmitter<Session>();
   @Output() close = new EventEmitter<void>();
 
@@ -30,6 +31,7 @@ export class SessionFormComponent implements OnInit {
   ngOnInit(): void {
     this.form = this.fb.group({
       courseId:    [this.session?.course?.idCourse ?? '', Validators.required],
+      coachId:     [this.session?.coach?.id ?? '', Validators.required],
       date:        [this.session?.date ?? '', Validators.required],
       startTime:   [this.session?.startTime ?? '', Validators.required],
       endTime:     [this.session?.endTime ?? '', Validators.required],
@@ -42,18 +44,14 @@ export class SessionFormComponent implements OnInit {
     });
   }
 
-  /**
-   * Emits the session object with all necessary fields for backend creation or update.
-   * Maps the selected course and age group by their IDs.
-   */
   submit(): void {
     if (this.form.valid) {
       const value = this.form.value;
       const courseObj = this.courses.find(c => c.idCourse == value.courseId);
+      const coachObj = this.coaches.find(c => c.id == value.coachId);
       const ageGroupObj = this.ageGroups.find(a => a.idAgeGroup == value.ageGroupId);
 
-      // Ensure course and age group are selected (should never fail if form is valid)
-      if (!courseObj || !ageGroupObj) return;
+      if (!courseObj || !ageGroupObj || !coachObj) return;
 
       const session: Session = {
         ...this.session,
@@ -66,6 +64,7 @@ export class SessionFormComponent implements OnInit {
         imageUrl: value.imageUrl,
         description: value.description,
         course: courseObj,
+        coach: coachObj,
         ageGroup: ageGroupObj,
         status: this.session?.status ?? 'available'
       };
@@ -73,16 +72,10 @@ export class SessionFormComponent implements OnInit {
     }
   }
 
-  /**
-   * Emits close event to parent (close modal/dialog).
-   */
   closeModal(): void {
     this.close.emit();
   }
 
-  /**
-   * Utility for translating age group enum names to French for the UI.
-   */
   translateAgeGroup(name: string): string {
     switch (name) {
       case 'PUPPY': return 'Chiot';

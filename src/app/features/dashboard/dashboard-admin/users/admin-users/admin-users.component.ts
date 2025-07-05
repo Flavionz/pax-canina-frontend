@@ -56,8 +56,8 @@ export class AdminUsersComponent implements OnInit {
   }
 
   onSaveUser(user: User): void {
-    if (user.idUser) {
-      this.userService.updateUser(user.idUser, user).subscribe({
+    if (user.id) {
+      this.userService.updateUser(user.id, user).subscribe({
         next: () => {
           this.fetchUsers();
           this.showForm = false;
@@ -90,7 +90,7 @@ export class AdminUsersComponent implements OnInit {
 
   onDeleteUser(user: User): void {
     if (confirm(`Supprimer l'utilisateur ${user.email} ?`)) {
-      this.userService.deleteUser(user.idUser).subscribe({
+      this.userService.deleteUser(user.id).subscribe({
         next: () => this.fetchUsers(),
         error: (err) => {
           this.error = "Erreur lors de la suppression.";

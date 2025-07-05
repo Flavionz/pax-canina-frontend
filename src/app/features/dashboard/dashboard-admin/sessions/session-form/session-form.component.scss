@@ -20,6 +20,15 @@
   flex-direction: column;
   gap: 1.2rem;
 
+  h3 {
+    text-align: left;
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 1.7rem;
+    color: #222e3a;
+    letter-spacing: -.5px;
+  }
+
   .form-row {
     display: flex;
     gap: 1.5rem;
@@ -32,10 +41,11 @@
     }
 
     label {
-      font-weight: 500;
-      margin-bottom: 5px;
+      font-weight: 600;
       color: #23735d;
+      margin-bottom: 5px;
       display: block;
+      font-size: 1.05em;
     }
     input,
     select,
@@ -87,12 +97,15 @@
         cursor: not-allowed;
       }
     }
-  }
-
-  h3 {
-    text-align: center;
-    margin-bottom: 1.5rem;
-    color: #1DCB4F;
+    button[type="button"] {
+      background: #fff;
+      color: #1DCB4F;
+      border: 2px solid #1DCB4F;
+      &:hover, &:focus {
+        background: #eafff1;
+        color: #23735d;
+      }
+    }
   }
 }
 

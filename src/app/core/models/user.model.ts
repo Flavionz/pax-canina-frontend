@@ -1,5 +1,5 @@
 export interface User {
-  idUser: number;
+  id: number;
   lastName: string;
   firstName: string;
   email: string;
@@ -8,6 +8,5 @@ export interface User {
   lastLogin?: Date | string;
   avatarUrl?: string;
   bio?: string;
-
   role: 'ADMIN' | 'COACH' | 'OWNER';
 }

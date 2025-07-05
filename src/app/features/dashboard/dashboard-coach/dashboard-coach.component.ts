@@ -36,7 +36,7 @@ export class DashboardCoachComponent implements OnInit {
         this.sessionService.getSessions().subscribe({
           next: sessions => {
             // Filter sessions where coach.idUser matches logged-in coach
-            this.sessions = (sessions || []).filter(s => s.coach?.idUser === coach.idUser);
+            this.sessions = (sessions || []).filter(s => s.coach?.id === coach.id);
             this.loading = false;
           },
           error: () => {

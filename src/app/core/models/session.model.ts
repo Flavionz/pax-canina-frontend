@@ -17,7 +17,7 @@ export interface Session {
   };
 
   coach?: {
-    idUser: number;
+    id: number;
     firstName: string;
     lastName: string;
     avatarUrl?: string;
