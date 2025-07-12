@@ -8,7 +8,7 @@ import { AdminUsersComponent } from './dashboard-admin/users/admin-users/admin-u
 import { AdminCoursesComponent } from './dashboard-admin/courses/admin-courses/admin-courses.component';
 import { AdminSessionsComponent } from './dashboard-admin/sessions/admin-sessions/admin-sessions.component';
 import { AdminDogsComponent } from './dashboard-admin/dogs/admin-dogs/admin-dogs.component';
-import { AdminSpecialisationsComponent } from './dashboard-admin/specialisations/admin-specialisations/admin-specialisations.component';
+import { AdminSpecializationsComponent } from './dashboard-admin/specializations/admin-specializations/admin-specializations.component';
 
 // --- ROLE DASHBOARDS ---
 import { DashboardCoachComponent } from './dashboard-coach/dashboard-coach.component';
@@ -28,7 +28,7 @@ export const DASHBOARD_ROUTES: Routes = [
           { path: 'courses', component: AdminCoursesComponent },
           { path: 'sessions', component: AdminSessionsComponent },
           { path: 'dogs', component: AdminDogsComponent },
-          { path: 'specialisations', component: AdminSpecialisationsComponent }
+          { path: 'specializations', component: AdminSpecializationsComponent }
         ]
       },
       {

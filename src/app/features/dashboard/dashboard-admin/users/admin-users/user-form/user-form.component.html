@@ -24,11 +24,12 @@
         <option value="ADMIN">Admin</option>
       </select>
     </div>
+    <!-- Cambia qui: specialization -->
     <div *ngIf="form.value.role === 'COACH'">
       <label>Spécialisation</label>
-      <select formControlName="specialisation">
+      <select formControlName="specialization">
         <option value="" disabled>Choisir...</option>
-        <option *ngFor="let s of specialisations" [value]="s.name">{{ s.name }}</option>
+        <option *ngFor="let s of specializations" [value]="s.name">{{ s.name }}</option>
       </select>
     </div>
     <div>

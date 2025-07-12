@@ -7,7 +7,7 @@ import { CourseService } from '@core/services/course.service';
 import { SessionService } from '@core/services/session.service';
 import { UserService } from '@core/services/user.service';
 import { DogService } from '@core/services/dog.service';
-import { SpecialisationService } from '@core/services/specialisation.service';
+import { SpecializationService } from '@core/services/specialization.service';
 import { AdminService } from '@core/services/admin.service';
 import { Admin } from '@core/models/admin.model';
 
@@ -29,7 +29,7 @@ export class AdminOverviewComponent implements OnInit {
     sessions: 0,
     users: 0,
     dogs: 0,
-    specialisations: 0
+    specializations: 0
   };
 
   // Current admin display name
@@ -40,7 +40,7 @@ export class AdminOverviewComponent implements OnInit {
     private sessionService: SessionService,
     private userService: UserService,
     private dogService: DogService,
-    private specialisationService: SpecialisationService,
+    private specializationService: SpecializationService,
     private adminService: AdminService,
     private router: Router
   ) {}
@@ -55,14 +55,14 @@ export class AdminOverviewComponent implements OnInit {
       this.sessionService.getSessions(),
       this.userService.getAllUsers(),
       this.dogService.getAllDogs(),
-      this.specialisationService.getSpecialisations()
+      this.specializationService.getAll()
     ]).subscribe({
-      next: ([courses, sessions, users, dogs, specialisations]) => {
-        this.counts.courses           = courses.length;
-        this.counts.sessions          = sessions.length;
-        this.counts.users             = users.length;
-        this.counts.dogs              = dogs.length;
-        this.counts.specialisations   = specialisations.length;
+      next: ([courses, sessions, users, dogs, specializations]) => {
+        this.counts.courses         = courses.length;
+        this.counts.sessions        = sessions.length;
+        this.counts.users           = users.length;
+        this.counts.dogs            = dogs.length;
+        this.counts.specializations = specializations.length;
       }
     });
 

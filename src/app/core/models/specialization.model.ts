@@ -1,4 +1,5 @@
 export interface Specialization {
-  idSpecialization: number;
+  id: number;
   name: string;
+  description: string;
 }

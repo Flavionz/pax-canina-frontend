@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, Output, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { User } from '@core/models/user.model';
-import { SpecialisationService } from '@core/services/specialisation.service';
+import { SpecializationService } from '@core/services/specialization.service';
 import { CommonModule } from '@angular/common';
 
 /**
@@ -25,11 +25,11 @@ export class UserFormComponent implements OnInit {
   @Output() cancel = new EventEmitter<void>();
 
   form: FormGroup;
-  specialisations: any[] = [];
+  specializations: any[] = [];
 
   constructor(
     private fb: FormBuilder,
-    private specialisationService: SpecialisationService
+    private specializationService: SpecializationService
   ) {
     // Always use English field names for the model
     this.form = this.fb.group({
@@ -40,7 +40,7 @@ export class UserFormComponent implements OnInit {
       role: ['OWNER', Validators.required],
       bio: [''],
       avatarUrl: [''],
-      specialisation: ['']
+      specialization: ['']
     });
   }
 
@@ -48,19 +48,20 @@ export class UserFormComponent implements OnInit {
     // If editing, pre-fill the form
     if (this.user) this.form.patchValue(this.user);
 
-    // Load specialisations if needed
-    this.specialisationService.getSpecialisations().subscribe(specs => {
-      this.specialisations = specs;
+    // Load specializations for select
+    this.specializationService.getAll().subscribe(specs => {
+      this.specializations = specs;
     });
 
-    // Make specialisation required only for Coach
+    // Make specialization required only for Coach
     this.form.get('role')!.valueChanges.subscribe(role => {
+      const specializationCtrl = this.form.get('specialization');
       if (role === 'COACH') {
-        this.form.get('specialisation')!.setValidators(Validators.required);
+        specializationCtrl!.setValidators(Validators.required);
       } else {
-        this.form.get('specialisation')!.clearValidators();
+        specializationCtrl!.clearValidators();
       }
-      this.form.get('specialisation')!.updateValueAndValidity();
+      specializationCtrl!.updateValueAndValidity();
     });
   }
 
