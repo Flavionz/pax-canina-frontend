@@ -1,12 +1,15 @@
+import { Specialization } from './specialization.model';
+
 export interface User {
   id: number;
-  lastName: string;
   firstName: string;
+  lastName: string;
   email: string;
   phone?: string;
-  registrationDate?: Date | string;
-  lastLogin?: Date | string;
   avatarUrl?: string;
   bio?: string;
-  role: 'ADMIN' | 'COACH' | 'OWNER';
+  role: 'ADMIN' | 'COACH' | 'OWNER' | string;
+  registrationDate?: string;
+  specializations?: Specialization[];
+  emailVerified?: boolean;
 }

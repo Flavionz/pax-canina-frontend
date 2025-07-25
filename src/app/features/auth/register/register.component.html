@@ -3,7 +3,21 @@
     <h1>Créer un compte</h1>
     <p class="subtitle">Rejoignez la communauté Pax Canina</p>
 
-    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+    <!-- SUCCESS MESSAGE AFTER REGISTER -->
+    <div *ngIf="successMessage" class="success-message">
+      {{ successMessage }}
+      <br />
+      <span>
+        <strong>Important&nbsp;:</strong> Vérifiez votre boîte mail pour activer votre compte.<br>
+        Si vous ne recevez rien d'ici quelques minutes, pensez à vérifier vos spams.
+      </span>
+      <div class="return-login">
+        <a routerLink="/auth/login">Retour à la page de connexion</a>
+      </div>
+    </div>
+
+    <!-- REGISTRATION FORM -->
+    <form *ngIf="!successMessage" [formGroup]="registerForm" (ngSubmit)="onSubmit()">
       <div class="form-row">
         <div class="form-group">
           <label for="firstName">Prénom</label>
@@ -109,7 +123,7 @@
       <div class="error" *ngIf="error">{{ error }}</div>
     </form>
 
-    <div class="login-link">
+    <div class="login-link" *ngIf="!successMessage">
       Déjà un compte ?
       <a routerLink="/auth/login">Se connecter</a>
     </div>

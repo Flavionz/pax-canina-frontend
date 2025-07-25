@@ -8,8 +8,6 @@ export interface Dog {
   weight: number;
   idOwner?: number;
   idBreed?: number;
-  breedName?: string;
-
-  ownerName?: string; // for admin-table
-
+  breedName?: string; // opzionale, backend può riempirlo
+  ownerName?: string; // opzionale
 }

@@ -20,4 +20,38 @@
     justify-content: flex-end;
     gap: 1em;
   }
+
+  .specialization-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .6em;
+    margin-bottom: .8em;
+    .badge {
+      background: #e4f1fb;
+      color: #145b91;
+      border-radius: 999px;
+      padding: 0.45em 1em 0.45em .8em;
+      display: flex;
+      align-items: center;
+      font-size: .98em;
+      font-weight: 500;
+      .remove-btn {
+        border: none;
+        background: none;
+        font-size: 1.1em;
+        margin-left: .4em;
+        cursor: pointer;
+        color: #ca2c2c;
+        font-weight: bold;
+      }
+    }
+  }
+}
+select[multiple] {
+  min-height: 4em;
+}
+.hint {
+  color: #c14646;
+  font-size: 0.95em;
+  margin-top: .2em;
 }

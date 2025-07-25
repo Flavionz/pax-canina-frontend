@@ -1,5 +1,4 @@
 <div class="admin-users">
-
   <div class="users-header">
     <h2>Gestion des utilisateurs</h2>
     <button class="btn btn-primary" (click)="onAddUser()">
@@ -37,15 +36,13 @@
       <td>{{ u.email }}</td>
       <td>{{ u.phone || '-' }}</td>
       <td>
-    <span class="role-badge" [ngClass]="{
-  'badge-admin': u.role === 'ADMIN',
-  'badge-coach': u.role === 'COACH',
-  'badge-owner': u.role === 'OWNER'
-}">
-  {{ translateRole(u.role) }}
-</span>
-
-
+          <span class="role-badge" [ngClass]="{
+            'badge-admin': u.role === 'ADMIN',
+            'badge-coach': u.role === 'COACH',
+            'badge-owner': u.role === 'OWNER'
+          }">
+            {{ translateRole(u.role) }}
+          </span>
       </td>
       <td>
         <button class="btn btn-outline btn-xs" (click)="onEditUser(u)">Modifier</button>

@@ -211,7 +211,7 @@ export class ProfileComponent implements OnInit {
     this.errorMsg = null;
   }
 
-  // Dogs CRUD logic for OWNER only (using type-guards)
+  // DOGS CRUD LOGIC
   openAddDogDialog() {
     if (!isOwner(this.user)) return;
     const dialogRef = this.dialog.open(AddDogDialogComponent, {
@@ -219,7 +219,7 @@ export class ProfileComponent implements OnInit {
       disableClose: true
     });
     dialogRef.afterClosed().subscribe((dog: Dog) => {
-      if (dog?.name && dog?.breedName) {
+      if (dog?.name && dog?.idBreed) {
         this.loading = true;
         this.dogService.addDog(dog)
           .pipe(finalize(() => (this.loading = false)))

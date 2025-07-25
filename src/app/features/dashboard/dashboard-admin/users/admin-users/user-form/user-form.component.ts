@@ -1,37 +1,32 @@
 import { Component, EventEmitter, Input, Output, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { User } from '@core/models/user.model';
+import { Specialization } from '@core/models/specialization.model';
 import { SpecializationService } from '@core/services/specialization.service';
 import { CommonModule } from '@angular/common';
 
-/**
- * Form for creating or editing a user (Admin, Coach, Owner).
- * All model fields are in English to match backend & database.
- * All labels and options are in French for the UX jury!
- */
 @Component({
   selector: 'app-user-form',
   standalone: true,
   templateUrl: './user-form.component.html',
-  imports: [
-    CommonModule,
-    ReactiveFormsModule
-  ],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule],
   styleUrls: ['./user-form.component.scss']
 })
 export class UserFormComponent implements OnInit {
-  @Input() user: User | null = null; // If set, we're editing; otherwise, creating
+  @Input() user: User | null = null;
   @Output() save = new EventEmitter<User>();
   @Output() cancel = new EventEmitter<void>();
 
   form: FormGroup;
-  specializations: any[] = [];
+  specializations: Specialization[] = [];
+  selectedSpec: Specialization | null = null;
+  specializationError = false;
+  errorMsg: string | null = null;
 
   constructor(
     private fb: FormBuilder,
     private specializationService: SpecializationService
   ) {
-    // Always use English field names for the model
     this.form = this.fb.group({
       firstName: ['', Validators.required],
       lastName: ['', Validators.required],
@@ -40,35 +35,70 @@ export class UserFormComponent implements OnInit {
       role: ['OWNER', Validators.required],
       bio: [''],
       avatarUrl: [''],
-      specialization: ['']
+      specializations: [[]],
     });
   }
 
   ngOnInit() {
-    // If editing, pre-fill the form
-    if (this.user) this.form.patchValue(this.user);
-
-    // Load specializations for select
     this.specializationService.getAll().subscribe(specs => {
       this.specializations = specs;
     });
 
-    // Make specialization required only for Coach
-    this.form.get('role')!.valueChanges.subscribe(role => {
-      const specializationCtrl = this.form.get('specialization');
-      if (role === 'COACH') {
-        specializationCtrl!.setValidators(Validators.required);
-      } else {
-        specializationCtrl!.clearValidators();
-      }
-      specializationCtrl!.updateValueAndValidity();
-    });
+    if (this.user) {
+      this.form.patchValue({
+        ...this.user,
+        specializations: this.user.specializations ?? []
+      });
+    }
+
+    // Controllo specializzazioni ogni volta che cambia ruolo o la lista
+    this.form.get('role')!.valueChanges.subscribe(() => this.validateSpecializations());
+    this.form.get('specializations')!.valueChanges.subscribe(() => this.validateSpecializations());
+    this.validateSpecializations();
   }
 
-  /**
-   * Emit user data to parent on submit, if valid.
-   */
+  get selectedSpecializations(): Specialization[] {
+    return this.form.value.specializations ?? [];
+  }
+
+  get availableSpecializations(): Specialization[] {
+    const current = this.selectedSpecializations;
+    return this.specializations.filter(
+      s => !current.some(sel => sel.id === s.id)
+    );
+  }
+
+  addSpecialization() {
+    if (this.selectedSpec) {
+      const current = this.selectedSpecializations;
+      this.form.patchValue({ specializations: [...current, this.selectedSpec] });
+      this.selectedSpec = null;
+      this.validateSpecializations();
+    }
+  }
+
+  removeSpecialization(spec: Specialization) {
+    const current = this.selectedSpecializations;
+    this.form.patchValue({ specializations: current.filter(s => s.id !== spec.id) });
+    this.validateSpecializations();
+  }
+
+  validateSpecializations() {
+    const isCoach = this.form.value.role === 'COACH';
+    const list = this.selectedSpecializations;
+    this.specializationError = isCoach && list.length < 1;
+  }
+
   onSubmit() {
-    if (this.form.valid) this.save.emit(this.form.value);
+    this.errorMsg = null;
+    const value = { ...this.form.value };
+
+    // Pulizia: se non è coach, niente specializzazioni
+    if (value.role !== 'COACH') value.specializations = [];
+
+    this.save.emit({
+      ...value,
+      id: this.user?.id
+    });
   }
 }

@@ -8,7 +8,7 @@ import {
   ValidationErrors,
   ReactiveFormsModule
 } from '@angular/forms';
-import { Router, RouterLink } from '@angular/router';
+import { RouterLink } from '@angular/router';
 import { AuthService } from '@core/services/auth.service';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
@@ -31,10 +31,11 @@ export class RegisterComponent {
   error: string | null = null;
   loading = false;
 
+  successMessage: string | null = null;
+
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
-    private router: Router,
     private http: HttpClient
   ) {
     this.registerForm = this.fb.group({
@@ -84,24 +85,14 @@ export class RegisterComponent {
         firstName, lastName, email, phone, password
       }).subscribe({
         next: () => {
-          this.authService.login(email, password).subscribe({
-            next: (success) => {
-              this.loading = false;
-              if (success) {
-                this.router.navigate(['/profile']);
-              } else {
-                this.error = "Erreur lors de la connexion automatique.";
-              }
-            },
-            error: () => {
-              this.loading = false;
-              this.error = "Erreur lors de la connexion automatique.";
-            }
-          });
+          this.loading = false;
+          // No auto-login! Show message.
+          this.successMessage = "Inscription réussie ! Un e-mail de validation vient de vous être envoyé à l'adresse indiquée.";
+          this.registerForm.reset();
         },
         error: () => {
           this.loading = false;
-          this.error = "Erreur lors de l'inscription. Vérifiez vos informations.";
+          this.error = "Erreur lors de l'inscription. Vérifiez vos informations ou essayez plus tard.";
         }
       });
     } else {

@@ -24,7 +24,8 @@ export class DashboardComponent implements OnInit {
     } else if (role === 'COACH') {
       this.router.navigate(['/dashboard/coach']);
     } else {
-      this.router.navigate(['/dashboard/proprietaire']);
+      this.router.navigate(['/dashboard/owner']);
     }
+
   }
 }

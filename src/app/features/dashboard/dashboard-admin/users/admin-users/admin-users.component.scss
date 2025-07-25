@@ -94,3 +94,12 @@
   }
   .error-msg { color: #c93030; }
 }
+.btn-success {
+  color: #19a47b;
+  border-color: #19a47b;
+  background: #e1f7e9;
+  &:hover {
+    background: #c2ecd8;
+    border-color: #0f7050;
+  }
+}

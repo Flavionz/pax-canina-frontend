@@ -1,86 +1,53 @@
-// ===============================
-// AddDogDialogComponent Styles
-// ===============================
-
-:host {
-  display: block;
+.add-dog-form {
   width: 100%;
-  max-width: 600px;
-  padding: 16px; // Improves internal spacing for standalone layouts
-}
-
-// Title styling
-h2 {
-  color: #1f2937;
-  font-weight: bold;
-  margin-bottom: 16px;
-}
-
-// Utility for full width form fields
-.full-width {
-  width: 100%;
-  margin-bottom: 16px;
-}
-
-// Responsive two-column layout for certain fields
-.two-columns {
-  display: flex;
-  flex-wrap: wrap; // Prevents overflow on small screens
-  gap: 16px;
-  margin-bottom: 16px;
-
-  mat-form-field {
-    flex: 1 1 100%;
-
-    @media (min-width: 600px) {
-      flex: 1;
-    }
+  max-width: 560px;
+  padding: 16px;
+  .dialog-title {
+    margin-bottom: 16px;
+    font-size: 1.5rem;
+    font-weight: 700;
   }
-}
-
-// Photo upload section with file feedback
-.photo-upload {
-  margin-bottom: 24px;
-
-  p {
-    margin-bottom: 8px;
-    color: rgba(0, 0, 0, 0.6);
-    font-size: 14px;
-    font-weight: 500;
-  }
-
-  .upload-zone {
+  .form-grid {
     display: flex;
-    align-items: center;
     flex-wrap: wrap;
-    gap: 12px;
-  }
-
-  .upload-button {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-
-    mat-icon {
-      font-size: 20px;
+    gap: 16px;
+    .full-width {
+      width: 100%;
+    }
+    .half-col {
+      width: 48%;
+      min-width: 200px;
+      @media (max-width: 600px) {
+        width: 100%;
+      }
+    }
+    .photo-upload {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 8px;
+      .photo-preview {
+        width: 60px;
+        height: 60px;
+        object-fit: cover;
+        border-radius: 12px;
+        margin-left: 8px;
+      }
+      .file-selected {
+        font-size: 0.9rem;
+        color: #3cba54;
+        margin-left: 8px;
+      }
+      .remove-photo {
+        margin-left: 0;
+      }
     }
   }
-
-  .file-selected {
-    color: #22c55e;
-    font-size: 14px;
-    font-weight: 500;
+  .actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 24px;
   }
 }
-
-// Dialog action buttons style
-[mat-dialog-actions] {
-  margin-top: 16px;
-  padding-top: 16px;
-  border-top: 1px solid #eee;
-  display: flex;
-  justify-content: flex-end;
-  gap: 12px;
-}
-
-

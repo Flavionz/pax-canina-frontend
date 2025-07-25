@@ -7,12 +7,12 @@
         <input formControlName="name" type="text" required />
       </div>
       <div class="form-group">
-        <label>Description</label>
-        <textarea formControlName="description"></textarea>
+        <label>Description *</label>
+        <textarea formControlName="description" required></textarea>
       </div>
       <div class="form-group">
-        <label>Statut</label>
-        <select formControlName="status">
+        <label>Statut *</label>
+        <select formControlName="status" required>
           <option value="OPEN">Ouvert</option>
           <option value="CLOSED">Fermé</option>
         </select>
@@ -20,6 +20,18 @@
       <div class="form-group">
         <label>Image (URL)</label>
         <input formControlName="imageUrl" type="url" />
+      </div>
+      <div class="form-group">
+        <label>Spécialisation(s) *</label>
+        <select formControlName="specializations" multiple required>
+          <option *ngFor="let spec of allSpecializations" [value]="spec.id">
+            {{ spec.name }}
+          </option>
+        </select>
+        <div class="error"
+             *ngIf="form.get('specializations')?.invalid && (form.get('specializations')?.dirty || form.get('specializations')?.touched)">
+          Veuillez sélectionner au moins une spécialisation.
+        </div>
       </div>
       <div class="form-actions">
         <button class="btn btn-primary" type="submit" [disabled]="form.invalid">Enregistrer</button>

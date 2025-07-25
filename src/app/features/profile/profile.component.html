@@ -86,7 +86,6 @@
             <form class="profile-info-grid" autocomplete="off">
               <div>
                 <h3>Informations personnelles</h3>
-
                 <!-- First name (editable) -->
                 <div>
                   <strong>Prénom</strong><br>
@@ -97,7 +96,6 @@
                     <input [(ngModel)]="user.firstName" name="firstName" placeholder="Votre prénom" required />
                   </ng-template>
                 </div>
-
                 <!-- Last name (editable) -->
                 <div>
                   <strong>Nom</strong><br>
@@ -108,7 +106,6 @@
                     <input [(ngModel)]="user.lastName" name="lastName" placeholder="Votre nom" required />
                   </ng-template>
                 </div>
-
                 <!-- Email (readonly, masked for admin) -->
                 <div>
                   <strong>Email</strong><br>
@@ -122,7 +119,6 @@
                     </ng-template>
                   </span>
                 </div>
-
                 <!-- Phone (editable) -->
                 <div>
                   <strong>Téléphone</strong><br>
@@ -133,7 +129,6 @@
                     <input [(ngModel)]="user.phone" name="phone" placeholder="Votre téléphone" />
                   </ng-template>
                 </div>
-
                 <!-- Owner-only fields -->
                 <ng-container *ngIf="owner">
                   <div>
@@ -164,7 +159,6 @@
                     </ng-template>
                   </div>
                 </ng-container>
-
                 <!-- Coach-only: Specializations -->
                 <ng-container *ngIf="coach">
                   <div>
@@ -179,13 +173,11 @@
                     </ng-template>
                   </div>
                 </ng-container>
-
                 <!-- Admin-only: Role label -->
                 <div *ngIf="admin">
                   <strong>Rôle :</strong> Administrateur
                 </div>
               </div>
-
               <div>
                 <h3>À propos de moi</h3>
                 <!-- Bio (editable) -->
@@ -227,7 +219,9 @@
                   </ng-template>
                   <div class="dog-info">
                     <h4>{{ dog.name }}</h4>
-                    <div class="dog-breed-age">{{ dog.breedName }}, {{ getDogAge(dog.birthDate) }}</div>
+                    <div class="dog-breed-age">
+                      {{ dog.breedName }}, {{ getDogAge(dog.birthDate) }}
+                    </div>
                     <div class="dog-details">
                       <div><strong>Sexe</strong> <span>{{ dog.sex }}</span></div>
                       <div><strong>Poids</strong> <span>{{ dog.weight }} kg</span></div>

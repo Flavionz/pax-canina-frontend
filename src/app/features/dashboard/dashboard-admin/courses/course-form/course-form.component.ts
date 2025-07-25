@@ -2,11 +2,14 @@ import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Course } from '@core/models/course.model';
+import { Specialization } from '@core/models/specialization.model';
+import { SpecializationService } from '@core/services/specialization.service';
 
 /**
- * Course form component for create/edit.
- * All field names follow backend/model naming (English).
- * UI/labels/messages are in French (user-facing).
+ * Modal form for creating/updating a course, including selection of one or more specializations (by ID).
+ * - Follows backend naming conventions.
+ * - Works with an array of specialization ids (number[]).
+ * - Emits Course object with id array for CRUD compatibility.
  */
 @Component({
   selector: 'app-course-form',
@@ -21,37 +24,55 @@ export class CourseFormComponent implements OnInit {
   @Output() save = new EventEmitter<Course>();
 
   form!: FormGroup;
+  allSpecializations: Specialization[] = [];
 
-  constructor(private fb: FormBuilder) {}
+  constructor(
+    private fb: FormBuilder,
+    private specializationService: SpecializationService
+  ) {}
 
-  /**
-   * Initializes the form with course data (if present).
-   * Uses English field names for backend consistency.
-   */
   ngOnInit() {
+    // Initialize the form with the course data (or defaults).
     this.form = this.fb.group({
-      name:      [this.course?.name      || '', Validators.required],
-      description: [this.course?.description || '', Validators.required],
-      status:    [this.course?.status    || 'OPEN', Validators.required],
-      imageUrl:  [this.course?.imageUrl  || '']
+      name:          [this.course?.name ?? '', Validators.required],
+      description:   [this.course?.description ?? '', Validators.required],
+      status:        [this.course?.status ?? 'OPEN', Validators.required],
+      imageUrl:      [this.course?.imageUrl ?? ''],
+      // Specializations: store and handle as array of IDs!
+      specializations: [
+        // Se il course esiste già: array di id, altrimenti array vuoto
+        Array.isArray(this.course?.specializations)
+          ? this.course!.specializations
+          : [],
+        Validators.required
+      ]
+    });
+
+    // Fetch all available specializations for the select.
+    this.specializationService.getAll().subscribe({
+      next: specs => this.allSpecializations = specs
     });
   }
 
   /**
-   * Emits save event with form data.
+   * Emit save event with Course object including specialization id array.
+   * @returns void
    */
   submit() {
     if (this.form.valid) {
       const result: Course = {
         ...this.course,
-        ...this.form.value
+        ...this.form.value,
+        // Assicurati che specializations sia sempre un array di id (number[])
+        specializations: this.form.value.specializations
       };
       this.save.emit(result);
     }
   }
 
   /**
-   * Emits close event.
+   * Emit close event to parent.
+   * @returns void
    */
   closeModal() {
     this.close.emit(false);
