@@ -80,7 +80,18 @@
     font-size: 0.93em;
     &.badge-admin { background: #e3e9fd; color: #1a43b4; }
     &.badge-coach { background: #e1f7e9; color: #19a47b; }
-    &.badge-proprietaire { background: #faeee2; color: #c17d20; }
+    &.badge-owner { background: #faeee2; color: #c17d20; }
+  }
+
+  .badge-spec {
+    background: #eef1f4;
+    color: #1879c2;
+    border-radius: 7px;
+    font-size: 0.89em;
+    padding: 0.16em 0.7em;
+    margin-right: 0.32em;
+    font-weight: 500;
+    display: inline-block;
   }
 
   .loading-msg,
@@ -102,4 +113,14 @@
     background: #c2ecd8;
     border-color: #0f7050;
   }
+}
+.badge-specialization {
+  background: #e3f0fc;
+  color: #17547b;
+  margin-right: .2em;
+  border-radius: 8px;
+  padding: 0.15em 0.7em;
+  font-size: .92em;
+  font-weight: 500;
+  display: inline-block;
 }

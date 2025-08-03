@@ -9,6 +9,7 @@
   <app-user-form
     *ngIf="showForm"
     [user]="userToEdit"
+    [specializations]="specializations"
     (save)="onSaveUser($event)"
     (cancel)="onCancelForm()"
   ></app-user-form>
@@ -26,6 +27,7 @@
       <th>Email</th>
       <th>Téléphone</th>
       <th>Rôle</th>
+      <th *ngIf="hasAnyCoach()">Spécialisations</th>
       <th>Actions</th>
     </tr>
     </thead>
@@ -36,19 +38,26 @@
       <td>{{ u.email }}</td>
       <td>{{ u.phone || '-' }}</td>
       <td>
-          <span class="role-badge" [ngClass]="{
-            'badge-admin': u.role === 'ADMIN',
-            'badge-coach': u.role === 'COACH',
-            'badge-owner': u.role === 'OWNER'
-          }">
-            {{ translateRole(u.role) }}
-          </span>
+      <span class="role-badge" [ngClass]="{
+        'badge-admin': u.role === 'ADMIN',
+        'badge-coach': u.role === 'COACH',
+        'badge-owner': u.role === 'OWNER'
+      }">
+        {{ translateRole(u.role) }}
+      </span>
+      </td>
+      <td>
+        <ng-container *ngIf="u.role === 'COACH' && getSpecializationObjects(u.specializations).length; else dash">
+          <span *ngFor="let s of getSpecializationObjects(u.specializations)" class="badge badge-specialization">{{ s.name }}</span>
+        </ng-container>
+        <ng-template #dash>—</ng-template>
       </td>
       <td>
         <button class="btn btn-outline btn-xs" (click)="onEditUser(u)">Modifier</button>
         <button class="btn btn-outline btn-xs btn-danger" (click)="onDeleteUser(u)">Supprimer</button>
       </td>
     </tr>
+
     </tbody>
   </table>
 

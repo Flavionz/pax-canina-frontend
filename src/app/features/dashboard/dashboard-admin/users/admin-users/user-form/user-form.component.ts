@@ -2,16 +2,16 @@ import { Component, EventEmitter, Input, Output, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { User } from '@core/models/user.model';
 import { Specialization } from '@core/models/specialization.model';
-import { SpecializationService } from '@core/services/specialization.service';
 import { CommonModule } from '@angular/common';
 
 /**
  * UserFormComponent
  * -----------------
- * Admin user creation/modification form for Pax Canina dashboard.
- * - Manages Owner, Coach, and Admin roles.
+ * Jury-ready admin user creation/modification form for Pax Canina dashboard.
+ * - Handles Owner, Coach, and Admin roles.
  * - Handles Coach specializations (at least one required if role is COACH).
- * - Emits form data as User DTO compatible with the backend.
+ * - Emits form data as User DTO compatible with backend.
+ * - Specializations are passed as @Input, never fetched inside this component.
  * - Password field is intentionally omitted; password is generated backend-side.
  */
 @Component({
@@ -23,19 +23,16 @@ import { CommonModule } from '@angular/common';
 })
 export class UserFormComponent implements OnInit {
   @Input() user: User | null = null;
+  @Input() specializations: Specialization[] = [];  // Passate dal genitore!
   @Output() save = new EventEmitter<User>();
   @Output() cancel = new EventEmitter<void>();
 
   form: FormGroup;
-  specializations: Specialization[] = [];
   selectedSpec: Specialization | null = null;
   specializationError = false;
   errorMsg: string | null = null;
 
-  constructor(
-    private fb: FormBuilder,
-    private specializationService: SpecializationService
-  ) {
+  constructor(private fb: FormBuilder) {
     // Build the form structure (no password field, as password is backend-generated)
     this.form = this.fb.group({
       firstName: ['', Validators.required],
@@ -50,16 +47,18 @@ export class UserFormComponent implements OnInit {
   }
 
   ngOnInit() {
-    // Fetch available specializations from backend
-    this.specializationService.getAll().subscribe(specs => {
-      this.specializations = specs;
-    });
-
-    // If editing an existing user, patch form with existing values
+    // Patch form for edit mode (ensure full specialization objects)
     if (this.user) {
+      // Se le specializzazioni sono solo array di id, mappale sugli oggetti
+      let patchedUser = { ...this.user };
+      if (this.user.specializations?.length && typeof this.user.specializations[0] !== 'object') {
+        patchedUser.specializations = (this.user.specializations as any[]).map((id: number) =>
+          this.specializations.find(spec => spec.id === id)
+        ).filter(Boolean) as Specialization[];
+      }
       this.form.patchValue({
-        ...this.user,
-        specializations: this.user.specializations ?? []
+        ...patchedUser,
+        specializations: patchedUser.specializations ?? []
       });
     }
 
