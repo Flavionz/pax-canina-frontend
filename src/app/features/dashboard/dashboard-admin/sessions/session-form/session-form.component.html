@@ -1,9 +1,11 @@
 <div class="form-overlay">
   <form [formGroup]="form" (ngSubmit)="submit()" class="session-form">
-    <h3>Nouvelle session</h3>
+    <h3>{{ session ? 'Modifier la session' : 'Nouvelle session' }}</h3>
+
+    <!-- Corso -->
     <div class="form-row">
       <label>Cours *</label>
-      <select formControlName="courseId" required>
+      <select formControlName="courseId" required (change)="onCourseChange()">
         <option value="">Sélectionner...</option>
         <option *ngFor="let c of courses" [value]="c.idCourse">
           {{ c.name }}
@@ -11,21 +13,24 @@
       </select>
     </div>
 
+    <!-- Coach -->
     <div class="form-row">
       <label>Coach *</label>
       <select formControlName="coachId" required>
         <option value="">Sélectionner...</option>
         <option *ngFor="let coach of coaches" [value]="coach.id">
-          {{ coach.firstName }} {{ coach.lastName }}
+          {{ coach.firstName }} {{ coach.lastName }}{{ coach.role === 'ADMIN' ? ' (Admin)' : '' }}
         </option>
       </select>
     </div>
 
+    <!-- Data -->
     <div class="form-row">
       <label>Date *</label>
       <input type="date" formControlName="date" required>
     </div>
 
+    <!-- Ora -->
     <div class="form-row">
       <label>Heure début *</label>
       <input type="time" formControlName="startTime" required>
@@ -33,6 +38,7 @@
       <input type="time" formControlName="endTime" required>
     </div>
 
+    <!-- Livello e Capienza -->
     <div class="form-row">
       <label>Niveau *</label>
       <select formControlName="level" required>
@@ -45,6 +51,7 @@
       <input type="number" formControlName="maxCapacity" min="1" required>
     </div>
 
+    <!-- Location e Immagine -->
     <div class="form-row">
       <label>Lieu</label>
       <input type="text" formControlName="location">
@@ -52,11 +59,13 @@
       <input type="text" formControlName="imageUrl">
     </div>
 
+    <!-- Descrizione -->
     <div class="form-row">
       <label>Description</label>
       <textarea formControlName="description"></textarea>
     </div>
 
+    <!-- Fascia d'età -->
     <div class="form-row">
       <label>Tranche d'âge *</label>
       <select formControlName="ageGroupId" required>
@@ -75,6 +84,7 @@
       </select>
     </div>
 
+    <!-- Azioni -->
     <div class="actions">
       <button type="submit" [disabled]="form.invalid">Enregistrer</button>
       <button type="button" (click)="closeModal()">Annuler</button>

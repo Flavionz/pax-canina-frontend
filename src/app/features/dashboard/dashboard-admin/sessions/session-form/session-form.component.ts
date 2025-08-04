@@ -4,15 +4,12 @@ import { CommonModule } from '@angular/common';
 import { Session } from '@core/models/session.model';
 import { Course } from '@core/models/course.model';
 import { AgeGroup } from '@core/models/age-group.model';
-import { Coach } from '@core/models/coach.model';
+import { User } from '@core/models/user.model';
 
 @Component({
   selector: 'app-session-form',
   standalone: true,
-  imports: [
-    CommonModule,
-    ReactiveFormsModule,
-  ],
+  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './session-form.component.html',
   styleUrls: ['./session-form.component.scss']
 })
@@ -20,9 +17,10 @@ export class SessionFormComponent implements OnInit {
   @Input() session: Session | null = null;
   @Input() courses: Course[] = [];
   @Input() ageGroups: AgeGroup[] = [];
-  @Input() coaches: Coach[] = [];
+  @Input() coaches: User[] = []; // Usa User, non Coach!
   @Output() save = new EventEmitter<Session>();
   @Output() close = new EventEmitter<void>();
+  @Output() courseSelected = new EventEmitter<number>();
 
   form!: FormGroup;
 
@@ -42,6 +40,14 @@ export class SessionFormComponent implements OnInit {
       description: [this.session?.description ?? ''],
       ageGroupId:  [this.session?.ageGroup?.idAgeGroup ?? '', Validators.required]
     });
+  }
+
+  // Emetti l'evento quando il corso viene cambiato
+  onCourseChange(): void {
+    const courseId = this.form.get('courseId')?.value;
+    this.courseSelected.emit(Number(courseId));
+    // Reset coach selezionato se cambia corso
+    this.form.patchValue({ coachId: '' });
   }
 
   submit(): void {
@@ -64,7 +70,12 @@ export class SessionFormComponent implements OnInit {
         imageUrl: value.imageUrl,
         description: value.description,
         course: courseObj,
-        coach: coachObj,
+        coach: {
+          id: coachObj.id,
+          firstName: coachObj.firstName,
+          lastName: coachObj.lastName,
+          avatarUrl: coachObj.avatarUrl
+        },
         ageGroup: ageGroupObj,
         status: this.session?.status ?? 'available'
       };

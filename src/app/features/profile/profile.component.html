@@ -164,7 +164,7 @@
                   <div>
                     <strong>Spécialisations</strong><br>
                     <span *ngIf="coach.specializations?.length; else noSpecs">
-                      <span *ngFor="let spec of coach.specializations; let last = last">
+                      <span *ngFor="let spec of getSpecializationObjects(coach.specializations); let last = last">
                         {{ spec.name }}<span *ngIf="!last">, </span>
                       </span>
                     </span>

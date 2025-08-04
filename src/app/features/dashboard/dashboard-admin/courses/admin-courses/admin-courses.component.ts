@@ -3,11 +3,9 @@ import { CommonModule, NgClass, SlicePipe } from '@angular/common';
 import { CourseService } from '@core/services/course.service';
 import { Course } from '@core/models/course.model';
 import { CourseFormComponent } from '../course-form/course-form.component';
+import { Specialization } from '@core/models/specialization.model';
+import { SpecializationService } from '@core/services/specialization.service';
 
-/**
- * Admin panel to manage courses.
- * Allows CRUD operations on all courses.
- */
 @Component({
   selector: 'app-admin-courses',
   standalone: true,
@@ -22,18 +20,20 @@ import { CourseFormComponent } from '../course-form/course-form.component';
 })
 export class AdminCoursesComponent implements OnInit {
   courses: Course[] = [];
+  specializations: Specialization[] = [];
   formOpen = false;
   selectedCourse: Course | null = null;
 
-  constructor(private courseService: CourseService) {}
+  constructor(
+    private courseService: CourseService,
+    private specializationService: SpecializationService
+  ) {}
 
   ngOnInit() {
     this.loadCourses();
+    this.loadSpecializations();
   }
 
-  /**
-   * Loads all courses for admin view.
-   */
   loadCourses() {
     this.courseService.getCourses().subscribe({
       next: res => this.courses = res,
@@ -41,46 +41,35 @@ export class AdminCoursesComponent implements OnInit {
     });
   }
 
-  /**
-   * Opens the form for creating a new course.
-   */
+  loadSpecializations(): void {
+    this.specializationService.getSpecializations().subscribe({
+      next: (res: Specialization[]) => this.specializations = res,
+      error: () => { this.specializations = []; }
+    });
+  }
+
+
   openForm() {
     this.selectedCourse = null;
     this.formOpen = true;
   }
 
-  /**
-   * Opens the form for editing an existing course.
-   * @param course Course to edit
-   */
   editCourse(course: Course) {
     this.selectedCourse = course;
     this.formOpen = true;
   }
 
-  /**
-   * Closes the course form and reloads the list if needed.
-   * @param refresh If true, reload courses after closing
-   */
   closeForm(refresh: boolean = false) {
     this.formOpen = false;
     if (refresh) this.loadCourses();
   }
 
-  /**
-   * Deletes a course by id after confirmation.
-   * @param id Course id to delete
-   */
   deleteCourse(id: number) {
     if (confirm('Supprimer ce cours ?')) {
       this.courseService.deleteCourse(id).subscribe(() => this.loadCourses());
     }
   }
 
-  /**
-   * Handles saving a course (create or update).
-   * @param course Course data from the form
-   */
   handleSave(course: Course) {
     if (course.idCourse) {
       this.courseService.updateCourse(course).subscribe({
@@ -93,5 +82,13 @@ export class AdminCoursesComponent implements OnInit {
         error: () => alert("Erreur lors de la création du cours.")
       });
     }
+  }
+
+  /** Ritorna i nomi delle specializzazioni associate a un corso */
+  getCourseSpecializations(course: Course): string[] {
+    if (!course.specializations || !this.specializations.length) return [];
+    return this.specializations
+      .filter(spec => (course.specializations as number[]).includes(spec.id))
+      .map(spec => spec.name);
   }
 }

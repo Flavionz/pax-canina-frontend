@@ -20,7 +20,7 @@
     <tbody>
     <tr *ngFor="let s of sessions">
       <td>{{ s.course?.name }}</td>
-      <td>{{ s.date | date:'d MMMM yyyy':'':'fr' }}</td>
+      <td>{{ asDate(s.date) | date:'d MMMM yyyy':'':'fr' }}</td>
       <td>
         {{ s.startTime || '-' }} - {{ s.endTime || '-' }}
       </td>
@@ -61,8 +61,9 @@
     [session]="selectedSession"
     [courses]="courses"
     [ageGroups]="ageGroups"
-    [coaches]="coaches"
+    [coaches]="filteredCoaches"
     (close)="closeForm()"
-    (save)="handleSave($event)">
+    (save)="handleSave($event)"
+    (courseSelected)="onCourseSelected($event)">
   </app-session-form>
 </div>

@@ -33,7 +33,6 @@ export class UserFormComponent implements OnInit {
   errorMsg: string | null = null;
 
   constructor(private fb: FormBuilder) {
-    // Build the form structure (no password field, as password is backend-generated)
     this.form = this.fb.group({
       firstName: ['', Validators.required],
       lastName: ['', Validators.required],
@@ -42,38 +41,33 @@ export class UserFormComponent implements OnInit {
       role: ['OWNER', Validators.required],
       bio: [''],
       avatarUrl: [''],
-      specializations: [[]], // Only for COACH
+      specializations: [[]], // Solo per COACH
     });
   }
 
   ngOnInit() {
-    // Patch form for edit mode (ensure full specialization objects)
+    // Patch della form (con badge oggetti) SOLO per la form!
     if (this.user) {
-      // Se le specializzazioni sono solo array di id, mappale sugli oggetti
-      let patchedUser = { ...this.user };
-      if (this.user.specializations?.length && typeof this.user.specializations[0] !== 'object') {
-        patchedUser.specializations = (this.user.specializations as any[]).map((id: number) =>
-          this.specializations.find(spec => spec.id === id)
-        ).filter(Boolean) as Specialization[];
-      }
+      const selected = (this.user.specializations ?? []).map(
+        id => this.specializations.find(s => s.id === id)
+      ).filter(Boolean) as Specialization[];
       this.form.patchValue({
-        ...patchedUser,
-        specializations: patchedUser.specializations ?? []
+        ...this.user,
+        specializations: selected
       });
     }
 
-    // Reactively validate specializations on role/specializations change
     this.form.get('role')!.valueChanges.subscribe(() => this.validateSpecializations());
     this.form.get('specializations')!.valueChanges.subscribe(() => this.validateSpecializations());
     this.validateSpecializations();
   }
 
-  /** Returns current list of selected specializations */
+  /** Badge visualizzati */
   get selectedSpecializations(): Specialization[] {
     return this.form.value.specializations ?? [];
   }
 
-  /** Returns list of available specializations (excluding already selected) */
+  /** Opzioni disponibili per selezione (esclude già selezionati) */
   get availableSpecializations(): Specialization[] {
     const current = this.selectedSpecializations;
     return this.specializations.filter(
@@ -81,7 +75,7 @@ export class UserFormComponent implements OnInit {
     );
   }
 
-  /** Add selected specialization to the list */
+  /** Aggiunge una specializzazione */
   addSpecialization() {
     if (this.selectedSpec) {
       const current = this.selectedSpecializations;
@@ -91,14 +85,14 @@ export class UserFormComponent implements OnInit {
     }
   }
 
-  /** Remove a specialization from the list */
+  /** Rimuove una specializzazione */
   removeSpecialization(spec: Specialization) {
     const current = this.selectedSpecializations;
     this.form.patchValue({ specializations: current.filter(s => s.id !== spec.id) });
     this.validateSpecializations();
   }
 
-  /** Validates that at least one specialization is selected for COACH role */
+  /** Validazione: almeno una specialization se COACH */
   validateSpecializations() {
     const isCoach = this.form.value.role === 'COACH';
     const list = this.selectedSpecializations;
@@ -106,10 +100,10 @@ export class UserFormComponent implements OnInit {
   }
 
   /**
-   * Handles form submission.
-   * - Converts specializations to array of ids for backend DTO.
-   * - Ensures non-COACH users send empty specialization array.
-   * - Emits the User DTO to parent.
+   * Submit finale:
+   * - trasforma oggetti in id (number[])
+   * - solo per COACH, per gli altri è []
+   * - emette DTO pronto per backend!
    */
   onSubmit() {
     this.errorMsg = null;
@@ -118,7 +112,7 @@ export class UserFormComponent implements OnInit {
     // Remove specializations if not COACH
     if (value.role !== 'COACH') value.specializations = [];
 
-    // Convert specializations (array of objects) to array of ids
+    // Sempre mappa a id[]
     value.specializations = (value.specializations ?? []).map((s: Specialization) => s.id);
 
     this.save.emit({

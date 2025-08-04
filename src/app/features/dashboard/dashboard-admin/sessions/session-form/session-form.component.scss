@@ -34,12 +34,10 @@
     gap: 1.5rem;
     flex-wrap: wrap;
     align-items: flex-end;
-
     > * {
       flex: 1;
       min-width: 130px;
     }
-
     label {
       font-weight: 600;
       color: #23735d;
@@ -68,7 +66,6 @@
       resize: vertical;
     }
   }
-
   .actions, .btn-row {
     margin-top: 1rem;
     display: flex;
@@ -109,7 +106,6 @@
   }
 }
 
-/* Responsive - mobile */
 @media (max-width: 600px) {
   .session-form {
     min-width: 0;
@@ -119,4 +115,9 @@
       gap: .7rem;
     }
   }
+}
+.hint.error {
+  color: #c93030;
+  font-size: 0.99em;
+  margin-top: .25em;
 }

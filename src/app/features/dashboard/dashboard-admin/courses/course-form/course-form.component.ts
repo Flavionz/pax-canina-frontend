@@ -1,79 +1,103 @@
 import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Course } from '@core/models/course.model';
 import { Specialization } from '@core/models/specialization.model';
 import { SpecializationService } from '@core/services/specialization.service';
+import { CommonModule } from '@angular/common';
 
-/**
- * Modal form for creating/updating a course, including selection of one or more specializations (by ID).
- * - Follows backend naming conventions.
- * - Works with an array of specialization ids (number[]).
- * - Emits Course object with id array for CRUD compatibility.
- */
 @Component({
   selector: 'app-course-form',
   standalone: true,
   templateUrl: './course-form.component.html',
   styleUrls: ['./course-form.component.scss'],
-  imports: [CommonModule, ReactiveFormsModule]
+  imports: [CommonModule, ReactiveFormsModule, FormsModule]
 })
 export class CourseFormComponent implements OnInit {
   @Input() course: Course | null = null;
   @Output() close = new EventEmitter<boolean>();
   @Output() save = new EventEmitter<Course>();
 
-  form!: FormGroup;
+  form: FormGroup;
   allSpecializations: Specialization[] = [];
+  selectedSpec: Specialization | null = null;
+  specializationError = false;
 
   constructor(
     private fb: FormBuilder,
     private specializationService: SpecializationService
-  ) {}
-
-  ngOnInit() {
-    // Initialize the form with the course data (or defaults).
+  ) {
     this.form = this.fb.group({
-      name:          [this.course?.name ?? '', Validators.required],
-      description:   [this.course?.description ?? '', Validators.required],
-      status:        [this.course?.status ?? 'OPEN', Validators.required],
-      imageUrl:      [this.course?.imageUrl ?? ''],
-      // Specializations: store and handle as array of IDs!
-      specializations: [
-        // Se il course esiste già: array di id, altrimenti array vuoto
-        Array.isArray(this.course?.specializations)
-          ? this.course!.specializations
-          : [],
-        Validators.required
-      ]
-    });
-
-    // Fetch all available specializations for the select.
-    this.specializationService.getAll().subscribe({
-      next: specs => this.allSpecializations = specs
+      name: ['', Validators.required],
+      description: ['', Validators.required],
+      status: ['OPEN', Validators.required],
+      imageUrl: [''],
+      specializations: [[], Validators.required] // sarà array di Specialization in form, ma number[] in output
     });
   }
 
-  /**
-   * Emit save event with Course object including specialization id array.
-   * @returns void
-   */
-  submit() {
-    if (this.form.valid) {
-      const result: Course = {
-        ...this.course,
-        ...this.form.value,
-        // Assicurati che specializations sia sempre un array di id (number[])
-        specializations: this.form.value.specializations
-      };
-      this.save.emit(result);
+  ngOnInit() {
+    // Carica le specializzazioni (solo una volta)
+    this.specializationService.getAll().subscribe({
+      next: specs => {
+        this.allSpecializations = specs;
+        // Se stiamo editando, patcha i valori
+        if (this.course) {
+          // `course.specializations` è array di numeri (id) in ingresso
+          const selected = (this.course.specializations ?? [])
+            .map((id: number) => specs.find(s => s.id === id))
+            .filter(Boolean) as Specialization[];
+          this.form.patchValue({
+            ...this.course,
+            specializations: selected
+          });
+        }
+        this.validateSpecializations();
+      }
+    });
+
+    this.form.get('specializations')!.valueChanges.subscribe(() => this.validateSpecializations());
+  }
+
+  get selectedSpecializations(): Specialization[] {
+    return this.form.value.specializations ?? [];
+  }
+
+  get availableSpecializations(): Specialization[] {
+    const current = this.selectedSpecializations;
+    return this.allSpecializations.filter(s => !current.some(sel => sel.id === s.id));
+  }
+
+  addSpecialization() {
+    if (this.selectedSpec) {
+      const current = this.selectedSpecializations;
+      this.form.patchValue({ specializations: [...current, this.selectedSpec] });
+      this.selectedSpec = null;
+      this.validateSpecializations();
     }
   }
 
-  /**
-   * Emit close event to parent.
-   * @returns void
-   */
+  removeSpecialization(spec: Specialization) {
+    const current = this.selectedSpecializations;
+    this.form.patchValue({ specializations: current.filter(s => s.id !== spec.id) });
+    this.validateSpecializations();
+  }
+
+  validateSpecializations() {
+    this.specializationError = (this.selectedSpecializations.length < 1);
+  }
+
+  submit() {
+    if (this.form.valid && !this.specializationError) {
+      const value = { ...this.form.value };
+      // Trasforma array di oggetti Specialization -> array di id (number[])
+      value.specializations = (value.specializations ?? []).map((s: Specialization) => s.id);
+      this.save.emit({
+        ...(this.course || {}),
+        ...value
+      });
+    }
+  }
+
   closeModal() {
     this.close.emit(false);
   }

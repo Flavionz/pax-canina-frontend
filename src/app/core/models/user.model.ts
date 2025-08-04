@@ -10,6 +10,6 @@ export interface User {
   bio?: string;
   role: 'ADMIN' | 'COACH' | 'OWNER' | string;
   registrationDate?: string;
-  specializations?: Specialization[];
+  specializations?: number[];
   emailVerified?: boolean;
 }

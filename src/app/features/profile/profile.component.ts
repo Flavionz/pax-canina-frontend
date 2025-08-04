@@ -13,12 +13,14 @@ import { OwnerService } from '@core/services/owner.service';
 import { CoachService } from '@core/services/coach.service';
 import { AdminService } from '@core/services/admin.service';
 import { DogService } from '@core/services/dog.service';
+import { SpecializationService } from '@core/services/specialization.service'; // <--- AGGIUNTO
 import { AddDogDialogComponent } from '@features/dog/add-dog-dialog/add-dog-dialog.component';
 
 import { Dog } from '@models/dog.model';
 import { Owner } from '@models/owner.model';
 import { Coach } from '@models/coach.model';
 import { Admin } from '@models/admin.model';
+import { Specialization } from '@models/specialization.model';
 
 import { isOwner, isCoach, isAdmin } from '@core/type-guards/user-type-guards';
 
@@ -54,12 +56,16 @@ export class ProfileComponent implements OnInit {
 
   selectedTabIndex = 0; // 0 = personal info, 1 = dogs, 2 = registrations
 
+  // -- Specializations --
+  public allSpecializations: Specialization[] = [];
+
   constructor(
     private auth: AuthService,
     private ownerService: OwnerService,
     private coachService: CoachService,
     private adminService: AdminService,
     private dogService: DogService,
+    private specializationService: SpecializationService, // <--- AGGIUNTO
     private dialog: MatDialog,
     private route: ActivatedRoute,
     private router: Router
@@ -77,6 +83,17 @@ export class ProfileComponent implements OnInit {
       }
     });
     this.loadUser();
+
+    this.specializationService.getAll().subscribe(specs => {
+      this.allSpecializations = specs;
+    });
+  }
+
+  public getSpecializationObjects(ids: number[] | undefined): Specialization[] {
+    if (!ids?.length) return [];
+    return ids
+      .map(id => this.allSpecializations.find(spec => spec.id === id))
+      .filter(Boolean) as Specialization[];
   }
 
   /** Loads user data based on current role */

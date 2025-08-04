@@ -4,13 +4,14 @@
     <button class="btn btn-primary" (click)="openForm()">+ Nouveau cours</button>
   </div>
 
-  <table class="courses-table" *ngIf="courses?.length; else emptyState">
+  <table class="courses-table" *ngIf="courses?.length && !formOpen; else emptyState">
     <thead>
     <tr>
       <th>Nom</th>
       <th>Description</th>
       <th>Statut</th>
       <th>Image</th>
+      <th>Spécialisations</th>
       <th>Actions</th>
     </tr>
     </thead>
@@ -21,13 +22,22 @@
       <td>
           <span class="badge"
                 [ngClass]="{
-              'badge-success': course.status === 'OPEN',
-              'badge-danger': course.status === 'CLOSED'
-            }"
-          >{{ course.status === 'OPEN' ? 'OUVERT' : 'FERMÉ' }}</span>
+                  'badge-success': course.status === 'OPEN',
+                  'badge-danger': course.status === 'CLOSED'
+                }">
+            {{ course.status === 'OPEN' ? 'OUVERT' : 'FERMÉ' }}
+          </span>
       </td>
       <td>
         <img *ngIf="course.imageUrl" [src]="course.imageUrl" alt="img" class="course-img" />
+      </td>
+      <td>
+        <ng-container *ngIf="getCourseSpecializations(course)?.length; else noSpecs">
+            <span class="spec-badge" *ngFor="let s of getCourseSpecializations(course)">
+              {{ s }}
+            </span>
+        </ng-container>
+        <ng-template #noSpecs><span class="no-spec">-</span></ng-template>
       </td>
       <td>
         <button class="btn btn-sm btn-secondary" (click)="editCourse(course)">Modifier</button>
@@ -38,16 +48,16 @@
   </table>
 
   <ng-template #emptyState>
-    <div class="empty-state">
+    <div class="empty-state" *ngIf="!formOpen">
       <p>Aucun cours pour l’instant.</p>
     </div>
   </ng-template>
-
-  <!-- Inline modal for the course form -->
-  <app-course-form
-    *ngIf="formOpen"
-    [course]="selectedCourse"
-    (close)="closeForm($event)"
-    (save)="handleSave($event)">
-  </app-course-form>
 </div>
+
+<div class="form-overlay" *ngIf="formOpen"></div>
+<app-course-form
+  *ngIf="formOpen"
+  [course]="selectedCourse"
+  (close)="closeForm($event)"
+  (save)="handleSave($event)">
+</app-course-form>

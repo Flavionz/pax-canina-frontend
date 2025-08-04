@@ -1,6 +1,6 @@
-
 .admin-courses {
   padding: 2rem;
+  position: relative;
 
   .header {
     display: flex;
@@ -10,6 +10,7 @@
     h2 {
       font-size: 2rem;
       color: #1d3557;
+      font-weight: 700;
     }
     .btn-primary {
       background: #27c383;
@@ -98,5 +99,51 @@
     text-align: center;
     color: #7c8491;
     font-size: 1.2rem;
+  }
+}
+
+.spec-badge {
+  background: #f0f7ff;
+  color: #2070c7;
+  border-radius: 1rem;
+  padding: 0.2em 0.7em;
+  font-size: 0.90em;
+  font-weight: 500;
+  margin-right: 0.4em;
+}
+.no-spec {
+  color: #aaa;
+  font-style: italic;
+}
+
+
+/* Overlay - livello superiore, copre tutto tranne la modale */
+.form-overlay {
+  position: fixed;
+  z-index: 1000;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(34, 41, 58, 0.14);
+  backdrop-filter: blur(2px);
+}
+
+/* Modale centrata e interattiva sopra overlay */
+.course-form-modal {
+  position: fixed;
+  z-index: 1010;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  margin: 0 auto;
+  max-width: 430px;
+  width: 100%;
+  background: #f8fafc;
+  border-radius: 14px;
+  box-shadow: 0 2px 8px 0 #1879c210;
+  padding: 2rem 2rem 1rem 2rem;
+}
+@media (max-width: 600px) {
+  .course-form-modal {
+    max-width: 98vw;
+    padding: 1rem 0.5rem 0.5rem 0.5rem;
   }
 }
