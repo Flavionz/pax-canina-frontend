@@ -18,7 +18,7 @@ export class RegistrationService {
   /** Register a dog to a session */
   subscribeToSession(sessionId: number, dogId: number): Observable<Registration> {
     return this.http.post<Registration>(
-      `${environment.apiUrl}/session/${sessionId}/registration`,
+      `${environment.apiUrl}/sessions/${sessionId}/registration`,
       { dogId }
     );
   }

@@ -1,4 +1,22 @@
 /* Global Styles */
+html, body {
+  width: 100%;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  overflow-x: hidden;
+  height: 100%;
+}
+*, *::before, *::after {
+  box-sizing: inherit;
+}
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 

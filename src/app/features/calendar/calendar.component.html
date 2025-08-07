@@ -62,15 +62,28 @@
     </div>
     <div class="detail-row">
       <mat-icon>account_circle</mat-icon>
-      Coach : {{ selectedSession.coach?.firstName }} {{ selectedSession.coach?.lastName }}
+      Coach :
+      <ng-container *ngIf="selectedSession.coach">
+        {{ selectedSession.coach.firstName }} {{ selectedSession.coach.lastName }}
+      </ng-container>
+      <ng-container *ngIf="!selectedSession.coach">
+        N/A
+      </ng-container>
     </div>
     <div class="detail-row">
       <mat-icon>info</mat-icon>
-      {{ selectedSession.description }}
+      {{ selectedSession.description || '—' }}
     </div>
     <div class="detail-row">
       <mat-icon>child_care</mat-icon>
-      Tranche d'âge : {{ selectedSession.ageGroup?.name }} ({{ selectedSession.ageGroup?.ageMin }}-{{ selectedSession.ageGroup?.ageMax }} ans)
+      Tranche d'âge :
+      <ng-container *ngIf="selectedSession.ageGroup">
+        {{ selectedSession.ageGroup.name }}
+        ({{ selectedSession.ageGroup.ageMin }}-{{ selectedSession.ageGroup.ageMax }} ans)
+      </ng-container>
+      <ng-container *ngIf="!selectedSession.ageGroup">
+        N/A
+      </ng-container>
     </div>
     <img *ngIf="selectedSession.imageUrl" [src]="selectedSession.imageUrl" class="session-img" alt="">
     <div class="actions">

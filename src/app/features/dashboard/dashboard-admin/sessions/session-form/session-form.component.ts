@@ -17,7 +17,7 @@ export class SessionFormComponent implements OnInit {
   @Input() session: Session | null = null;
   @Input() courses: Course[] = [];
   @Input() ageGroups: AgeGroup[] = [];
-  @Input() coaches: User[] = []; // Usa User, non Coach!
+  @Input() coaches: User[] = [];
   @Output() save = new EventEmitter<Session>();
   @Output() close = new EventEmitter<void>();
   @Output() courseSelected = new EventEmitter<number>();
@@ -42,11 +42,9 @@ export class SessionFormComponent implements OnInit {
     });
   }
 
-  // Emetti l'evento quando il corso viene cambiato
   onCourseChange(): void {
     const courseId = this.form.get('courseId')?.value;
     this.courseSelected.emit(Number(courseId));
-    // Reset coach selezionato se cambia corso
     this.form.patchValue({ coachId: '' });
   }
 
@@ -59,9 +57,12 @@ export class SessionFormComponent implements OnInit {
 
       if (!courseObj || !ageGroupObj || !coachObj) return;
 
+      // FORZA il valore a essere SEMPRE stringa (basta per l'input type="date", ma lasciamo la sicurezza)
       const session: Session = {
         ...this.session,
-        date: value.date,
+        date: typeof value.date === 'string'
+          ? value.date
+          : value.date?.toISOString?.().substring(0, 10),
         startTime: value.startTime,
         endTime: value.endTime,
         level: value.level,
@@ -79,6 +80,8 @@ export class SessionFormComponent implements OnInit {
         ageGroup: ageGroupObj,
         status: this.session?.status ?? 'available'
       };
+
+
       this.save.emit(session);
     }
   }

@@ -23,9 +23,10 @@
     <div class="section-content">
       <img src="/assets/images/canetestolina.jpg" alt="Immagine de ClubCanine" class="section-image">
       <div class="section-text">
-        <h2 class="section-title">Qui sommes-nous?</h2>
+        <h2 class="section-title about-title">Qui sommes-nous?</h2>
         <p>
-          Pax Canina est une communauté passionnée dédiée à l'éducation canine et au bien-être de votre compagnon.
+          Pax Canina est un club canin associatif fondé en 2015 à Metz, dédié à l’éducation et au bien-être des chiens, quels que soient leur âge ou leur race. Animé par une équipe de coachs diplômés et passionnés,
+          le club accueille chaque année plus de deux cents membres accompagnés de leurs compagnons à quatre pattes.
         </p>
       </div>
     </div>
@@ -34,7 +35,7 @@
   <section class="our-mission">
     <div class="section-content">
       <div class="section-text">
-        <h2 class="section-title">Notre mission</h2>
+        <h2 class="section-title mission-title">Notre mission</h2>
         <p>
           Depuis plus de 10 ans, nous nous engageons à créer un environnement où les chiens et leurs propriétaires peuvent apprendre, grandir et s'épanouir ensemble. Notre approche est basée sur le renforcement positif et le respect du bien-être animal.
         </p>
@@ -43,53 +44,59 @@
     </div>
   </section>
 
+
   <section class="our-services">
-    <h2 class="our-services-title">Nos services</h2>
+    <div class="our-services-header">
+      <h2 class="our-services-title">Nos Services</h2>
+      <p class="our-services-desc">
+        Découvrez nos différentes offres conçues pour répondre aux besoins spécifiques de votre chien
+      </p>
+    </div>
     <div class="services-list">
       <div class="service-card">
         <img src="assets/icons/cours.svg" alt="Immagine du cours d'éducation canine" class="service-image">
-        <h3 class="service-title">Cours d'éducation canine</h3>
+        <h3 class="service-title">Cours d'Éducation Canine</h3>
         <p>
-          Des cours adaptés à tous les niveaux, des chiots aux chiens adultes, des chiens équilibrés et obéissants.
+          Des cours structurés pour tous les niveaux, du chiot au chien adulte, dispensés par des éducateurs certifiés et expérimentés.
         </p>
       </div>
       <div class="service-card">
         <img src="assets/icons/sociali.svg" alt="Immagine della socialisation" class="service-image">
         <h3 class="service-title">Socialisation</h3>
         <p>
-          Des séances de groupe pour aider votre chien à interagir positivamente con ses congénères et les humains.
+          Des séances encadrées permettant à votre chien d'apprendre les codes canins et d'interagir positivement avec ses congénères.
         </p>
       </div>
       <div class="service-card">
         <img src="assets/icons/punto.svg" alt="Immagine du conseil personnalisé" class="service-image">
-        <h3 class="service-title">Conseil personnalisé</h3>
+        <h3 class="service-title">Conseils Personnalisés</h3>
         <p>
-          Des experts à votre disposition pour répondre à toutes vos questions et adapter nos conseils aux besoins spécifiques de comportement de votre canine.
+          Des consultations individuelles pour résoudre des problèmes spécifiques ou adapter l'éducation aux besoins particuliers de votre chien.
         </p>
       </div>
     </div>
   </section>
 
+
   <section class="available-courses">
     <app-course-list [previewMode]="true" [previewCount]="3"></app-course-list>
   </section>
-
-  <section class="call-to-action">
-    <div class="call-to-action-card">
-      <div class="call-to-action-title">
-        Prêt à commencer l'aventure avec votre chien?
-      </div>
-      <p class="call-to-action-text">
-        Rejoignez Pax Canina dès aujourd'hui et donnez à votre compagnon la meilleure éducation canine!
-      </p>
-      <div>
-        <button class="btn btn-inverse btn-lg" routerLink="/auth/register">
-          Créer un compte
-        </button>
-        <button class="btn btn-inverse btn-lg" routerLink="/contact">
-          Contacter un formateur
-        </button>
-      </div>
-    </div>
-  </section>
 </div>
+<section class="call-to-action">
+  <div class="call-to-action-card">
+    <div class="call-to-action-title">
+      Prêt à commencer l'aventure avec votre chien?
+    </div>
+    <p class="call-to-action-text">
+      Rejoignez Pax Canina dès aujourd'hui et donnez à votre compagnon la meilleure éducation canine!
+    </p>
+    <div>
+      <button class="btn btn-inverse btn-lg" routerLink="/auth/register">
+        Créer un compte
+      </button>
+      <button class="btn btn-inverse btn-lg" routerLink="/contact">
+        Contacter un formateur
+      </button>
+    </div>
+  </div>
+</section>

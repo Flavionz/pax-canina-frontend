@@ -1,3 +1,4 @@
+import { environment } from '@environments/environment';
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
@@ -13,7 +14,7 @@ import { Dog } from '@core/models/dog.model';
 import { RegistrationService } from '@core/services/registration.service';
 import { DogService } from '@core/services/dog.service';
 import { MatButton } from '@angular/material/button';
-import { FormsModule } from '@angular/forms'; // Needed for ngModel
+import { FormsModule } from '@angular/forms';
 
 @Component({
   providers: [
@@ -36,8 +37,13 @@ import { FormsModule } from '@angular/forms'; // Needed for ngModel
 })
 export class CalendarComponent implements OnInit {
   selectedDate: Date | null = new Date();
+
+  // All sessions indexed by date (YYYY-MM-DD)
   sessionsByDate: Record<string, Session[]> = {};
+
+  // Sessions for the selected day
   sessions: Session[] = [];
+
   selectedSession: Session | null = null;
 
   myDogs: Dog[] = [];
@@ -53,13 +59,15 @@ export class CalendarComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    // Fetch user's dogs
     this.dogService.getMyDogs().subscribe(dogs => {
       this.myDogs = dogs;
       if (dogs.length === 1) this.selectedDogId = dogs[0].idDog!;
     });
+
     if (this.selectedDate) {
-      this.loadMonth(this.selectedDate);
-      this.loadDay(this.selectedDate);
+      this.loadMonth(this.selectedDate); // Sessions for month (calendar dots)
+      this.loadDay(this.selectedDate);   // Sessions for the selected day
     }
   }
 
@@ -68,15 +76,38 @@ export class CalendarComponent implements OnInit {
     if (d instanceof Date) this.loadMonth(d);
   }
 
+  /** Helper: always returns YYYY-MM-DD in local time (NON toISOString!) */
+  private toIsoDate(d: Date): string {
+    const year = d.getFullYear();
+    const month = (d.getMonth() + 1).toString().padStart(2, '0');
+    const day = d.getDate().toString().padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  }
+
+  /** Adapter: ensures relational fields are always available (even if flat DTO) */
+  private adaptSession(s: any): Session {
+    return {
+      ...s,
+      course: s.course ?? (s.courseId ? { idCourse: s.courseId, name: s.courseName, imageUrl: s.courseImageUrl } : undefined),
+      coach: s.coach ?? (s.coachId ? { id: s.coachId, firstName: s.coachFirstName, lastName: s.coachLastName, avatarUrl: s.coachAvatarUrl } : undefined),
+      ageGroup: s.ageGroup ?? (s.ageGroupId ? { idAgeGroup: s.ageGroupId, name: s.ageGroupName, ageMin: s.minAge, ageMax: s.maxAge } : undefined),
+    };
+  }
+
+  /** Carica tutte le sessioni del mese (dots nel calendario) */
   private loadMonth(d: Date) {
     const year = d.getFullYear(), month = d.getMonth() + 1;
-    this.http.get<Session[]>(`/api/session/by-date-range?start=${year}-${String(month).padStart(2,'0')}-01&end=${year}-${String(month).padStart(2,'0')}-31`)
-      .subscribe(arr => {
-        this.sessionsByDate = {};
-        for (let s of arr) {
-          (this.sessionsByDate[s.date] ??= []).push(s);
-        }
-      });
+    const start = `${year}-${month.toString().padStart(2,'0')}-01`;
+    const end = `${year}-${month.toString().padStart(2,'0')}-31`;
+
+    this.http.get<any[]>(
+      `${environment.apiUrl}/sessions/by-date-range?start=${start}&end=${end}`
+    ).subscribe(arr => {
+      this.sessionsByDate = {};
+      for (let s of arr.map(s => this.adaptSession(s))) {
+        (this.sessionsByDate[s.date] ??= []).push(s);
+      }
+    });
   }
 
   onDateChange(d: Date | null) {
@@ -85,15 +116,21 @@ export class CalendarComponent implements OnInit {
     this.loadDay(d);
   }
 
+  /** Carica tutte le sessioni di uno specifico giorno */
   private loadDay(d: Date) {
-    const iso = d.toISOString().substring(0,10);
-    this.http.get<Session[]>(`/api/session/by-date/${iso}`)
-      .subscribe(arr => this.sessions = arr);
+    const iso = this.toIsoDate(d);
+    this.http.get<any[]>(
+      `${environment.apiUrl}/sessions/by-date/${iso}`
+    ).subscribe(arr => {
+      this.sessions = arr.map(s => this.adaptSession(s));
+      this.sessionsByDate[iso] = this.sessions;
+    });
   }
 
+  /** Evidenzia le celle nel calendario */
   dateClass: MatCalendarCellClassFunction<Date> = (cellDate, view) => {
     if (view === 'month') {
-      const key = cellDate.toISOString().substring(0,10);
+      const key = this.toIsoDate(cellDate);
       const day = this.sessionsByDate[key] || [];
       if (day.length) return day.every(s=>s.status==='full') ? 'full' : 'available';
     }
@@ -101,8 +138,7 @@ export class CalendarComponent implements OnInit {
   }
 
   get sessionsForSelectedDate(): Session[] {
-    if (!this.selectedDate) return [];
-    return this.sessionsByDate[this.selectedDate.toISOString().substring(0,10)] || [];
+    return this.sessions;
   }
 
   openSessionDetail(s: Session) {
@@ -120,13 +156,11 @@ export class CalendarComponent implements OnInit {
     this.enrollSuccess = false;
     this.enrolling = true;
 
-    // Check dog selection
     if (!this.selectedDogId) {
       this.enrollError = "Veuillez sélectionner un chien à inscrire.";
       this.enrolling = false;
       return;
     }
-    // Check session and idSession
     if (!this.selectedSession || typeof this.selectedSession.idSession !== 'number') {
       this.enrollError = "Sélection de session invalide.";
       this.enrolling = false;

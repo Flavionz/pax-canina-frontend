@@ -1,6 +1,12 @@
-<h2 class="title">
-  {{ previewMode ? 'Nos Cours Populaires' : 'Tous les cours' }}
-</h2>
+<!-- HEADER DELLA SEZIONE -->
+<div class="course-list-header">
+  <h2 class="course-list-title">
+    Nos Cours Populaires
+  </h2>
+  <p class="course-list-subtitle">
+    Explorez nos cours les plus appréciés par notre communauté canine
+  </p>
+</div>
 
 <!-- PREVIEW GRID -->
 <div *ngIf="previewMode" class="course-list preview-grid">
@@ -21,10 +27,11 @@
       </button>
     </div>
   </div>
-  <a routerLink="/courses" class="view-all-courses">
+  <a routerLink="/courses" class="view-all-courses" style="grid-column: 1 / -1;">
     Voir tous les cours disponibles →
   </a>
 </div>
+
 
 <!-- FULL LIST -->
 <ng-container *ngIf="!previewMode">
