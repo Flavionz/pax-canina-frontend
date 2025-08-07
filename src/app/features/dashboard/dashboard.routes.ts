@@ -38,9 +38,8 @@ export const DASHBOARD_ROUTES: Routes = [
       {
         path: 'owner',
         component: DashboardOwnerComponent
-      }
-      // Optional: default redirect
-      // { path: '', redirectTo: 'admin', pathMatch: 'full' }
+      },
+      { path: '', redirectTo: 'admin', pathMatch: 'full' }
     ]
   }
 ];

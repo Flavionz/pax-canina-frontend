@@ -45,15 +45,12 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
   }
 }
 
-/* Verde Primario */
 $primary-color: #22c55e;
 $primary-dark: #1ea84b;
 
-/* Blu secondario per eventuali info/azioni extra */
 $secondary-color: #176cb5;
 $secondary-dark: #155188;
 
-/* BUTTON: VERDE SU BIANCO (sfondo chiaro, bottone verde pieno) */
 .btn-primary {
   background: $primary-color;
   color: #fff;
@@ -65,7 +62,6 @@ $secondary-dark: #155188;
   }
 }
 
-/* BUTTON: BIANCO SU VERDE (sfondo verde, bottone bianco outline verde) */
 .btn-inverse {
   background: #fff;
   color: $primary-color;
@@ -77,7 +73,6 @@ $secondary-dark: #155188;
   }
 }
 
-/* BUTTON: OUTLINE su bianco (bianco, bordo verde, testo verde) */
 .btn-outline {
   background: #fff;
   color: $primary-color;
@@ -89,7 +84,6 @@ $secondary-dark: #155188;
   }
 }
 
-/* BUTTON: SECONDARIO (blu) */
 .btn-secondary {
   background: $secondary-color;
   color: #fff;
@@ -101,7 +95,6 @@ $secondary-dark: #155188;
   }
 }
 
-/* BUTTON: LINK STYLE */
 .btn-link {
   background: none;
   color: $secondary-color;
@@ -161,13 +154,11 @@ $secondary-dark: #155188;
 }
 
 
-/* Dimensioni */
 .btn-xs { font-size: 0.89rem; padding: 0.3em 0.95em; }
 .btn-sm { font-size: 0.96rem; padding: 0.45em 1.2em; }
 .btn-md { font-size: 1rem; padding: 0.6em 1.5em; }
 .btn-lg { font-size: 1.18rem; padding: 0.8em 2.3em; }
 
-/* Icone */
 .btn .material-icons, .btn .mat-icon {
   vertical-align: middle;
   margin-right: 0.5em;

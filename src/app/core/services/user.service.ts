@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { User } from '@core/models/user.model';
 import { Observable } from 'rxjs';
 import { environment } from '@environments/environment';
+import {map} from 'rxjs/operators';
 
 @Injectable({ providedIn: 'root' })
 export class UserService {
@@ -17,6 +18,13 @@ export class UserService {
   getUserById(id: number): Observable<User> {
     return this.http.get<User>(`${this.baseUrl}/${id}`);
   }
+
+  getUserCount(): Observable<number> {
+    return this.http.get<{ count: number }>(`${this.baseUrl}/count`).pipe(
+      map(res => res.count)
+    );
+  }
+
 
   createUser(user: User): Observable<User> {
     return this.http.post<User>(this.baseUrl, user);

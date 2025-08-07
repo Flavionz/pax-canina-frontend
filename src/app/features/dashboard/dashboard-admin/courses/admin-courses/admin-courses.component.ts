@@ -5,6 +5,7 @@ import { Course } from '@core/models/course.model';
 import { CourseFormComponent } from '../course-form/course-form.component';
 import { Specialization } from '@core/models/specialization.model';
 import { SpecializationService } from '@core/services/specialization.service';
+import {RouterLink} from '@angular/router';
 
 @Component({
   selector: 'app-admin-courses',
@@ -15,7 +16,8 @@ import { SpecializationService } from '@core/services/specialization.service';
     CommonModule,
     NgClass,
     SlicePipe,
-    CourseFormComponent
+    CourseFormComponent,
+    RouterLink
   ]
 })
 export class AdminCoursesComponent implements OnInit {

@@ -24,7 +24,6 @@ $card-border-color: #ddd;
   width: 100%;
 }
 
-/* HERO SECTION */
 .hero {
   width: 100vw;
   display: flex;
@@ -319,7 +318,6 @@ $card-border-color: #ddd;
   }
 }
 
-
 .available-courses {
   text-align: center;
   padding: 40px;
@@ -408,7 +406,7 @@ $card-border-color: #ddd;
       order: 1;
       width: 100%;
       text-align: center;
-      padding: 2rem 1.3rem 1.7rem 1.3rem;    // più aria
+      padding: 2rem 1.3rem 1.7rem 1.3rem;
       .hero-title {
         font-size: 1.45em;
         font-weight: 800;
@@ -469,10 +467,15 @@ $card-border-color: #ddd;
 
   .our-services {
     padding: 24px 0 10px 0;
-    .our-services-title {
-      font-size: 1.28em;
-      margin-bottom: 0.8em;
-      font-weight: 700;
+    .our-services-header {
+      .our-services-title {
+        font-size: 2.3em;
+        margin-bottom: 0.8em;
+        font-weight: 800;
+      }
+      .our-services-desc {
+        font-size: 1em;
+      }
     }
     .services-list {
       flex-direction: column;
@@ -523,6 +526,4 @@ $card-border-color: #ddd;
       }
     }
   }
-
-
 }

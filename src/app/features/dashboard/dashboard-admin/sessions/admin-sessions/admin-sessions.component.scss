@@ -42,3 +42,27 @@
     color: #888;
   }
 }
+.btn-back {
+  display: inline-block;
+  margin-bottom: 1.4rem;
+  background: #e6f2fa;
+  color: #1977cc;
+  border: none;
+  border-radius: 1.2rem;
+  padding: 0.38em 1.1em;
+  font-size: 1.02rem;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 2px 8px #e5eefa24;
+  transition: background 0.18s, color 0.18s;
+  text-align: left;
+  &:hover {
+    background: #d3e8f9;
+    color: #144c7c;
+  }
+  i, svg {
+    margin-right: 0.45em;
+    font-size: 1.08em;
+    vertical-align: middle;
+  }
+}

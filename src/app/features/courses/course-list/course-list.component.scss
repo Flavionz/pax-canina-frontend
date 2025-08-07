@@ -1,3 +1,12 @@
+.course-section {
+  background: #fff;
+  width: 100vw;
+  margin-left: 50%;
+  transform: translateX(-50%);
+  padding: 66px 0;
+  box-sizing: border-box;
+}
+
 .course-list-header {
   text-align: center;
   margin-top: 36px;
@@ -120,7 +129,6 @@
   }
 }
 
-// RESPONSIVE
 @media (max-width: 1100px) {
   .course-list.preview-grid {
     grid-template-columns: 1fr 1fr;
@@ -129,6 +137,18 @@
   }
 }
 @media (max-width: 800px) {
+  .course-section {
+    padding: 24px 0;
+  }
+  .course-list-header {
+    margin-top: 22px;
+    margin-bottom: 16px;
+  }
+  .course-list-title {
+    font-size: 1.48em;
+    &::after { width: 42px; height: 3px; }
+  }
+  .course-list-subtitle { font-size: 1em; }
   .course-list.preview-grid {
     grid-template-columns: 1fr;
     gap: 1.2rem;
@@ -147,4 +167,3 @@
     .course-details { padding: 1.05rem 1rem 1.05rem 1rem; }
   }
 }
-

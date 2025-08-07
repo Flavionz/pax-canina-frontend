@@ -5,6 +5,7 @@ import { UserService } from '@core/services/user.service';
 import { SpecializationService } from '@core/services/specialization.service';
 import { Specialization } from '@core/models/specialization.model';
 import { UserFormComponent } from './user-form/user-form.component';
+import {RouterLink} from '@angular/router';
 
 /**
  * AdminUsersComponent
@@ -16,7 +17,7 @@ import { UserFormComponent } from './user-form/user-form.component';
 @Component({
   selector: 'app-admin-users',
   standalone: true,
-  imports: [CommonModule, UserFormComponent],
+  imports: [CommonModule, UserFormComponent, RouterLink],
   templateUrl: './admin-users.component.html',
   styleUrls: ['./admin-users.component.scss']
 })

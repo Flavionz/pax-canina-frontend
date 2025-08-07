@@ -9,13 +9,14 @@ import { AgeGroup } from '@core/models/age-group.model';
 import { User } from '@core/models/user.model';
 import { SessionFormComponent } from '../session-form/session-form.component';
 import { CommonModule, NgClass, DatePipe } from '@angular/common';
+import {RouterLink} from '@angular/router';
 
 @Component({
   selector: 'app-admin-sessions',
   standalone: true,
   templateUrl: './admin-sessions.component.html',
   styleUrls: ['./admin-sessions.component.scss'],
-  imports: [CommonModule, NgClass, SessionFormComponent, DatePipe]
+  imports: [CommonModule, NgClass, SessionFormComponent, DatePipe, RouterLink]
 })
 export class AdminSessionsComponent implements OnInit {
   sessions: Session[] = [];

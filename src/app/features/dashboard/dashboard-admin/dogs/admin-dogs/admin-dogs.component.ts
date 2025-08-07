@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DogService } from '@core/services/dog.service';
 import { Dog } from '@core/models/dog.model';
+import {RouterLink} from '@angular/router';
 
 /**
  * Admin dogs management component.
@@ -14,7 +15,7 @@ import { Dog } from '@core/models/dog.model';
   standalone: true,
   templateUrl: './admin-dogs.component.html',
   styleUrls: ['./admin-dogs.component.scss'],
-  imports: [CommonModule]
+  imports: [CommonModule, RouterLink]
 })
 export class AdminDogsComponent implements OnInit {
   dogs: Dog[] = [];

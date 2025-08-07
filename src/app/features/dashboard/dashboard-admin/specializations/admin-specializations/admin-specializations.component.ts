@@ -3,11 +3,12 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { SpecializationService } from '@core/services/specialization.service';
 import { Specialization } from '@core/models/specialization.model';
+import {RouterLink} from '@angular/router';
 
 @Component({
   selector: 'app-admin-specializations',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, RouterLink],
   templateUrl: './admin-specializations.component.html',
   styleUrls: ['./admin-specializations.component.scss']
 })

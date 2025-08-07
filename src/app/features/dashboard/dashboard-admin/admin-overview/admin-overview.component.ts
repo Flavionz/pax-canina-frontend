@@ -53,16 +53,20 @@ export class AdminOverviewComponent implements OnInit {
     forkJoin([
       this.courseService.getCourses(),
       this.sessionService.getSessions(),
-      this.userService.getAllUsers(),
+      this.userService.getUserCount(),
       this.dogService.getAllDogs(),
       this.specializationService.getAll()
     ]).subscribe({
-      next: ([courses, sessions, users, dogs, specializations]) => {
+      next: ([courses, sessions, userCount, dogs, specializations]) => {
+        console.log('userCount:', userCount); // <-- deve stampare 1
+
         this.counts.courses         = courses.length;
         this.counts.sessions        = sessions.length;
-        this.counts.users           = users.length;
+        this.counts.users           = userCount;
         this.counts.dogs            = dogs.length;
         this.counts.specializations = specializations.length;
+        console.log('counts after assign:', this.counts);
+
       }
     });
 
