@@ -1,60 +1,75 @@
 <div class="dashboard-owner" *ngIf="!loading && owner">
+
+  <!-- Header -->
   <div class="dashboard-header">
     <img [src]="getAvatarUrl(owner)" alt="Avatar" class="avatar"/>
     <div class="info">
       <h2>Bonjour {{ owner.firstName }}</h2>
-      <p class="welcome-msg">
-        Heureux de vous revoir sur <strong>Pax Canina</strong> !
-      </p>
+      <p class="welcome-msg">Heureux de vous revoir sur <strong>Pax Canina</strong> !</p>
     </div>
-    <button class="btn btn-outline btn-md" routerLink="/profile">Gérer mon profil</button>
+    <button class="btn btn-outline btn-md" routerLink="/profile">
+      <span class="material-icons">manage_accounts</span> Gérer mon profil
+    </button>
   </div>
 
+  <!-- Quick stats -->
   <div class="quick-cards">
-    <div class="card quick-card">
-      <div class="quick-title">Vos chiens</div>
-      <div class="quick-value">{{ dogs.length }}</div>
-      <button class="btn btn-outline btn-xs" routerLink="/profile" title="Gérer les chiens">Gérer</button>
+    <div class="card quick-card dogs">
+      <div class="quick-icon"><span class="material-icons">pets</span></div>
+      <div>
+        <div class="quick-title">Vos chiens</div>
+        <div class="quick-value">{{ dogs.length }}</div>
+        <button class="btn btn-outline btn-xs" routerLink="/profile" title="Gérer les chiens">
+          <span class="material-icons">arrow_forward</span>
+        </button>
+      </div>
     </div>
-    <div class="card quick-card">
-      <div class="quick-title">Inscriptions récentes</div>
-      <div class="quick-value">{{ registrations.length }}</div>
-      <button class="btn btn-outline btn-xs" routerLink="/profile" title="Voir l’historique">Voir</button>
+    <div class="card quick-card registrations">
+      <div class="quick-icon"><span class="material-icons">event_available</span></div>
+      <div>
+        <div class="quick-title">Inscriptions</div>
+        <div class="quick-value">{{ registrations.length }}</div>
+        <button class="btn btn-outline btn-xs" routerLink="/profile" title="Voir l’historique">
+          <span class="material-icons">arrow_forward</span>
+        </button>
+      </div>
     </div>
     <div class="card quick-card add-dog">
-      <button
-        class="btn btn-primary btn-add"
-        (click)="goToAddDogTab()"
-      >
-        + Ajouter un chien
+      <button class="btn btn-primary btn-add" (click)="goToAddDogTab()">
+        <span class="material-icons">add</span> Ajouter un chien
       </button>
     </div>
   </div>
 
+  <!-- Last registrations -->
   <div class="dashboard-section">
-    <h3>Vos 3 dernières inscriptions</h3>
+    <h3>Dernières inscriptions</h3>
     <table class="recap-table" *ngIf="registrations.length > 0; else noReg">
       <thead>
       <tr>
-        <th>Cours</th>
-        <th>Date</th>
         <th>Chien</th>
+        <th>Cours</th>
+        <th>Session</th>
+        <th>Date</th>
         <th>Statut</th>
       </tr>
       </thead>
       <tbody>
       <tr *ngFor="let reg of registrations | slice:0:3">
-        <td>{{ reg.session.course.name }}</td>
-        <td>{{ reg.session.date | date:'shortDate' }}</td>
-        <td>{{ reg.dog.name }}</td>
+        <td>{{ reg.dogName }}</td>
+        <td>{{ reg.courseName }}</td>
+        <td>{{ reg.sessionName }}</td>
+        <td>{{ reg.registrationDate | date:'dd/MM/yyyy' }}</td>
         <td>
           <span class="badge"
                 [ngClass]="{
-                  'badge-success': reg.status === 'Confirmée',
-                  'badge-pending': reg.status === 'En attente',
-                  'badge-cancel': reg.status === 'Annulée'
+                  'badge-success': reg.status === 'REGISTERED' || reg.status === 'Confirmée',
+                  'badge-pending': reg.status === 'PENDING' || reg.status === 'En attente',
+                  'badge-cancel': reg.status === 'CANCELLED' || reg.status === 'Annulée'
                 }">
-            {{ reg.status }}
+            {{ reg.status === 'REGISTERED' ? 'Confirmée' :
+            reg.status === 'PENDING' ? 'En attente' :
+              reg.status === 'CANCELLED' ? 'Annulée' : reg.status }}
           </span>
         </td>
       </tr>
@@ -63,13 +78,14 @@
     <ng-template #noReg>
       <div class="text-muted">Aucune inscription récente.</div>
     </ng-template>
-    <button class="btn btn-link btn-xs" routerLink="/profile">Voir tout l’historique</button>
+    <button class="btn btn-link btn-xs" routerLink="/profile?tab=registrations">Voir tout l’historique</button>
   </div>
 
+  <!-- Available courses CTA -->
   <div class="dashboard-section">
     <h3>Participer à un cours</h3>
     <button class="btn btn-primary btn-lg" routerLink="/courses">
-      Voir les sessions disponibles
+      <span class="material-icons">search</span> Voir les sessions disponibles
     </button>
   </div>
 </div>

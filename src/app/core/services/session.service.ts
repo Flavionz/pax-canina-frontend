@@ -10,60 +10,53 @@ export class SessionService {
 
   constructor(private http: HttpClient) {}
 
-  /** Fetch all sessions */
+  /** --- già esistenti --- */
   getSessions(): Observable<Session[]> {
-    return this.http.get<any[]>(`${this.baseUrl}`).pipe(
-      map(dtos => dtos.map(this.dtoToSession))
-    );
+    return this.http.get<any[]>(`${this.baseUrl}`).pipe(map(dtos => dtos.map(this.dtoToSession)));
   }
-
-  /** Fetch sessions by course ID */
   getByCourse(courseId: number): Observable<Session[]> {
-    return this.http.get<any[]>(`${this.baseUrl}/by-course/${courseId}`).pipe(
-      map(dtos => dtos.map(this.dtoToSession))
-    );
+    return this.http.get<any[]>(`${this.baseUrl}/by-course/${courseId}`).pipe(map(dtos => dtos.map(this.dtoToSession)));
   }
-
-  /** Fetch sessions for a specific date (ISO yyyy-MM-dd) */
   getByDate(date: string): Observable<Session[]> {
-    return this.http.get<any[]>(`${this.baseUrl}/by-date/${date}`).pipe(
-      map(dtos => dtos.map(this.dtoToSession))
-    );
+    return this.http.get<any[]>(`${this.baseUrl}/by-date/${date}`).pipe(map(dtos => dtos.map(this.dtoToSession)));
   }
-
-  /** Fetch a single session by its ID */
   getSessionById(idSession: number): Observable<Session> {
-    return this.http.get<any>(`${this.baseUrl}/${idSession}`).pipe(
-      map(this.dtoToSession)
-    );
+    return this.http.get<any>(`${this.baseUrl}/${idSession}`).pipe(map(this.dtoToSession));
   }
-
-  // === CRUD Operations ===
-
-  /** Create a new session */
   createSession(session: Session): Observable<Session> {
     const dto = this.sessionToDto(session);
-    return this.http.post<any>(`${this.baseUrl}`, dto).pipe(
-      map(this.dtoToSession)
-    );
+    return this.http.post<any>(`${this.baseUrl}`, dto).pipe(map(this.dtoToSession));
   }
-
-  /** Update an existing session */
   updateSession(idSession: number, session: Session): Observable<Session> {
     const dto = this.sessionToDto(session);
-    return this.http.put<any>(`${this.baseUrl}/${idSession}`, dto).pipe(
-      map(this.dtoToSession)
-    );
+    return this.http.put<any>(`${this.baseUrl}/${idSession}`, dto).pipe(map(this.dtoToSession));
   }
-
-  /** Delete a session by its ID */
   deleteSession(idSession: number): Observable<void> {
     return this.http.delete<void>(`${this.baseUrl}/${idSession}`);
   }
 
-  // === MAPPING UTILS ===
+  /** --- alias “compatibilità” con i tuoi component --- */
+  getById(id: number): Observable<Session> {          // <-- usato dal form
+    return this.getSessionById(id);
+  }
+  create(payload: Session): Observable<Session> {      // <-- usato dal form
+    return this.createSession(payload);
+  }
+  update(id: number, payload: Session): Observable<Session> { // <-- usato dal form
+    return this.updateSession(id, payload);
+  }
+  delete(id: number): Observable<void> {               // <-- se lo userai in lista
+    return this.deleteSession(id);
+  }
 
-  /** Converts backend DTO (flat) to Session (annidato) */
+  /** --- lista del coach (minimal: filtro client-side) --- */
+  getMine(coachId: number): Observable<Session[]> {
+    return this.getSessions().pipe(
+      map(sessions => (sessions || []).filter(s => s.coach?.id === coachId))
+    );
+  }
+
+  /** --- mapping --- */
   private dtoToSession = (dto: any): Session => ({
     idSession: dto.idSession,
     date: dto.date,
@@ -76,28 +69,11 @@ export class SessionService {
     location: dto.location,
     imageUrl: dto.imageUrl,
     status: (dto.status === 'available' || dto.status === 'full') ? dto.status : undefined,
-    course: dto.courseId
-      ? { idCourse: dto.courseId, name: dto.courseName ?? '', imageUrl: dto.courseImageUrl }
-      : undefined,
-    coach: dto.coachId
-      ? {
-        id: dto.coachId,
-        firstName: dto.coachFirstName ?? '',
-        lastName: dto.coachLastName ?? '',
-        avatarUrl: dto.coachAvatarUrl
-      }
-      : undefined,
-    ageGroup: dto.ageGroupId
-      ? {
-        idAgeGroup: dto.ageGroupId,
-        name: dto.ageGroupName ?? '',
-        ageMin: dto.minAge,
-        ageMax: dto.maxAge
-      }
-      : undefined,
+    course: dto.courseId ? { idCourse: dto.courseId, name: dto.courseName ?? '', imageUrl: dto.courseImageUrl } : undefined,
+    coach: dto.coachId ? { id: dto.coachId, firstName: dto.coachFirstName ?? '', lastName: dto.coachLastName ?? '', avatarUrl: dto.coachAvatarUrl } : undefined,
+    ageGroup: dto.ageGroupId ? { idAgeGroup: dto.ageGroupId, name: dto.ageGroupName ?? '', ageMin: dto.minAge, ageMax: dto.maxAge } : undefined,
   });
 
-  /** Converts Session (annidato) to backend DTO (flat) */
   private sessionToDto(session: Session): any {
     return {
       idSession: session.idSession,

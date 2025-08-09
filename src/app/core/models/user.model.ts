@@ -1,5 +1,3 @@
-import { Specialization } from './specialization.model';
-
 export interface User {
   id: number;
   firstName: string;
@@ -10,6 +8,13 @@ export interface User {
   bio?: string;
   role: 'ADMIN' | 'COACH' | 'OWNER' | string;
   registrationDate?: string;
-  specializations?: number[];
   emailVerified?: boolean;
+
+  //(RGPD)
+  isActive?: boolean;
+  anonymizedAt?: string | null;
+  lastPasswordChangeAt?: string | null;
+
+  // Solo se l’utente è coach
+  specializations?: number[];
 }

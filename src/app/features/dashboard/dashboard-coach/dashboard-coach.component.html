@@ -1,28 +1,50 @@
-<div class="dashboard-coach" *ngIf="!loading">
+<div class="dashboard-coach" *ngIf="!loading; else loadingTpl">
   <div class="dashboard-header">
     <h2>Bonjour Coach {{ coach?.firstName }} {{ coach?.lastName }}</h2>
   </div>
 
   <div class="card">
-    <h3 class="card-title">Vos sessions</h3>
-    <button class="btn btn-primary mb-2" routerLink="/sessions/add">Créer une nouvelle session</button>
-    <ul class="session-list">
-      <li *ngFor="let session of sessions" class="session-item">
-        <span class="session-course">{{ session.course?.name }}</span>
-        <span class="session-date">
-          ({{ session.date | date:'shortDate' }})
-        </span>
-        <span class="session-level" *ngIf="session.level">| {{ session.level }}</span>
+    <div class="card-head">
+      <h3 class="card-title">Vos sessions</h3>
+      <div class="actions">
+        <a class="btn btn-primary" routerLink="/dashboard/coach/sessions/add">
+          Créer une nouvelle session
+        </a>
+        <a class="btn btn-light" routerLink="/dashboard/coach/sessions">
+          Gérer toutes mes sessions
+        </a>
+      </div>
+    </div>
+
+    <ul class="session-list" *ngIf="sessions.length > 0; else emptyTpl">
+      <li *ngFor="let s of sessions" class="session-item">
+        <div class="left">
+          <div class="session-course">{{ s.course?.name }}</div>
+          <div class="session-meta">
+            {{ s.date | date:'EEE dd/MM/yyyy' }} · {{ s.startTime }}–{{ s.endTime }}
+            <span *ngIf="s.level"> · {{ s.level }}</span>
+          </div>
+        </div>
+        <div class="right">
+          <a class="btn btn-sm"
+             [routerLink]="['/dashboard/coach/sessions', s.idSession, 'edit']">
+            Modifier
+          </a>
+        </div>
       </li>
     </ul>
-    <div *ngIf="!sessions || sessions.length === 0" class="text-muted mt-2">
-      Aucune session trouvée.
-    </div>
   </div>
 
   <div class="card">
     <h3 class="card-title">Statistiques de participation (à venir)</h3>
-    <p class="text-muted">Fonctionnalité en cours de développement...</p>
+    <p class="text-muted">Fonctionnalité en cours de développement…</p>
   </div>
 </div>
-<div *ngIf="loading" class="loading-message">Chargement...</div>
+
+<ng-template #loadingTpl>
+  <div class="loading-message">Chargement…</div>
+</ng-template>
+
+<ng-template #emptyTpl>
+  <div class="text-muted mt-2">Aucune session trouvée.</div>
+</ng-template>

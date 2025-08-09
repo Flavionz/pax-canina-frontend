@@ -34,34 +34,36 @@
     border-radius: 2rem;
     box-shadow: 0 2px 12px #e5eefa;
     overflow: hidden;
+    border-collapse: separate;
+    border-spacing: 0;
     th, td {
       padding: 1rem;
       text-align: left;
+      vertical-align: middle;
     }
     th {
       background: #f3f9fa;
       color: #246bad;
       font-size: 1.1rem;
+      font-weight: 700;
+      letter-spacing: 0.01em;
     }
     td {
       font-size: 1rem;
       .desc {
         color: #3e5574;
+        max-width: 350px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
       }
     }
-    .badge {
-      display: inline-block;
-      border-radius: 1rem;
-      padding: 0.3em 1em;
-      font-size: 0.85em;
-      font-weight: 600;
-      &.badge-success {
-        background: #e2faed;
-        color: #27c383;
+    tr {
+      &:nth-child(even) {
+        background: #f6fafc;
       }
-      &.badge-danger {
-        background: #ffe1e3;
-        color: #e3545a;
+      &:hover {
+        background: #e7f9f1;
       }
     }
     .course-img {
@@ -71,6 +73,7 @@
       border-radius: 8px;
       box-shadow: 0 2px 6px #e6e6e6;
       background: #fff;
+      display: block;
     }
     .btn-sm {
       font-size: 0.95em;
@@ -110,6 +113,7 @@
   font-size: 0.90em;
   font-weight: 500;
   margin-right: 0.4em;
+  display: inline-block;
 }
 .no-spec {
   color: #aaa;
@@ -164,6 +168,16 @@
   border-radius: 14px;
   box-shadow: 0 2px 8px 0 #1879c210;
   padding: 2rem 2rem 1rem 2rem;
+}
+
+@media (max-width: 900px) {
+  .admin-courses {
+    padding: 0.7rem;
+  }
+  .courses-table th, .courses-table td {
+    padding: 0.4rem;
+    font-size: 0.98em;
+  }
 }
 @media (max-width: 600px) {
   .course-form-modal {

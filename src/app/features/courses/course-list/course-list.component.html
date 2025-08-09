@@ -1,11 +1,23 @@
 <div class="course-section">
-  <div class="course-list-header">
+
+  <!-- Solo nella pagina /courses -->
+  <ng-container *ngIf="!previewMode">
+    <div class="back-home">
+      <button routerLink="/" class="btn-back-home">
+        ← Retour à l'accueil
+      </button>
+    </div>
+  </ng-container>
+
+  <!-- Header e sottotitolo SOLO in preview mode (homepage) -->
+  <div *ngIf="previewMode" class="course-list-header">
     <h2 class="course-list-title">Nos cours populaires</h2>
     <p class="course-list-subtitle">
       Explorez nos cours les plus appréciés par notre communauté canine
     </p>
   </div>
 
+  <!-- PREVIEW GRID (Homepage) -->
   <div *ngIf="previewMode" class="course-list preview-grid">
     <div *ngFor="let course of displayedCourses" class="course-card">
       <img [src]="course.imageUrl" alt="Image du cours" class="course-image" />
@@ -17,11 +29,13 @@
         </button>
       </div>
     </div>
-    <a routerLink="/courses" class="view-all-courses" style="grid-column: 1 / -1;">
+
+    <a routerLink="/courses" class="view-all-courses">
       Voir tous les cours disponibles →
     </a>
   </div>
 
+  <!-- LISTA COMPLETA (pagina /courses) -->
   <ng-container *ngIf="!previewMode">
     <div class="courses-toolbar">
       <input
@@ -31,88 +45,23 @@
         (input)="applyFilters()"
         class="search-input"
       />
-      <select
-        [(ngModel)]="selectedStatus"
-        (change)="applyFilters()"
-        class="status-filter"
-      >
-        <option value="">Tous les statuts</option>
-        <option value="active">Actif</option>
-        <option value="inactive">Inactif</option>
-        <option value="draft">Brouillon</option>
-      </select>
-      <button *ngIf="canAddCourse" class="add-course-btn" (click)="onAddCourse()">
-        + Ajouter un cours
-      </button>
     </div>
 
-    <div class="courses-list">
-      <table>
-        <thead>
-        <tr>
-          <th>COURS</th>
-          <th>STATUT</th>
-          <th>SESSIONS</th>
-          <th>ACTIONS</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr *ngFor="let course of filteredCourses">
-          <td>
-            <img [src]="course.imageUrl" alt="img" class="course-img" />
-            <div>
-              <strong>{{ course.name }}</strong>
-              <div class="desc">{{ course.description }}</div>
-            </div>
-          </td>
-          <td>
-              <span
-                [ngClass]="{
-                  'status-actif':    course.status === 'active',
-                  'status-inactif':  course.status === 'inactive',
-                  'status-brouillon':course.status === 'draft'
-                }"
-              >
-                {{
-                  course.status === 'active' ? 'Actif'
-                    : course.status === 'inactive' ? 'Inactif'
-                      : course.status === 'draft' ? 'Brouillon'
-                        : course.status
-                }}
-              </span>
-          </td>
-          <td class="sessions-col">
-            <button
-              class="icon-btn"
-              [routerLink]="['/courses', course.idCourse]"
-              title="Voir sessions"
-            >
-              <mat-icon>calendar_today</mat-icon>
-            </button>
-          </td>
-          <td>
-            <button
-              class="icon-btn"
-              (click)="onEditCourse(course)"
-              *ngIf="canEditCourse"
-            >
-              <mat-icon>edit</mat-icon>
-            </button>
-            <button
-              class="icon-btn"
-              (click)="onDeleteCourse(course)"
-              *ngIf="canDeleteCourse"
-            >
-              <mat-icon>delete</mat-icon>
-            </button>
-          </td>
-        </tr>
-        </tbody>
-      </table>
-    </div>
+    <div class="courses-list detailed-list">
+      <div *ngIf="filteredCourses.length === 0" class="no-courses">
+        <p>Aucun cours disponible pour le moment.</p>
+      </div>
 
-    <div *ngIf="filteredCourses.length === 0" class="no-courses">
-      <p>Aucun cours disponible pour le moment.</p>
+      <div *ngFor="let course of filteredCourses" class="course-row">
+        <img [src]="course.imageUrl" alt="img" class="course-img-mini" />
+        <div class="course-info">
+          <strong class="course-row-title">{{ course.name }}</strong>
+          <span class="course-row-desc">{{ course.description }}</span>
+        </div>
+        <button class="course-session-btn" [routerLink]="['/courses', course.idCourse]">
+          <i class="fa-regular fa-calendar"></i> Voir les sessions
+        </button>
+      </div>
     </div>
   </ng-container>
 </div>

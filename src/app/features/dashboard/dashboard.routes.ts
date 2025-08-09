@@ -14,11 +14,22 @@ import { AdminSpecializationsComponent } from './dashboard-admin/specializations
 import { DashboardCoachComponent } from './dashboard-coach/dashboard-coach.component';
 import { DashboardOwnerComponent } from './dashboard-owner/dashboard-owner.component';
 
+/**
+ * Dashboard routes
+ * - Admin area: full CRUD sections as child routes
+ * - Coach area: minimal CRUD for sessions (standalone components, lazy-loaded)
+ * - Owner area: profile & dogs
+ *
+ * Keep all coach CRUD under /dashboard/coach/... to avoid global route pollution.
+ */
 export const DASHBOARD_ROUTES: Routes = [
   {
     path: '',
     component: DashboardComponent,
     children: [
+      // =====================
+      // ADMIN
+      // =====================
       {
         path: 'admin',
         component: DashboardAdminComponent,
@@ -31,14 +42,48 @@ export const DASHBOARD_ROUTES: Routes = [
           { path: 'specializations', component: AdminSpecializationsComponent }
         ]
       },
+
+      // =====================
+      // COACH
+      // =====================
       {
         path: 'coach',
-        component: DashboardCoachComponent
+        children: [
+          // Simple coach dashboard (welcome + shortcuts)
+          { path: '', component: DashboardCoachComponent, pathMatch: 'full' },
+
+          // Sessions list (only the coach's own sessions)
+          {
+            path: 'sessions',
+            loadComponent: () =>
+              import('./dashboard-coach/sessions/coach-sessions/coach-sessions.component')
+                .then(m => m.CoachSessionsComponent)
+          },
+
+          // Create session
+          {
+            path: 'sessions/add',
+            loadComponent: () =>
+              import('./dashboard-coach/sessions/coach-session-form/coach-session-form.component')
+                .then(m => m.CoachSessionFormComponent)
+          },
+
+          // Edit session
+          {
+            path: 'sessions/:id/edit',
+            loadComponent: () =>
+              import('./dashboard-coach/sessions/coach-session-form/coach-session-form.component')
+                .then(m => m.CoachSessionFormComponent)
+          }
+        ]
       },
-      {
-        path: 'owner',
-        component: DashboardOwnerComponent
-      },
+
+      // =====================
+      // OWNER
+      // =====================
+      { path: 'owner', component: DashboardOwnerComponent },
+
+      // Default: send to admin (works for jury demo)
       { path: '', redirectTo: 'admin', pathMatch: 'full' }
     ]
   }

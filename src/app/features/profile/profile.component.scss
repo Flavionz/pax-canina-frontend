@@ -99,7 +99,7 @@ $cancel-color-hover: #334155;
       border: none;
       padding: 0;
       margin: 0;
-      background: rgba(30,41,59, 0.38); // Grigio scuro, semi-trasparente
+      background: rgba(30,41,59, 0.38);
       color: #fff;
       display: flex;
       align-items: center;
@@ -123,7 +123,6 @@ $cancel-color-hover: #334155;
       }
     }
   }
-
 
   .avatar-preview-actions {
     margin-top: 22px;
@@ -302,6 +301,184 @@ $cancel-color-hover: #334155;
 }
 
 // ========================
+// REGISTRATIONS TABLE
+// ========================
+.registrations-section {
+  padding: 24px 0;
+
+  .registrations-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #1f2937;
+    margin-bottom: 24px;
+  }
+}
+
+.registrations-table-container {
+  background: #fff;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.registrations-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.95rem;
+
+  thead {
+    background: #f8fafc;
+    th {
+      padding: 16px 20px;
+      text-align: left;
+      font-weight: 600;
+      font-size: 0.85rem;
+      color: #64748b;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      border-bottom: 1px solid #e2e8f0;
+    }
+  }
+
+  tbody {
+    .registration-row {
+      border-bottom: 1px solid #f1f5f9;
+      transition: background-color 0.15s ease;
+
+      &:hover {
+        background: #f8fafc;
+      }
+
+      &:last-child {
+        border-bottom: none;
+      }
+
+      td {
+        padding: 20px;
+        vertical-align: middle;
+      }
+    }
+  }
+
+  // Course cell
+  .course-cell {
+    .course-info {
+      .course-name {
+        font-weight: 600;
+        color: #1e293b;
+        margin-bottom: 2px;
+      }
+      .course-level {
+        font-size: 0.85rem;
+        color: #64748b;
+      }
+    }
+  }
+
+  // Dog cell with avatar
+  .dog-cell {
+    .dog-info-cell {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+
+      .dog-avatar {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 2px solid #e2e8f0;
+      }
+
+      .dog-name {
+        font-weight: 500;
+        color: #1e293b;
+      }
+    }
+  }
+
+  // Date & time cell
+  .datetime-cell {
+    .date {
+      font-weight: 500;
+      color: #1e293b;
+      margin-bottom: 2px;
+    }
+    .time {
+      font-size: 0.85rem;
+      color: #64748b;
+    }
+  }
+
+  // Status cell
+  .status-cell {
+    .status-badge {
+      display: inline-block;
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      text-transform: capitalize;
+
+      &.status-confirmed {
+        background: #dcfce7;
+        color: #166534;
+      }
+
+      &.status-pending {
+        background: #fef3c7;
+        color: #92400e;
+      }
+
+      &.status-cancelled {
+        background: #fecaca;
+        color: #991b1b;
+      }
+    }
+  }
+
+  // Actions cell
+  .actions-cell {
+    .action-btn {
+      background: none;
+      border: none;
+      font-size: 0.9rem;
+      font-weight: 500;
+      cursor: pointer;
+      padding: 6px 12px;
+      border-radius: 6px;
+      margin-right: 8px;
+      transition: all 0.15s ease;
+
+      &.details-btn {
+        color: $primary-color;
+        &:hover {
+          background: rgba(34, 197, 94, 0.1);
+        }
+      }
+
+      &.cancel-btn {
+        color: #dc2626;
+        &:hover {
+          background: rgba(220, 38, 38, 0.1);
+        }
+      }
+    }
+  }
+}
+
+.empty-registrations-state {
+  text-align: center;
+  padding: 60px 0;
+  color: #64748b;
+
+  p {
+    font-size: 1.1rem;
+    margin: 0;
+  }
+}
+
+// ========================
 // RESPONSIVE
 // ========================
 @media (max-width: 900px) {
@@ -316,5 +493,36 @@ $cancel-color-hover: #334155;
   }
   .profile-avatar-container {
     margin-left: 12px;
+  }
+
+  // Responsive table
+  .registrations-table-container {
+    overflow-x: auto;
+  }
+
+  .registrations-table {
+    min-width: 700px;
+
+    th, td {
+      padding: 12px 16px;
+    }
+  }
+}
+
+@media (max-width: 640px) {
+  .registrations-table {
+    min-width: 600px;
+    font-size: 0.9rem;
+
+    th, td {
+      padding: 10px 12px;
+    }
+
+    .dog-info-cell {
+      .dog-avatar {
+        width: 32px;
+        height: 32px;
+      }
+    }
   }
 }

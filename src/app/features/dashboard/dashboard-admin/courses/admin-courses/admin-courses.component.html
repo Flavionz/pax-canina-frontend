@@ -9,7 +9,6 @@
     <tr>
       <th>Nom</th>
       <th>Description</th>
-      <th>Statut</th>
       <th>Image</th>
       <th>Spécialisations</th>
       <th>Actions</th>
@@ -18,16 +17,7 @@
     <tbody>
     <tr *ngFor="let course of courses">
       <td>{{ course.name }}</td>
-      <td class="desc">{{ course.description | slice:0:50 }}...</td>
-      <td>
-          <span class="badge"
-                [ngClass]="{
-                  'badge-success': course.status === 'OPEN',
-                  'badge-danger': course.status === 'CLOSED'
-                }">
-            {{ course.status === 'OPEN' ? 'OUVERT' : 'FERMÉ' }}
-          </span>
-      </td>
+      <td class="desc">{{ getDescriptionShort(course.description) }}</td>
       <td>
         <img *ngIf="course.imageUrl" [src]="course.imageUrl" alt="img" class="course-img" />
       </td>

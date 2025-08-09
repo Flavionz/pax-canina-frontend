@@ -6,6 +6,19 @@
     </button>
   </div>
 
+  <!-- SEARCHBAR -->
+  <div class="user-searchbar">
+    <input
+      type="text"
+      [(ngModel)]="searchTerm"
+      (input)="applyFilters()"
+      class="user-search-input"
+      placeholder="Rechercher par nom, prénom, email, rôle…"
+      autocomplete="off"
+    />
+    <button class="reset-btn" *ngIf="searchTerm" (click)="clearSearch()" aria-label="Effacer la recherche">×</button>
+  </div>
+
   <app-user-form
     *ngIf="showForm"
     [user]="userToEdit"
@@ -14,37 +27,45 @@
     (cancel)="onCancelForm()"
   ></app-user-form>
 
-  <div *ngIf="loading" class="loading-msg">
-    Chargement des utilisateurs...
-  </div>
+  <div *ngIf="loading" class="loading-msg">Chargement des utilisateurs...</div>
   <div *ngIf="error" class="error-msg">{{ error }}</div>
 
-  <table class="users-table" *ngIf="!loading && users.length && !showForm">
+  <table class="users-table" *ngIf="!loading && filteredUsers.length && !showForm">
     <thead>
     <tr>
-      <th>Prénom</th>
-      <th>Nom</th>
-      <th>Email</th>
-      <th>Téléphone</th>
-      <th>Rôle</th>
+      <th (click)="sortBy('firstName')" [class.sorted]="sortColumn==='firstName'">
+        Prénom <span class="sort-arrows">{{ getSortArrow('firstName') }}</span>
+      </th>
+      <th (click)="sortBy('lastName')" [class.sorted]="sortColumn==='lastName'">
+        Nom <span class="sort-arrows">{{ getSortArrow('lastName') }}</span>
+      </th>
+      <th (click)="sortBy('email')" [class.sorted]="sortColumn==='email'">
+        Email <span class="sort-arrows">{{ getSortArrow('email') }}</span>
+      </th>
+      <th (click)="sortBy('phone')" [class.sorted]="sortColumn==='phone'">
+        Téléphone <span class="sort-arrows">{{ getSortArrow('phone') }}</span>
+      </th>
+      <th (click)="sortBy('role')" [class.sorted]="sortColumn==='role'">
+        Rôle <span class="sort-arrows">{{ getSortArrow('role') }}</span>
+      </th>
       <th *ngIf="hasAnyCoach()">Spécialisations</th>
       <th>Actions</th>
     </tr>
     </thead>
     <tbody>
-    <tr *ngFor="let u of users">
+    <tr *ngFor="let u of filteredUsers">
       <td>{{ u.firstName }}</td>
       <td>{{ u.lastName }}</td>
       <td>{{ u.email }}</td>
       <td>{{ u.phone || '-' }}</td>
       <td>
-      <span class="role-badge" [ngClass]="{
-        'badge-admin': u.role === 'ADMIN',
-        'badge-coach': u.role === 'COACH',
-        'badge-owner': u.role === 'OWNER'
-      }">
-        {{ translateRole(u.role) }}
-      </span>
+        <span class="role-badge" [ngClass]="{
+          'badge-admin': u.role === 'ADMIN',
+          'badge-coach': u.role === 'COACH',
+          'badge-owner': u.role === 'OWNER'
+        }">
+          {{ translateRole(u.role) }}
+        </span>
       </td>
       <td>
         <ng-container *ngIf="u.role === 'COACH' && getSpecializationObjects(u.specializations).length; else dash">
@@ -57,11 +78,10 @@
         <button class="btn btn-outline btn-xs btn-danger" (click)="onDeleteUser(u)">Supprimer</button>
       </td>
     </tr>
-
     </tbody>
   </table>
 
-  <div *ngIf="!loading && !users.length && !showForm" class="empty-state">
+  <div *ngIf="!loading && !filteredUsers.length && !showForm" class="empty-state">
     Aucun utilisateur trouvé.
   </div>
 </div>

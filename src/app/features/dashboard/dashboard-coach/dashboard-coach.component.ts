@@ -1,14 +1,15 @@
 import { Component, OnInit } from '@angular/core';
+import { CommonModule, DatePipe } from '@angular/common';
+import { RouterLink } from '@angular/router';
 import { CoachService } from '@core/services/coach.service';
 import { SessionService } from '@core/services/session.service';
 import { Coach } from '@core/models/coach.model';
 import { Session } from '@core/models/session.model';
-import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-dashboard-coach',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, RouterLink, DatePipe],
   templateUrl: './dashboard-coach.component.html',
   styleUrls: ['./dashboard-coach.component.scss']
 })
@@ -22,34 +23,32 @@ export class DashboardCoachComponent implements OnInit {
     private sessionService: SessionService
   ) {}
 
-  /**
-   * Loads coach profile and associated sessions on component init.
-   * Follows best practice for role-based data access (jury/enterprise ready).
-   */
   ngOnInit(): void {
     this.loading = true;
-    // Load coach profile
+
+    // 1) Carico profilo coach
     this.coachService.getProfile().subscribe({
       next: coach => {
         this.coach = coach;
-        // Once coach loaded, load only sessions for this coach
+
+        // 2) Carico TUTTE le sessioni e filtro solo quelle del coach corrente
         this.sessionService.getSessions().subscribe({
-          next: sessions => {
-            // Filter sessions where coach.idUser matches logged-in coach
-            this.sessions = (sessions || []).filter(s => s.coach?.id === coach.id);
+          next: all => {
+            const mine = (all || []).filter(s => s.coach?.id === coach.id);
+
+            // Ordina per data+ora e mostra le ultime 5
+            this.sessions = mine.sort((a, b) => {
+              const aKey = `${a.date ?? ''} ${a.startTime ?? ''}`;
+              const bKey = `${b.date ?? ''} ${b.startTime ?? ''}`;
+              return aKey.localeCompare(bKey);
+            }).slice(0, 5);
+
             this.loading = false;
           },
-          error: () => {
-            this.sessions = [];
-            this.loading = false;
-          }
+          error: () => { this.sessions = []; this.loading = false; }
         });
       },
-      error: () => {
-        this.coach = null;
-        this.sessions = [];
-        this.loading = false;
-      }
+      error: () => { this.coach = null; this.sessions = []; this.loading = false; }
     });
   }
 }

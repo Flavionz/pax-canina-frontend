@@ -1,34 +1,33 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms'; // ← IMPORTANTE!
 import { User } from '@core/models/user.model';
 import { UserService } from '@core/services/user.service';
 import { SpecializationService } from '@core/services/specialization.service';
 import { Specialization } from '@core/models/specialization.model';
 import { UserFormComponent } from './user-form/user-form.component';
-import {RouterLink} from '@angular/router';
+import { RouterLink } from '@angular/router';
 
-/**
- * AdminUsersComponent
- * -------------------
- * CRUD users (Admin, Coach, Owner) for Pax Canina dashboard.
- * - Specializations are always number[] in the model.
- * - Mapping to objects only for UI (badges, select, ecc).
- */
 @Component({
   selector: 'app-admin-users',
   standalone: true,
-  imports: [CommonModule, UserFormComponent, RouterLink],
+  imports: [CommonModule, FormsModule, UserFormComponent, RouterLink],
   templateUrl: './admin-users.component.html',
   styleUrls: ['./admin-users.component.scss']
 })
 export class AdminUsersComponent implements OnInit {
   users: User[] = [];
+  filteredUsers: User[] = [];
   specializations: Specialization[] = [];
   loading = false;
   error: string | null = null;
 
   showForm = false;
   userToEdit: User | null = null;
+
+  searchTerm = '';
+  sortColumn: string = '';
+  sortDirection: 'asc' | 'desc' = 'asc';
 
   constructor(
     private userService: UserService,
@@ -48,6 +47,7 @@ export class AdminUsersComponent implements OnInit {
     this.userService.getAllUsers().subscribe({
       next: (users) => {
         this.users = users;
+        this.applyFilters();
         this.loading = false;
       },
       error: (err) => {
@@ -62,9 +62,6 @@ export class AdminUsersComponent implements OnInit {
     return this.users.some(u => u.role === 'COACH');
   }
 
-  /**
-   * Mapping da array di id (number[]) a Specialization[] (solo per badge/visualizzazione)
-   */
   getSpecializationObjects(ids: number[] | undefined): Specialization[] {
     if (!ids?.length) return [];
     return ids
@@ -78,20 +75,16 @@ export class AdminUsersComponent implements OnInit {
   }
 
   onEditUser(user: User): void {
-    // NON convertire mai a oggetti, lasciali sempre number[]
     this.userToEdit = { ...user };
     this.showForm = true;
   }
 
   onSaveUser(user: User): void {
     this.error = null;
-
-    // Trasformazione sempre: ids ONLY!
     const userToSend: User = {
       ...user,
       specializations: (user.specializations || [])
     };
-
     if (user.id) {
       this.userService.fullUpdateUser(user.id, userToSend).subscribe({
         next: () => {
@@ -135,6 +128,57 @@ export class AdminUsersComponent implements OnInit {
         }
       });
     }
+  }
+
+  // Ricerca + sort insieme!
+  applyFilters(): void {
+    let data = [...this.users];
+    if (this.searchTerm) {
+      const term = this.searchTerm.trim().toLowerCase();
+      data = data.filter(u =>
+        u.firstName?.toLowerCase().includes(term) ||
+        u.lastName?.toLowerCase().includes(term) ||
+        u.email?.toLowerCase().includes(term) ||
+        this.translateRole(u.role).toLowerCase().includes(term)
+      );
+    }
+    if (this.sortColumn) {
+      data.sort((a, b) => {
+        let aValue = (a as any)[this.sortColumn];
+        let bValue = (b as any)[this.sortColumn];
+        if (this.sortColumn === 'role') {
+          aValue = this.translateRole(a.role);
+          bValue = this.translateRole(b.role);
+        }
+        if (typeof aValue === 'string' && typeof bValue === 'string') {
+          aValue = aValue.toLowerCase(); bValue = bValue.toLowerCase();
+        }
+        if (aValue < bValue) return this.sortDirection === 'asc' ? -1 : 1;
+        if (aValue > bValue) return this.sortDirection === 'asc' ? 1 : -1;
+        return 0;
+      });
+    }
+    this.filteredUsers = data;
+  }
+
+  sortBy(column: string): void {
+    if (this.sortColumn === column) {
+      this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc';
+    } else {
+      this.sortColumn = column;
+      this.sortDirection = 'asc';
+    }
+    this.applyFilters();
+  }
+
+  getSortArrow(column: string): string {
+    if (this.sortColumn !== column) return '⇅';
+    return this.sortDirection === 'asc' ? '↑' : '↓';
+  }
+
+  clearSearch(): void {
+    this.searchTerm = '';
+    this.applyFilters();
   }
 
   translateRole(role: string): string {

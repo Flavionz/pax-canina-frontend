@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { CommonModule, NgClass, SlicePipe } from '@angular/common';
+import { CommonModule, SlicePipe } from '@angular/common';
 import { CourseService } from '@core/services/course.service';
 import { Course } from '@core/models/course.model';
 import { CourseFormComponent } from '../course-form/course-form.component';
 import { Specialization } from '@core/models/specialization.model';
 import { SpecializationService } from '@core/services/specialization.service';
-import {RouterLink} from '@angular/router';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-admin-courses',
@@ -14,8 +14,6 @@ import {RouterLink} from '@angular/router';
   styleUrls: ['./admin-courses.component.scss'],
   imports: [
     CommonModule,
-    NgClass,
-    SlicePipe,
     CourseFormComponent,
     RouterLink
   ]
@@ -44,12 +42,20 @@ export class AdminCoursesComponent implements OnInit {
   }
 
   loadSpecializations(): void {
-    this.specializationService.getSpecializations().subscribe({
-      next: (res: Specialization[]) => this.specializations = res,
-      error: () => { this.specializations = []; }
-    });
+    // Usa il metodo corretto del tuo service (modifica se necessario)
+    if (this.specializationService.getSpecializations) {
+      this.specializationService.getSpecializations().subscribe({
+        next: (res: Specialization[]) => this.specializations = res,
+        error: () => { this.specializations = []; }
+      });
+    } else if (this.specializationService.getAll) {
+      // fallback nel caso il service abbia il metodo chiamato diversamente
+      this.specializationService.getAll().subscribe({
+        next: (res: Specialization[]) => this.specializations = res,
+        error: () => { this.specializations = []; }
+      });
+    }
   }
-
 
   openForm() {
     this.selectedCourse = null;
@@ -85,6 +91,12 @@ export class AdminCoursesComponent implements OnInit {
       });
     }
   }
+
+  getDescriptionShort(desc?: string): string {
+    if (!desc) return '';
+    return desc.length > 50 ? desc.slice(0, 50) + '...' : desc;
+  }
+
 
   /** Ritorna i nomi delle specializzazioni associate a un corso */
   getCourseSpecializations(course: Course): string[] {

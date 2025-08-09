@@ -1,0 +1,32 @@
+<div class="card" *ngIf="!loading">
+  <div class="header">
+    <h3>Mes sessions</h3>
+    <!-- percorso assoluto sotto /dashboard -->
+    <a class="btn btn-primary" routerLink="/dashboard/coach/sessions/add">Nouvelle session</a>
+  </div>
+
+  <ul class="list">
+    <li *ngFor="let s of sessions">
+      <div class="line">
+        <div class="title">{{ s.course?.name }}</div>
+        <div class="meta">
+          {{ s.date | date:'EEE dd/MM/y' }} · {{ s.startTime }}–{{ s.endTime }} · {{ s.level }}
+        </div>
+      </div>
+
+      <div class="actions">
+        <a class="btn"
+           [routerLink]="['/dashboard/coach/sessions', s.idSession, 'edit']">
+          Modifier
+        </a>
+        <button class="btn btn-danger" (click)="delete(s.idSession)">
+          Supprimer
+        </button>
+      </div>
+    </li>
+  </ul>
+
+  <div class="muted" *ngIf="sessions.length === 0">Aucune session.</div>
+</div>
+
+<div class="loading-message" *ngIf="loading">Chargement…</div>

@@ -1,4 +1,5 @@
 <div class="home-container">
+  <!-- HERO -->
   <section class="hero">
     <div class="hero-content">
       <h1 class="hero-title">BIENVENUE AU PAX CANINA</h1>
@@ -19,11 +20,13 @@
     </div>
   </section>
 
-  <section class="about-us">
+  <!-- ABOUT -->
+  <section class="about-us section section--alt section--split" aria-labelledby="about-title">
     <div class="section-content">
       <img src="/assets/images/canetestolina.jpg" alt="Immagine de ClubCanine" class="section-image">
       <div class="section-text">
-        <h2 class="section-title about-title">Qui sommes-nous?</h2>
+        <p class="section-eyebrow">À propos</p>
+        <h2 id="about-title" class="section-title about-title">Qui sommes-nous?</h2>
         <p>
           Pax Canina est un club canin associatif fondé en 2015 à Metz, dédié à l’éducation et au bien-être des chiens, quels que soient leur âge ou leur race. Animé par une équipe de coachs diplômés et passionnés,
           le club accueille chaque année plus de deux cents membres accompagnés de leurs compagnons à quatre pattes.
@@ -32,10 +35,12 @@
     </div>
   </section>
 
-  <section class="our-mission">
+  <!-- MISSION -->
+  <section class="our-mission section section--split" aria-labelledby="mission-title">
     <div class="section-content">
       <div class="section-text">
-        <h2 class="section-title mission-title">Notre mission</h2>
+        <p class="section-eyebrow">Notre approche</p>
+        <h2 id="mission-title" class="section-title mission-title">Notre mission</h2>
         <p>
           Depuis plus de 10 ans, nous nous engageons à créer un environnement où les chiens et leurs propriétaires peuvent apprendre, grandir et s'épanouir ensemble. Notre approche est basée sur le renforcement positif et le respect du bien-être animal.
         </p>
@@ -44,11 +49,42 @@
     </div>
   </section>
 
+  <!-- HOW IT WORKS (nuova sezione) -->
+  <section class="section how-it-works" aria-labelledby="hiw-title">
+    <div class="section-header">
+      <p class="section-eyebrow">En 3 étapes</p>
+      <h2 id="hiw-title" class="section-title">Comment ça marche</h2>
+      <p class="section-subtitle">
+        Trois étapes simples pour démarrer sereinement avec votre compagnon.
+      </p>
+    </div>
 
-  <section class="our-services">
-    <div class="our-services-header">
-      <h2 class="our-services-title">Nos services</h2>
-      <p class="our-services-desc">
+    <div class="steps-list" role="list">
+      <article class="step-card" role="listitem">
+        <span class="step-badge" aria-hidden="true">1</span>
+        <h3 class="step-title">Créez votre compte</h3>
+        <p class="step-text">Inscrivez-vous et ajoutez votre chien en 2 minutes.</p>
+      </article>
+
+      <article class="step-card" role="listitem">
+        <span class="step-badge" aria-hidden="true">2</span>
+        <h3 class="step-title">Choisissez une session</h3>
+        <p class="step-text">Filtrez par âge, niveau et disponibilités sur le calendrier.</p>
+      </article>
+
+      <article class="step-card" role="listitem">
+        <span class="step-badge" aria-hidden="true">3</span>
+        <h3 class="step-title">Progression suivie</h3>
+        <p class="step-text">Recevez rappels, conseils et suivi des présences.</p>
+      </article>
+    </div>
+  </section>
+
+  <!-- SERVICES -->
+  <section class="our-services section" aria-labelledby="services-title">
+    <div class="our-services-header section-header">
+      <h2 id="services-title" class="our-services-title section-title">Nos services</h2>
+      <p class="our-services-desc section-subtitle">
         Découvrez nos différentes offres conçues pour répondre aux besoins spécifiques de votre chien
       </p>
     </div>
@@ -77,14 +113,15 @@
     </div>
   </section>
 
-
-  <section class="available-courses">
+  <!-- COURSES PREVIEW -->
+  <section>
     <app-course-list [previewMode]="true" [previewCount]="3"></app-course-list>
   </section>
-</div>
-<section class="call-to-action">
+
+<!-- CTA -->
+<section class="call-to-action" aria-labelledby="cta-title">
   <div class="call-to-action-card">
-    <div class="call-to-action-title">
+    <div id="cta-title" class="call-to-action-title">
       Prêt à commencer l'aventure avec votre chien?
     </div>
     <p class="call-to-action-text">

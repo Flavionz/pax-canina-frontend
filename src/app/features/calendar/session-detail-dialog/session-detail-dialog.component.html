@@ -1,0 +1,60 @@
+<div class="modal-content">
+  <button class="close-btn" (click)="close()" aria-label="Fermer">
+    <mat-icon>close</mat-icon>
+  </button>
+
+  <h2 class="modal-title">{{ data.session.course?.name }}</h2>
+
+  <div class="details">
+    <div><mat-icon>event</mat-icon> {{ data.session.date | date:'fullDate':'':'fr' }}</div>
+    <div><mat-icon>schedule</mat-icon> {{ data.session.startTime }} - {{ data.session.endTime }}</div>
+    <div><mat-icon>place</mat-icon> {{ data.session.location }}</div>
+    <div>
+      <mat-icon>groups</mat-icon>
+      {{ data.session.registrationsCount }}/{{ data.session.maxCapacity }} inscrit{{ data.session.maxCapacity === 1 ? '' : 's' }}
+    </div>
+    <div>
+      <mat-icon>account_circle</mat-icon>
+      Coach : {{ data.session.coach?.firstName }} {{ data.session.coach?.lastName || 'N/A' }}
+    </div>
+    <div>
+      <mat-icon>child_care</mat-icon>
+      Tranche d'âge :
+      <ng-container *ngIf="data.session.ageGroup; else noAge">
+        {{ data.session.ageGroup.name }} ({{ data.session.ageGroup.ageMin }}-{{ data.session.ageGroup.ageMax }} ans)
+      </ng-container>
+      <ng-template #noAge>N/A</ng-template>
+    </div>
+  </div>
+
+  <img *ngIf="data.session.imageUrl" [src]="data.session.imageUrl" class="session-img" alt="Image de la session">
+
+  <!-- Azioni -->
+  <div class="modal-actions" *ngIf="!enrollSuccess">
+    <div *ngIf="data.myDogs.length === 0" class="no-dog-msg">
+      <mat-icon color="warn">warning</mat-icon>
+      <span>Vous devez <b>enregistrer un chien</b> avant de pouvoir vous inscrire à une session.</span>
+    </div>
+    <div *ngIf="data.myDogs.length > 1" class="dog-select-group">
+      <label for="dog-select">Choisissez un chien à inscrire :</label>
+      <select id="dog-select" [(ngModel)]="selectedDogId">
+        <option [ngValue]="null" disabled>-- Sélectionner --</option>
+        <option *ngFor="let d of data.myDogs" [ngValue]="d.idDog">{{ d.name }}</option>
+      </select>
+    </div>
+    <button mat-raised-button color="primary"
+            (click)="enrollToSession()"
+            [disabled]="enrolling || !selectedDogId || data.myDogs.length === 0 || enrollSuccess"
+            *ngIf="data.myDogs.length > 0">
+      <span *ngIf="!enrolling">S'inscrire</span>
+      <span *ngIf="enrolling">Inscription...</span>
+    </button>
+    <div class="enroll-error" *ngIf="enrollError">{{ enrollError }}</div>
+  </div>
+
+  <!-- Messaggio successo -->
+  <div class="enroll-success" *ngIf="enrollSuccess">
+    <mat-icon color="primary" style="font-size: 2rem;">check_circle</mat-icon>
+    <span>Merci pour votre inscription !</span>
+  </div>
+</div>

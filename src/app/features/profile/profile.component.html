@@ -83,6 +83,10 @@
 
           <!-- PERSONAL INFO TAB -->
           <mat-tab label="Informations personnelles">
+            <button class="btn btn-outline btn-md" (click)="openChangePasswordDialog()">
+              <span class="material-icons">lock</span> Changer le mot de passe
+            </button>
+
             <form class="profile-info-grid" autocomplete="off">
               <div>
                 <h3>Informations personnelles</h3>
@@ -245,19 +249,71 @@
             </div>
           </mat-tab>
 
-          <!-- REGISTRATIONS TAB (owners only) -->
+          <!-- REGISTRATIONS TAB (owners only) - TABLE STYLE -->
           <mat-tab *ngIf="owner" label="Mes inscriptions">
-            <div class="p-6 space-y-4"
-                 *ngIf="owner.registrations && owner.registrations.length > 0; else noRegistrations">
-              <div *ngFor="let reg of owner.registrations" class="border rounded p-4 shadow-sm">
-                <p><strong>Activité :</strong> {{ reg.session.course.name }}</p>
-                <p><strong>Date :</strong> {{ reg.session.date | date:'dd/MM/yyyy' }}</p>
-                <p><strong>Statut :</strong> {{ reg.status }}</p>
+            <div class="registrations-section">
+              <h3 class="registrations-title">Mes inscriptions</h3>
+
+              <div class="registrations-table-container" *ngIf="owner.registrations && owner.registrations.length > 0; else noRegistrations">
+                <table class="registrations-table">
+                  <thead>
+                  <tr>
+                    <th>COURS</th>
+                    <th>CHIEN</th>
+                    <th>DATE & HEURE</th>
+                    <th>STATUT</th>
+                    <th>ACTIONS</th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                  <tr *ngFor="let reg of owner.registrations" class="registration-row">
+                    <td class="course-cell">
+                      <div class="course-info">
+                        <div class="course-name">{{ reg.courseName }}</div>
+                        <div class="course-level">{{ reg.sessionName }}</div>
+                      </div>
+                    </td>
+                    <td class="dog-cell">
+                      <div class="dog-info-cell">
+                        <img class="dog-avatar" [src]="getDogAvatarForRegistration(reg)" [alt]="reg.dogName" />
+                        <span class="dog-name">{{ reg.dogName }}</span>
+                      </div>
+                    </td>
+                    <td class="datetime-cell">
+                      <div class="date">{{ reg.registrationDate | date:'dd MMM yyyy' }}</div>
+                      <div class="time">{{ reg.sessionName }}</div>
+                    </td>
+                    <td class="status-cell">
+                        <span class="status-badge"
+                              [ngClass]="{
+                                'status-confirmed': reg.status === 'REGISTERED' || reg.status === 'CONFIRMED',
+                                'status-pending': reg.status === 'PENDING' || reg.status === 'EN_ATTENTE',
+                                'status-cancelled': reg.status === 'CANCELLED'
+                              }">
+                          {{ getStatusLabel(reg.status) }}
+                        </span>
+                    </td>
+                    <td class="actions-cell">
+                      <button class="action-btn details-btn" (click)="viewRegistrationDetails(reg)">
+                        Détails
+                      </button>
+                      <button class="action-btn cancel-btn"
+                              (click)="cancelRegistration(reg)"
+                              *ngIf="reg.status !== 'CANCELLED'">
+                        Annuler
+                      </button>
+                    </td>
+                  </tr>
+                  </tbody>
+                </table>
               </div>
+
+              <ng-template #noRegistrations>
+                <div class="empty-registrations-state" aria-live="polite">
+                  <p class="text-gray-600">Vous n'avez aucune inscription pour le moment.</p>
+                </div>
+              </ng-template>
             </div>
-            <ng-template #noRegistrations>
-              <p class="text-gray-600">Vous n'avez aucune inscription pour le moment.</p>
-            </ng-template>
           </mat-tab>
 
         </mat-tab-group>

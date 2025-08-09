@@ -13,14 +13,16 @@ import { OwnerService } from '@core/services/owner.service';
 import { CoachService } from '@core/services/coach.service';
 import { AdminService } from '@core/services/admin.service';
 import { DogService } from '@core/services/dog.service';
-import { SpecializationService } from '@core/services/specialization.service'; // <--- AGGIUNTO
+import { SpecializationService } from '@core/services/specialization.service';
 import { AddDogDialogComponent } from '@features/dog/add-dog-dialog/add-dog-dialog.component';
+import { ChangePasswordComponent } from '@features/auth/change-password/change-password.component';
 
 import { Dog } from '@models/dog.model';
 import { Owner } from '@models/owner.model';
 import { Coach } from '@models/coach.model';
 import { Admin } from '@models/admin.model';
 import { Specialization } from '@models/specialization.model';
+import { RegistrationFlat } from '@models/registration-flat.model';
 
 import { isOwner, isCoach, isAdmin } from '@core/type-guards/user-type-guards';
 
@@ -65,7 +67,7 @@ export class ProfileComponent implements OnInit {
     private coachService: CoachService,
     private adminService: AdminService,
     private dogService: DogService,
-    private specializationService: SpecializationService, // <--- AGGIUNTO
+    private specializationService: SpecializationService,
     private dialog: MatDialog,
     private route: ActivatedRoute,
     private router: Router
@@ -82,10 +84,18 @@ export class ProfileComponent implements OnInit {
         }
       }
     });
+
     this.loadUser();
 
     this.specializationService.getAll().subscribe(specs => {
       this.allSpecializations = specs;
+    });
+  }
+
+  openChangePasswordDialog() {
+    this.dialog.open(ChangePasswordComponent, {
+      width: '520px',
+      disableClose: true
     });
   }
 
@@ -96,18 +106,34 @@ export class ProfileComponent implements OnInit {
       .filter(Boolean) as Specialization[];
   }
 
-  /** Loads user data based on current role */
+  /** Loads user data based on current role (no admin fallback). */
   private loadUser(): void {
     this.loading = true;
     this.errorMsg = null;
-    let obs$: Observable<AnyUser>;
-    if (this.auth.role === 'OWNER') {
-      obs$ = this.ownerService.getProfile();
-    } else if (this.auth.role === 'COACH') {
-      obs$ = this.coachService.getProfile();
-    } else {
-      obs$ = this.adminService.getProfile();
+
+    // Safety net: hydrate role from JWT if not present
+    if (!this.auth.role && (this.auth as any).hydrateRoleFromToken) {
+      (this.auth as any).hydrateRoleFromToken();
     }
+
+    let obs$: Observable<AnyUser> | null = null;
+
+    switch (this.auth.role) {
+      case 'OWNER':
+        obs$ = this.ownerService.getProfile();
+        break;
+      case 'COACH':
+        obs$ = this.coachService.getProfile();
+        break;
+      case 'ADMIN':
+        obs$ = this.adminService.getProfile();
+        break;
+      default:
+        this.loading = false;
+        this.errorMsg = "Impossible de charger le profil (rôle inconnu).";
+        return;
+    }
+
     obs$
       .pipe(finalize(() => (this.loading = false)))
       .subscribe({
@@ -133,6 +159,11 @@ export class ProfileComponent implements OnInit {
   get owner(): Owner | null { return isOwner(this.user) ? this.user : null; }
   get coach(): Coach | null { return isCoach(this.user) ? this.user : null; }
   get admin(): Admin | null { return isAdmin(this.user) ? this.user : null; }
+
+  // NEW: Typed getter for flat registrations (tab "Mes inscriptions")
+  get ownerRegistrationsFlat(): RegistrationFlat[] {
+    return this.owner?.registrations ?? [];
+  }
 
   /** Masks email for admins (UI detail) */
   maskEmail(email: string | undefined): string {
@@ -304,5 +335,89 @@ export class ProfileComponent implements OnInit {
       months += 12;
     }
     return years > 0 ? `${years} an(s) et ${months} mois` : `${months} mois`;
+  }
+
+  // ========================
+  // NEW METHODS FOR TABLE UI
+  // ========================
+
+  /**
+   * Get dog avatar URL for the table display using registration data
+   * Finds the dog by name and returns its photo URL or a default
+   */
+  getDogAvatarForRegistration(registration: RegistrationFlat): string {
+    if (!this.owner?.dogs) {
+      return 'assets/images/default-dog-avatar.png';
+    }
+
+    // Find the dog by name in the owner's dogs array
+    const dog = this.owner.dogs.find(d =>
+      d.name?.toLowerCase() === registration.dogName?.toLowerCase()
+    );
+
+    if (dog && dog.photoUrl) {
+      return dog.photoUrl.startsWith('http')
+        ? dog.photoUrl
+        : `${environment.mediaUrl}/${dog.photoUrl}`;
+    }
+
+    // Return a default dog avatar or placeholder
+    return 'assets/images/default-dog-avatar.png';
+  }
+
+  /**
+   * Get localized status label for registrations
+   */
+  getStatusLabel(status: string): string {
+    const statusMap: { [key: string]: string } = {
+      'REGISTERED': 'Confirmé',
+      'CONFIRMED': 'Confirmé',
+      'PENDING': 'En attente',
+      'EN_ATTENTE': 'En attente',
+      'CANCELLED': 'Annulé',
+      'COMPLETED': 'Terminé',
+      'NO_SHOW': 'Absent'
+    };
+
+    return statusMap[status?.toUpperCase()] || status || 'Non défini';
+  }
+
+  /**
+   * Handle registration details view
+   */
+  viewRegistrationDetails(registration: RegistrationFlat): void {
+    // TODO: Implement registration details dialog or navigation
+    console.log('View registration details:', registration);
+  }
+
+  /**
+   * Handle registration cancellation (placeholder)
+   */
+  cancelRegistration(registration: RegistrationFlat): void {
+    const confirmMessage = `Êtes-vous sûr de vouloir annuler l'inscription à "${registration.courseName}" (${registration.sessionName}) pour ${registration.dogName} ?`;
+
+    if (confirm(confirmMessage)) {
+      this.loading = true;
+      setTimeout(() => {
+        registration.status = 'CANCELLED';
+        this.loading = false;
+      }, 1000);
+    }
+  }
+
+  /**
+   * Format date for display in the table (helper method if needed)
+   */
+  formatRegistrationDate(dateString: string): string {
+    if (!dateString) return '';
+
+    const date = new Date(dateString);
+    const options: Intl.DateTimeFormatOptions = {
+      day: '2-digit',
+      month: 'short',
+      year: 'numeric'
+    };
+
+    return date.toLocaleDateString('fr-FR', options);
   }
 }

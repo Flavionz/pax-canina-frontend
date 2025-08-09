@@ -11,13 +11,11 @@
     justify-content: space-between;
     align-items: center;
     margin-bottom: 1.5rem;
-
     h2 {
       font-size: 1.4rem;
       color: #1e3346;
       margin: 0;
     }
-
     .btn-primary {
       background: #1879c2;
       color: #fff;
@@ -26,9 +24,37 @@
       padding: 0.6rem 1.1rem;
       font-weight: 600;
       transition: background 0.2s;
-      &:hover {
-        background: #125a92;
-      }
+      &:hover { background: #125a92; }
+    }
+  }
+
+  .user-searchbar {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1.2rem;
+    .user-search-input {
+      flex: 1;
+      padding: 0.6em 1.1em;
+      font-size: 1rem;
+      border-radius: 8px;
+      border: 1px solid #e6e6e6;
+      background: #f9fcff;
+      box-shadow: 0 2px 8px 0 #f3f6fa1f;
+      transition: border-color 0.17s;
+      &:focus { border-color: #1879c2; outline: none; }
+    }
+    .reset-btn {
+      background: none;
+      border: none;
+      color: #c93030;
+      font-size: 1.6em;
+      margin-left: -2.1em;
+      cursor: pointer;
+      padding: 0 0.3em;
+      line-height: 1;
+      opacity: .65;
+      transition: opacity .15s;
+      &:hover { opacity: 1; }
     }
   }
 
@@ -47,6 +73,19 @@
     th {
       color: #43627c;
       background: #f8fafc;
+      cursor: pointer;
+      user-select: none;
+      position: relative;
+      &.sorted {
+        color: #1879c2;
+        background: #ecf5fd;
+      }
+    }
+
+    .sort-arrows {
+      font-size: .98em;
+      user-select: none;
+      margin-left: 0.13em;
     }
 
     .btn-outline {
@@ -66,9 +105,7 @@
         color: #c93030;
         border-color: #c93030;
         background: #faebeb;
-        &:hover {
-          background: #f3c6c6;
-        }
+        &:hover { background: #f3c6c6; }
       }
     }
   }
@@ -83,7 +120,8 @@
     &.badge-owner { background: #faeee2; color: #c17d20; }
   }
 
-  .badge-spec {
+  .badge-spec,
+  .badge-specialization {
     background: #eef1f4;
     color: #1879c2;
     border-radius: 7px;
@@ -104,25 +142,6 @@
     opacity: .8;
   }
   .error-msg { color: #c93030; }
-}
-.btn-success {
-  color: #19a47b;
-  border-color: #19a47b;
-  background: #e1f7e9;
-  &:hover {
-    background: #c2ecd8;
-    border-color: #0f7050;
-  }
-}
-.badge-specialization {
-  background: #e3f0fc;
-  color: #17547b;
-  margin-right: .2em;
-  border-radius: 8px;
-  padding: 0.15em 0.7em;
-  font-size: .92em;
-  font-weight: 500;
-  display: inline-block;
 }
 .btn-back {
   display: inline-block;

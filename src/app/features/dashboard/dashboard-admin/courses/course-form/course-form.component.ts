@@ -29,7 +29,6 @@ export class CourseFormComponent implements OnInit {
     this.form = this.fb.group({
       name: ['', Validators.required],
       description: ['', Validators.required],
-      status: ['OPEN', Validators.required],
       imageUrl: [''],
       specializations: [[], Validators.required] // sarà array di Specialization in form, ma number[] in output
     });

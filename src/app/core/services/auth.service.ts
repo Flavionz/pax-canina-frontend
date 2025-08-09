@@ -4,8 +4,16 @@ import { HttpClient } from '@angular/common/http';
 import { catchError, map } from 'rxjs/operators';
 import { environment } from '@environments/environment';
 
+interface JwtLoginResponse {
+  token: string;
+  role: string;
+}
+
 @Injectable({ providedIn: 'root' })
 export class AuthService {
+  private readonly JWT_KEY = 'jwt';
+  private readonly ROLE_KEY = 'role';
+
   private loggedIn = new BehaviorSubject<boolean>(false);
   /** Observable to know if the user is logged in */
   public isLoggedIn$: Observable<boolean> = this.loggedIn.asObservable();
@@ -14,11 +22,11 @@ export class AuthService {
   private _role: string | null = null;
 
   /** Base URL for /auth */
-  public baseUrl = environment.apiUrl + '/auth';
+  public baseUrl = `${environment.apiUrl}/auth`;
 
   constructor(private http: HttpClient) {
-    const jwt = localStorage.getItem('jwt');
-    const storedRole = localStorage.getItem('role');
+    const jwt = localStorage.getItem(this.JWT_KEY);
+    const storedRole = localStorage.getItem(this.ROLE_KEY);
     if (jwt && storedRole) {
       this._role = storedRole;
       this.loggedIn.next(true);
@@ -29,27 +37,26 @@ export class AuthService {
     return this._role;
   }
 
+  /** ---------------------------
+   *  Auth
+   * --------------------------- */
   login(email: string, password: string): Observable<boolean> {
-    return this.http.post<{ token: string; role: string }>(
-      `${this.baseUrl}/login`,
-      { email, password }
-    ).pipe(
-      map(response => {
-        if (response.token && response.role) {
-          localStorage.setItem('jwt', response.token);
-          localStorage.setItem('role', response.role);
-          this._role = response.role;
-          this.loggedIn.next(true);
-          return true;
-        }
-        this.loggedIn.next(false);
-        return false;
-      }),
-      catchError(() => {
-        this.loggedIn.next(false);
-        return of(false);
-      })
-    );
+    return this.http
+      .post<JwtLoginResponse>(`${this.baseUrl}/login`, { email, password })
+      .pipe(
+        map((response) => {
+          if (response?.token && response?.role) {
+            this.setSession(response.token, response.role);
+            return true;
+          }
+          this.loggedIn.next(false);
+          return false;
+        }),
+        catchError(() => {
+          this.loggedIn.next(false);
+          return of(false);
+        })
+      );
   }
 
   registerOwner(data: {
@@ -66,17 +73,67 @@ export class AuthService {
   }
 
   logout(): void {
-    localStorage.removeItem('jwt');
-    localStorage.removeItem('role');
+    localStorage.removeItem(this.JWT_KEY);
+    localStorage.removeItem(this.ROLE_KEY);
     this._role = null;
     this.loggedIn.next(false);
   }
 
   getToken(): string | null {
-    return localStorage.getItem('jwt');
+    return localStorage.getItem(this.JWT_KEY);
   }
 
   isAuthenticated(): boolean {
-    return !!localStorage.getItem('jwt') && !!this._role;
+    return !!localStorage.getItem(this.JWT_KEY) && !!this._role;
+  }
+
+  /** ---------------------------
+   *  Email verification
+   * --------------------------- */
+  verifyEmail(token: string): Observable<{ status: string } | { error: string }> {
+    return this.http.get<{ status: string } | { error: string }>(
+      `${this.baseUrl}/verify-email`,
+      { params: { token } }
+    );
+  }
+
+  resendVerification(userId: number): Observable<{ status: string } | { error: string }> {
+    return this.http.post<{ status: string } | { error: string }>(
+      `${this.baseUrl}/resend-verification/${userId}`,
+      {}
+    );
+  }
+
+  /** ---------------------------
+   *  Password reset flow
+   * --------------------------- */
+  requestPasswordReset(email: string): Observable<{ status: string }> {
+    // Backend always returns 200 OK to avoid email enumeration
+    return this.http.post<{ status: string }>(`${this.baseUrl}/password-reset-request`, { email });
+  }
+
+  resetPassword(token: string, newPassword: string): Observable<{ status: string } | { error: string }> {
+    return this.http.post<{ status: string } | { error: string }>(
+      `${this.baseUrl}/password-reset`,
+      { token, newPassword }
+    );
+  }
+
+  changePassword(currentPassword: string, newPassword: string) {
+    return this.http.post<void>(`${this.baseUrl}/change-password`, {
+      currentPassword,
+      newPassword
+    });
+  }
+
+
+  /** ---------------------------
+   *  Internal helpers
+   * --------------------------- */
+  private setSession(token: string, role: string) {
+    localStorage.setItem(this.JWT_KEY, token);
+    localStorage.setItem(this.ROLE_KEY, role);
+    this._role = role;
+    this.loggedIn.next(true);
   }
 }

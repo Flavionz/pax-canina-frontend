@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Owner } from '@models/owner.model';
 import { Dog } from '@models/dog.model';
-import { Registration } from '@models/registration.model';
+import { RegistrationFlat } from '@models/registration-flat.model';
 import { OwnerService } from '@core/services/owner.service';
 import { environment } from '@environments/environment';
 import { CommonModule } from '@angular/common';
@@ -17,7 +17,7 @@ import { Router, RouterLink } from '@angular/router';
 export class DashboardOwnerComponent implements OnInit {
   owner: Owner | null = null;
   dogs: Dog[] = [];
-  registrations: Registration[] = [];
+  registrations: RegistrationFlat[] = [];
   loading = true;
 
   constructor(
@@ -31,7 +31,8 @@ export class DashboardOwnerComponent implements OnInit {
       next: (owner: Owner) => {
         this.owner = owner;
         this.dogs = owner.dogs || [];
-        this.registrations = owner.registrations || [];
+        // registrations ora è un array di RegistrationFlat (non più annidata)
+        this.registrations = (owner as any).registrations || [];
         this.loading = false;
       },
       error: () => {
@@ -40,7 +41,6 @@ export class DashboardOwnerComponent implements OnInit {
     });
   }
 
-  /** Returns avatar url or a fallback */
   getAvatarUrl(owner: Owner | null): string {
     if (!owner?.avatarUrl) return 'assets/images/default-avatar.png';
     return owner.avatarUrl.startsWith('http')
@@ -48,7 +48,6 @@ export class DashboardOwnerComponent implements OnInit {
       : `${environment.mediaUrl}/${owner.avatarUrl}`;
   }
 
-  /** Navigates to profile with add-dog tab open */
   goToAddDogTab() {
     this.router.navigate(['/profile'], {
       queryParams: {

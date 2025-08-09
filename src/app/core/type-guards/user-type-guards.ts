@@ -3,17 +3,30 @@ import { Owner } from '@models/owner.model';
 import { Coach } from '@models/coach.model';
 import { Admin } from '@models/admin.model';
 
-// Type guard for Owner
-export function isOwner(user: User | null | undefined): user is Owner {
-  return !!user && user.role === 'OWNER';
+function normalizeRole(u: any): string | undefined {
+  const r = u?.role ?? u?.Role ?? u?.ROLE;
+  return typeof r === 'string' ? r.toUpperCase() : undefined;
 }
 
-// Type guard for Coach
 export function isCoach(user: User | null | undefined): user is Coach {
-  return !!user && user.role === 'COACH';
+  if (!user) return false;
+  const role = normalizeRole(user);
+  return role === 'COACH' || Array.isArray((user as any).specializations);
 }
 
-// Type guard for Admin
+export function isOwner(user: User | null | undefined): user is Owner {
+  if (!user) return false;
+  const role = normalizeRole(user);
+  const u: any = user;
+  return role === 'OWNER' || 'address' in u || 'city' in u || 'postalCode' in u || Array.isArray(u.dogs);
+}
+
 export function isAdmin(user: User | null | undefined): user is Admin {
-  return !!user && user.role === 'ADMIN';
+  if (!user) return false;
+  const role = normalizeRole(user);
+  if (role) return role === 'ADMIN';
+  const u: any = user;
+  const looksCoach = Array.isArray(u?.specializations);
+  const looksOwner = 'address' in u || 'city' in u || 'postalCode' in u || Array.isArray(u?.dogs);
+  return !looksCoach && !looksOwner;
 }

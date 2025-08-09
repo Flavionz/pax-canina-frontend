@@ -1,5 +1,6 @@
 <div class="calendar-page">
   <div class="calendar-grid">
+    <!-- COLONNA CALENDARIO -->
     <div class="calendar-panel mat-elevation-z2">
       <h2>Calendrier des sessions</h2>
       <mat-calendar
@@ -9,6 +10,7 @@
       </mat-calendar>
     </div>
 
+    <!-- SESSIONI DEL GIORNO -->
     <div class="sessions-panel mat-elevation-z2">
       <h2>Sessions du {{ selectedDate | date:'d MMMM':'':'fr' }}</h2>
       <ng-container *ngIf="sessionsForSelectedDate.length; else noSessions">
@@ -38,89 +40,36 @@
     </div>
   </div>
 
-  <!-- Session detail modal -->
-  <div class="session-detail-panel" *ngIf="selectedSession">
-    <button class="close-btn" (click)="closeDetail()" aria-label="Close detail">
-      <mat-icon>close</mat-icon>
-    </button>
-    <h3>{{ selectedSession.course?.name }}</h3>
-    <div class="detail-row">
-      <mat-icon>event</mat-icon>
-      {{ selectedSession.date | date:'fullDate':'':'fr' }}
-    </div>
-    <div class="detail-row">
-      <mat-icon>schedule</mat-icon>
-      {{ selectedSession.startTime }} - {{ selectedSession.endTime }}
-    </div>
-    <div class="detail-row">
-      <mat-icon>place</mat-icon>
-      {{ selectedSession.location }}
-    </div>
-    <div class="detail-row">
-      <mat-icon>groups</mat-icon>
-      {{ selectedSession.registrationsCount }}/{{ selectedSession.maxCapacity }} inscrits
-    </div>
-    <div class="detail-row">
-      <mat-icon>account_circle</mat-icon>
-      Coach :
-      <ng-container *ngIf="selectedSession.coach">
-        {{ selectedSession.coach.firstName }} {{ selectedSession.coach.lastName }}
-      </ng-container>
-      <ng-container *ngIf="!selectedSession.coach">
-        N/A
-      </ng-container>
-    </div>
-    <div class="detail-row">
-      <mat-icon>info</mat-icon>
-      {{ selectedSession.description || '—' }}
-    </div>
-    <div class="detail-row">
-      <mat-icon>child_care</mat-icon>
-      Tranche d'âge :
-      <ng-container *ngIf="selectedSession.ageGroup">
-        {{ selectedSession.ageGroup.name }}
-        ({{ selectedSession.ageGroup.ageMin }}-{{ selectedSession.ageGroup.ageMax }} ans)
-      </ng-container>
-      <ng-container *ngIf="!selectedSession.ageGroup">
-        N/A
-      </ng-container>
-    </div>
-    <img *ngIf="selectedSession.imageUrl" [src]="selectedSession.imageUrl" class="session-img" alt="">
-    <div class="actions">
-      <!-- Enrollment logic and feedback -->
-      <ng-container *ngIf="selectedSession.status === 'available'">
-        <div *ngIf="myDogs.length === 0" class="no-dog-msg">
-          <mat-icon>warning</mat-icon>
-          <span>
-            Vous devez <b>enregistrer un chien</b> avant de pouvoir vous inscrire à une session.
+  <!-- SHORTCUT SUMMARY: tutte le sessioni del mese -->
+  <div class="month-summary">
+    <h3>Sessions du mois</h3>
+    <div class="summary-list" *ngIf="monthSessions.length; else noMonthSessions">
+      <div
+        class="summary-card"
+        *ngFor="let s of monthSessions"
+        [class.today]="isToday(s.date)"
+        (click)="jumpToSession(s)"
+        tabindex="0"
+      >
+        <div>
+          <span class="summary-date">{{ s.date | date: 'd MMM' : '' : 'fr' }}</span>
+          <span class="summary-title">{{ s.course?.name }}</span>
+        </div>
+        <div class="summary-info">
+          <span>{{ s.startTime }}-{{ s.endTime }}</span>
+          <span class="badge"
+                [ngClass]="{'badge-success': s.status==='available', 'badge-danger': s.status==='full'}">
+            {{ s.status==='full' ? 'Complet' : 'Disponible' }}
           </span>
         </div>
-        <div *ngIf="myDogs.length > 1" class="dog-select-group">
-          <label for="dog-select">Choisissez un chien à inscrire :</label>
-          <select id="dog-select" [(ngModel)]="selectedDogId">
-            <option [ngValue]="null" disabled selected>-- Sélectionner --</option>
-            <option *ngFor="let d of myDogs" [value]="d.idDog">{{ d.name }}</option>
-          </select>
-        </div>
-        <button
-          mat-raised-button
-          color="primary"
-          class="enroll-btn"
-          (click)="enrollToSession()"
-          [disabled]="enrolling || !selectedDogId || myDogs.length === 0"
-          *ngIf="myDogs.length > 0"
-        >
-          <span *ngIf="!enrolling && !enrollSuccess">S'inscrire</span>
-          <span *ngIf="enrolling">Inscription...</span>
-          <span *ngIf="enrollSuccess">Inscrit !</span>
-        </button>
-        <div class="enroll-error" *ngIf="enrollError">{{ enrollError }}</div>
-        <div class="enroll-success" *ngIf="enrollSuccess">Inscription réussie !</div>
-      </ng-container>
-      <button mat-stroked-button color="accent" (click)="closeDetail()">Fermer</button>
+      </div>
     </div>
+    <ng-template #noMonthSessions>
+      <p class="no-summary">Aucune session programmée ce mois.</p>
+    </ng-template>
   </div>
 
+  <!-- LEGENDA -->
   <div class="calendar-legend mat-elevation-z2">
     <span><span class="dot selected"></span> Date sélectionnée</span>
     <span><span class="dot today"></span> Aujourd'hui</span>
