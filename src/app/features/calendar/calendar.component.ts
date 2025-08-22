@@ -6,13 +6,10 @@ import {
   MatDatepickerModule,
   MatCalendarCellClassFunction
 } from '@angular/material/datepicker';
-import { MatNativeDateModule } from '@angular/material/core';
+import { MatNativeDateModule, MAT_DATE_LOCALE, provideNativeDateAdapter } from '@angular/material/core';
 import { MatIconModule } from '@angular/material/icon';
-import { MAT_DATE_LOCALE, provideNativeDateAdapter } from '@angular/material/core';
 import { Session } from '@core/models/session.model';
 import { Dog } from '@core/models/dog.model';
-import { RegistrationService } from '@core/services/registration.service';
-import { DogService } from '@core/services/dog.service';
 import { MatButton } from '@angular/material/button';
 import { FormsModule } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
@@ -39,11 +36,11 @@ import { SessionDetailDialogComponent } from './session-detail-dialog/session-de
 export class CalendarComponent implements OnInit {
   selectedDate: Date | null = new Date();
 
-  // Tutte le sessioni del mese, indicizzate per data (YYYY-MM-DD)
+  /** Sessions indexed by day (YYYY-MM-DD) for the current month view */
   sessionsByDate: Record<string, Session[]> = {};
-  // Tutte le sessioni del mese in array flat (per il summary)
+  /** Flat list of sessions for the month (for summary) */
   monthSessions: Session[] = [];
-  // Sessioni del giorno selezionato
+  /** Sessions for the currently selected date */
   sessions: Session[] = [];
 
   myDogs: Dog[] = [];
@@ -51,15 +48,13 @@ export class CalendarComponent implements OnInit {
   private dialog = inject(MatDialog);
 
   constructor(
-    private http: HttpClient,
-    private registrationService: RegistrationService,
-    private dogService: DogService
+    private http: HttpClient
   ) {}
 
   ngOnInit() {
-    // Carica i cani dell'utente
-    this.dogService.getMyDogs().subscribe(dogs => {
-      this.myDogs = dogs;
+    // Load user's dogs (used by the dialog)
+    this.http.get<Dog[]>(`${environment.apiUrl}/dogs/me`).subscribe(dogs => {
+      this.myDogs = dogs || [];
     });
 
     if (this.selectedDate) {
@@ -68,7 +63,7 @@ export class CalendarComponent implements OnInit {
     }
   }
 
-  /** YYYY-MM-DD locale */
+  /** Format Date -> YYYY-MM-DD */
   private toIsoDate(d: Date): string {
     const year = d.getFullYear();
     const month = (d.getMonth() + 1).toString().padStart(2, '0');
@@ -76,41 +71,55 @@ export class CalendarComponent implements OnInit {
     return `${year}-${month}-${day}`;
   }
 
+  /** Map raw DTO -> Session model (kept here because this component calls HTTP directly) */
   private adaptSession(s: any): Session {
     return {
       ...s,
-      course: s.course ?? (s.courseId ? { idCourse: s.courseId, name: s.courseName, imageUrl: s.courseImageUrl } : undefined),
-      coach: s.coach ?? (s.coachId ? { id: s.coachId, firstName: s.coachFirstName, lastName: s.coachLastName, avatarUrl: s.coachAvatarUrl } : undefined),
-      ageGroup: s.ageGroup ?? (s.ageGroupId ? { idAgeGroup: s.ageGroupId, name: s.ageGroupName, ageMin: s.minAge, ageMax: s.maxAge } : undefined),
-    };
+      course: s.course ?? (s.courseId
+        ? { idCourse: s.courseId, name: s.courseName, imageUrl: s.courseImageUrl }
+        : undefined),
+      coach: s.coach ?? (s.coachId
+        ? { id: s.coachId, firstName: s.coachFirstName, lastName: s.coachLastName, avatarUrl: s.coachAvatarUrl }
+        : undefined),
+      // 🔁 KEY FIX: minAge/maxAge (non più ageMin/ageMax)
+      ageGroup: s.ageGroup ?? (s.ageGroupId
+        ? { idAgeGroup: s.ageGroupId, name: s.ageGroupName, minAge: s.minAge, maxAge: s.maxAge }
+        : undefined),
+      // status already normalized server-side; keep as provided or compute if needed
+    } as Session;
   }
 
-  /** Carica tutte le sessioni del mese */
+  /** Load all sessions for the month containing 'd' */
   private loadMonth(d: Date) {
     const year = d.getFullYear(), month = d.getMonth() + 1;
-    const start = `${year}-${month.toString().padStart(2, '0')}-01`;
-    const end = `${year}-${month.toString().padStart(2, '0')}-31`;
+    const mm = month.toString().padStart(2, '0');
+    const start = `${year}-${mm}-01`;
+    const end = `${year}-${mm}-31`;
 
     this.http.get<any[]>(`${environment.apiUrl}/sessions/by-date-range?start=${start}&end=${end}`)
       .subscribe(arr => {
         this.sessionsByDate = {};
-        this.monthSessions = arr.map(s => this.adaptSession(s)).sort((a, b) => a.date.localeCompare(b.date));
-        for (let s of this.monthSessions) {
+        this.monthSessions = (arr || [])
+          .map(s => this.adaptSession(s))
+          .sort((a, b) => a.date.localeCompare(b.date));
+
+        for (const s of this.monthSessions) {
           (this.sessionsByDate[s.date] ??= []).push(s);
         }
       });
   }
 
-  /** Carica tutte le sessioni di uno specifico giorno */
+  /** Load all sessions for a single day */
   private loadDay(d: Date) {
     const iso = this.toIsoDate(d);
     this.http.get<any[]>(`${environment.apiUrl}/sessions/by-date/${iso}`)
       .subscribe(arr => {
-        this.sessions = arr.map(s => this.adaptSession(s));
+        this.sessions = (arr || []).map(s => this.adaptSession(s));
         this.sessionsByDate[iso] = this.sessions;
       });
   }
 
+  /** Calendar cell class: 'full' if all sessions that day are full, else 'available' */
   dateClass: MatCalendarCellClassFunction<Date> = (cellDate, view) => {
     if (view === 'month') {
       const key = this.toIsoDate(cellDate);
@@ -124,12 +133,12 @@ export class CalendarComponent implements OnInit {
     return this.sessions;
   }
 
-  /** Shortcut: sessioni del mese */
+  /** Shortcut: all sessions of current month */
   getMonthSessions(): Session[] {
     return this.monthSessions;
   }
 
-  // === APERTURA DIALOG ===
+  /** Open detail dialog for a session */
   openSessionDetail(s: Session) {
     this.dialog.open(SessionDetailDialogComponent, {
       panelClass: 'pax-modal-center',
@@ -142,34 +151,34 @@ export class CalendarComponent implements OnInit {
       width: '410px',
       maxWidth: '95vw'
     }).afterClosed().subscribe(result => {
-      // Se result === true vuol dire che l'iscrizione è andata a buon fine, quindi ricarica dati
-      if (result === true && this.selectedDate) {
+      // 🔁 FIX: il dialog chiude con { success: true }, non con boolean
+      if (result?.success && this.selectedDate) {
         this.loadMonth(this.selectedDate);
         this.loadDay(this.selectedDate);
       }
     });
   }
 
-  /** Handler cambio data */
+  /** Handle date change from the datepicker */
   onDateChange(d: Date | null) {
     if (!(d instanceof Date)) return;
     this.selectedDate = d;
     this.loadDay(d);
   }
 
-  /** Shortcut click: seleziona la data e apre il dettaglio */
+  /** Jump to a session date and open its dialog */
   jumpToSession(s: Session) {
     if (!this.selectedDate || this.toIsoDate(this.selectedDate) !== s.date) {
       this.selectedDate = new Date(s.date);
       this.loadDay(this.selectedDate);
-      setTimeout(() => this.openSessionDetail(s), 150); // Garantisce il refresh
+      setTimeout(() => this.openSessionDetail(s), 150); // ensure day list is rendered
     } else {
       this.openSessionDetail(s);
     }
     setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 80);
   }
 
-  /** True se la data della session è oggi */
+  /** True if the session date is today */
   isToday(dateStr: string): boolean {
     const today = new Date();
     const d = new Date(dateStr);

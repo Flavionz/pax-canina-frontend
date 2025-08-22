@@ -22,6 +22,7 @@
 }
 .sessions-panel { flex: 1; }
 
+/* ===== Session cards (lista del giorno) ===== */
 .session-card {
   background: #f7fbfa;
   border-radius: 10px;
@@ -30,19 +31,38 @@
   display: flex; align-items: center; justify-content: space-between;
   box-shadow: 0 1px 3px #f0f0f0;
   cursor: pointer;
-  transition: box-shadow 0.2s;
+  transition: box-shadow 0.2s, transform 0.08s;
   &:hover { box-shadow: 0 4px 12px #e5e7eb; }
-  &.full { opacity: 0.65; pointer-events: none; }
-  .title { font-weight: 600; font-size: 1.1rem; }
-  .hour, .place { font-size: .97rem; margin-left: 1rem; color: #7b7b7b; }
+  &:focus-within { outline: 2px solid #1DCB4F; outline-offset: 2px; }
+  &.full { opacity: 0.65; }
+
+  .session-main {
+    display: flex; align-items: center; flex-wrap: wrap; gap: .6rem 1rem;
+    .title { font-weight: 600; font-size: 1.1rem; color: #0f172a; }
+    .hour, .place { font-size: .97rem; color: #7b7b7b; }
+    .hour { margin-left: .5rem; }
+  }
+
+  .session-badges {
+    display: flex; gap: .4rem; align-items: center; flex-wrap: wrap; justify-content: flex-end;
+  }
 }
+
+/* ===== Badge styles (riusabili) ===== */
 .badge {
   padding: 0.3em 0.8em;
   border-radius: 12px;
   font-size: 0.85em;
-  &.badge-success { background: #e5ffe7; color: #1DCB4F; border: 1.5px solid #1DCB4F; }
-  &.badge-danger  { background: #ffeaea; color: #ff5b5b; border: 1.5px solid #ffbdbd; }
+  line-height: 1;
+  border: 1.5px solid transparent;
+  white-space: nowrap;
+
+  &.badge-success { background: #e5ffe7; color: #1DCB4F; border-color: #1DCB4F; }
+  &.badge-danger  { background: #ffeaea; color: #ff5b5b; border-color: #ffbdbd; }
+  &.badge-info    { background: #eef2ff; color: #3730a3; border-color: #c7d2fe; }   /* tranche d’âge */
+  &.badge-neutral { background: #f1f5f9; color: #0f172a; border-color: #e2e8f0; }   /* capienza */
 }
+
 .no-sessions {
   margin-top: 2rem;
   display: flex;
@@ -160,7 +180,7 @@
   }
 }
 
-/* Highlight cells in the Material Calendar */
+/* Evidenziazione celle nel Material Calendar */
 .mat-calendar-body-cell.available .mat-calendar-body-cell-content { background-color: rgba(29,203,79,0.2); }
 .mat-calendar-body-cell.full .mat-calendar-body-cell-content { background-color: rgba(255,189,189,0.2); }
 

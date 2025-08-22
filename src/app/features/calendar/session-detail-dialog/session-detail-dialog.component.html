@@ -20,8 +20,19 @@
     <div>
       <mat-icon>child_care</mat-icon>
       Tranche d'âge :
-      <ng-container *ngIf="data.session.ageGroup; else noAge">
-        {{ data.session.ageGroup.name }} ({{ data.session.ageGroup.ageMin }}-{{ data.session.ageGroup.ageMax }} ans)
+      <ng-container *ngIf="data.session.ageGroup as g; else noAge">
+        {{ translateAgeGroup(g.name) }}
+        <span class="age-range">
+          <ng-container *ngIf="g.minAge != null && g.maxAge != null">
+            ({{ g.minAge }}–{{ g.maxAge }} mois)
+          </ng-container>
+          <ng-container *ngIf="g.minAge != null && g.maxAge == null">
+            (≥ {{ g.minAge }} mois)
+          </ng-container>
+          <ng-container *ngIf="g.minAge == null && g.maxAge != null">
+            (≤ {{ g.maxAge }} mois)
+          </ng-container>
+        </span>
       </ng-container>
       <ng-template #noAge>N/A</ng-template>
     </div>
@@ -35,6 +46,7 @@
       <mat-icon color="warn">warning</mat-icon>
       <span>Vous devez <b>enregistrer un chien</b> avant de pouvoir vous inscrire à une session.</span>
     </div>
+
     <div *ngIf="data.myDogs.length > 1" class="dog-select-group">
       <label for="dog-select">Choisissez un chien à inscrire :</label>
       <select id="dog-select" [(ngModel)]="selectedDogId">
@@ -42,13 +54,19 @@
         <option *ngFor="let d of data.myDogs" [ngValue]="d.idDog">{{ d.name }}</option>
       </select>
     </div>
+
+    <!-- Hint di pre-check età -->
+    <div class="precheck-hint" *ngIf="disableReason">{{ disableReason }}</div>
+
     <button mat-raised-button color="primary"
             (click)="enrollToSession()"
-            [disabled]="enrolling || !selectedDogId || data.myDogs.length === 0 || enrollSuccess"
+            [disabled]="enrolling || !selectedDogId || data.myDogs.length === 0 || enrollSuccess || !!disableReason"
             *ngIf="data.myDogs.length > 0">
       <span *ngIf="!enrolling">S'inscrire</span>
       <span *ngIf="enrolling">Inscription...</span>
     </button>
+
+    <!-- Errore server-side amichevole -->
     <div class="enroll-error" *ngIf="enrollError">{{ enrollError }}</div>
   </div>
 

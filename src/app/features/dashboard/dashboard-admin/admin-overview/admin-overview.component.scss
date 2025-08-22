@@ -1,5 +1,6 @@
 .dashboard-welcome {
   margin-bottom: 2rem;
+
   h2 {
     font-size: 2.1rem;
     color: #1879c2;
@@ -54,10 +55,92 @@
       color: #156da5;
       border-radius: 9px;
     }
+
     &:hover {
       box-shadow: 0 4px 18px 0 #20c96232;
       transform: translateY(-4px) scale(1.035);
       .icon { color: #1879c2; }
     }
+
+    /* Focus tastiera accessibile */
+    &:focus-visible {
+      outline: 2px solid #1879c2;
+      outline-offset: 3px;
+    }
+  }
+}
+
+/* =========================
+   Responsive Breakpoints
+   ========================= */
+
+/* Laptop medio / piccoli (≤ 1200px) */
+@media (max-width: 1200px) {
+  .dashboard-welcome h2 { font-size: 1.9rem; }
+  .dashboard-welcome p  { font-size: 1.08rem; }
+  .dashboard-overview   { gap: 1.4rem; }
+  .dashboard-overview .overview-card {
+    max-width: 400px;
+    padding: 1.3rem 1.5rem;
+  }
+}
+
+/* Tablet (≤ 992px): due colonne comode */
+@media (max-width: 992px) {
+  .dashboard-overview {
+    justify-content: center;
+    gap: 1.2rem;
+  }
+  .dashboard-overview .overview-card {
+    flex: 1 1 calc(50% - 1rem);
+    min-width: 260px;
+    max-width: 520px;
+    padding: 1.2rem 1.3rem;
+
+    .icon { font-size: 2rem; }
+    h3    { font-size: 1.12rem; }
+    p     { font-size: .98rem; }
+    .badge{ font-size: .93rem; }
+  }
+}
+
+/* Mobile (≤ 600px): una colonna full width */
+@media (max-width: 600px) {
+  .dashboard-welcome {
+    margin-bottom: 1.4rem;
+    h2 { font-size: 1.6rem; }
+    p  { font-size: 1rem; }
+  }
+
+  .dashboard-overview {
+    gap: 0.9rem;
+  }
+
+  .dashboard-overview .overview-card {
+    flex: 1 1 100%;
+    min-width: 0;
+    max-width: none;
+    padding: 1rem 1.1rem;
+    border-radius: 14px;
+
+    .icon { font-size: 1.6rem; margin-right: .5rem; }
+    h3    { font-size: 1.05rem; }
+    p     { font-size: .95rem; }
+    .badge{ font-size: .9rem; }
+  }
+
+  /* Evita salti eccessivi su hover in mobile */
+  .dashboard-overview .overview-card:hover {
+    transform: none;
+  }
+}
+
+/* Riduci animazioni per utenti che lo preferiscono */
+@media (prefers-reduced-motion: reduce) {
+  .dashboard-overview .overview-card {
+    transition: none;
+  }
+  .dashboard-overview .overview-card:hover {
+    transform: none;
   }
 }

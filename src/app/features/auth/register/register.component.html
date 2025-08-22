@@ -3,21 +3,21 @@
     <h1>Créer un compte</h1>
     <p class="subtitle">Rejoignez la communauté Pax Canina</p>
 
-    <!-- SUCCESS MESSAGE AFTER REGISTER -->
+    <!-- SUCCESS -->
     <div *ngIf="successMessage" class="success-message">
-      {{ successMessage }}
-      <br />
-      <span>
-        <strong>Important&nbsp;:</strong> Vérifiez votre boîte mail pour activer votre compte.<br>
-        Si vous ne recevez rien d'ici quelques minutes, pensez à vérifier vos spams.
-      </span>
+      <p>{{ successMessage }}</p>
+      <p class="small">
+        <strong>Important :</strong> vérifiez votre boîte mail pour activer votre compte.
+        Pensez aussi au dossier spams.
+      </p>
       <div class="return-login">
         <a routerLink="/auth/login">Retour à la page de connexion</a>
       </div>
     </div>
 
-    <!-- REGISTRATION FORM -->
+    <!-- FORM -->
     <form *ngIf="!successMessage" [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+      <!-- prénom / nom -->
       <div class="form-row">
         <div class="form-group">
           <label for="firstName">Prénom</label>
@@ -26,6 +26,7 @@
             Le prénom est requis
           </div>
         </div>
+
         <div class="form-group">
           <label for="lastName">Nom</label>
           <input id="lastName" type="text" formControlName="lastName" placeholder="Votre nom" />
@@ -51,7 +52,6 @@
         </div>
       </div>
 
-      <!-- Password -->
       <div class="form-group">
         <label for="password">Mot de passe</label>
         <div class="password-field">
@@ -76,7 +76,6 @@
         </div>
       </div>
 
-      <!-- Confirm Password -->
       <div class="form-group">
         <label for="confirmPassword">Confirmer le mot de passe</label>
         <div class="password-field">
@@ -115,12 +114,12 @@
         </div>
       </div>
 
-      <button class="register-btn" type="submit" [disabled]="loading">
+      <button class="register-btn" type="submit" [disabled]="loading || registerForm.invalid">
         <span *ngIf="!loading">Créer un compte</span>
         <span *ngIf="loading">Création...</span>
       </button>
 
-      <div class="error" *ngIf="error">{{ error }}</div>
+      <div class="error global" *ngIf="error">{{ error }}</div>
     </form>
 
     <div class="login-link" *ngIf="!successMessage">

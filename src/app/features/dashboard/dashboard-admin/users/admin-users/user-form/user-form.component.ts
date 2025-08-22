@@ -46,7 +46,6 @@ export class UserFormComponent implements OnInit {
   }
 
   ngOnInit() {
-    // Patch della form (con badge oggetti) SOLO per la form!
     if (this.user) {
       const selected = (this.user.specializations ?? []).map(
         id => this.specializations.find(s => s.id === id)
@@ -62,12 +61,11 @@ export class UserFormComponent implements OnInit {
     this.validateSpecializations();
   }
 
-  /** Badge visualizzati */
+
   get selectedSpecializations(): Specialization[] {
     return this.form.value.specializations ?? [];
   }
 
-  /** Opzioni disponibili per selezione (esclude già selezionati) */
   get availableSpecializations(): Specialization[] {
     const current = this.selectedSpecializations;
     return this.specializations.filter(
@@ -75,7 +73,6 @@ export class UserFormComponent implements OnInit {
     );
   }
 
-  /** Aggiunge una specializzazione */
   addSpecialization() {
     if (this.selectedSpec) {
       const current = this.selectedSpecializations;

@@ -49,7 +49,6 @@ export class AdminOverviewComponent implements OnInit {
    * Loads all counts and admin profile on initialization.
    */
   ngOnInit(): void {
-    // Fetch all resource counts in parallel
     forkJoin([
       this.courseService.getCourses(),
       this.sessionService.getSessions(),
@@ -58,7 +57,7 @@ export class AdminOverviewComponent implements OnInit {
       this.specializationService.getAll()
     ]).subscribe({
       next: ([courses, sessions, userCount, dogs, specializations]) => {
-        console.log('userCount:', userCount); // <-- deve stampare 1
+        console.log('userCount:', userCount);
 
         this.counts.courses         = courses.length;
         this.counts.sessions        = sessions.length;
@@ -70,7 +69,6 @@ export class AdminOverviewComponent implements OnInit {
       }
     });
 
-    // Fetch admin display name for greeting
     this.adminService.getProfile().subscribe({
       next: (admin: Admin) => {
         this.adminName = `${admin.firstName} ${admin.lastName}`;

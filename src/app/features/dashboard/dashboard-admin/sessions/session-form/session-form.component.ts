@@ -90,6 +90,16 @@ export class SessionFormComponent implements OnInit {
     this.close.emit();
   }
 
+  formatAgeGroupOption(ag: AgeGroup): string {
+    const name = this.translateAgeGroup(ag.name);
+    const min = ag.minAge;
+    const max = ag.maxAge;
+    if (min != null && max != null) return `${name} (${min} - ${max} mois)`;
+    if (min != null) return `${name} (≥ ${min} mois)`;
+    if (max != null) return `${name} (≤ ${max} mois)`;
+    return name;
+  }
+
   translateAgeGroup(name: string): string {
     switch (name) {
       case 'PUPPY': return 'Chiot';

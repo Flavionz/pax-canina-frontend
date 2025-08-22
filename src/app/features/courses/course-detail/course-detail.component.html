@@ -108,8 +108,8 @@
                 </svg>
                 <span>
                   Tranche d'âge : {{ s.ageGroup.name }}
-                  <ng-container *ngIf="s.ageGroup.ageMin && s.ageGroup.ageMax">
-                    ({{ s.ageGroup.ageMin }}-{{ s.ageGroup.ageMax }} ans)
+                  <ng-container *ngIf="s.ageGroup.minAge && s.ageGroup.maxAge">
+                    ({{ s.ageGroup.minAge }}-{{ s.ageGroup.maxAge }} ans)
                   </ng-container>
                 </span>
               </div>

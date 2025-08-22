@@ -8,7 +8,7 @@ import { environment } from '@environments/environment';
   providedIn: 'root'
 })
 export class AgeGroupService {
-  private baseUrl = `${environment.apiUrl}/age-group`;
+  private baseUrl = `${environment.apiUrl}/age-groups`;
 
   constructor(private http: HttpClient) {}
 

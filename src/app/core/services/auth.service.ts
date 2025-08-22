@@ -37,9 +37,6 @@ export class AuthService {
     return this._role;
   }
 
-  /** ---------------------------
-   *  Auth
-   * --------------------------- */
   login(email: string, password: string): Observable<boolean> {
     return this.http
       .post<JwtLoginResponse>(`${this.baseUrl}/login`, { email, password })

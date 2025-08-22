@@ -69,17 +69,9 @@
     <div class="form-row">
       <label>Tranche d'âge *</label>
       <select formControlName="ageGroupId" required>
-        <option value="">Sélectionner...</option>
-        <option *ngFor="let ag of ageGroups" [value]="ag.idAgeGroup">
-          {{ translateAgeGroup(ag.name) }}
-          <ng-container *ngIf="ag.minAge !== null && ag.minAge !== undefined">
-            <ng-container *ngIf="ag.maxAge !== null && ag.maxAge !== undefined">
-              ({{ ag.minAge }} - {{ ag.maxAge }} mois)
-            </ng-container>
-            <ng-container *ngIf="ag.maxAge === null || ag.maxAge === undefined">
-              ({{ ag.minAge }} mois+)
-            </ng-container>
-          </ng-container>
+        <option [ngValue]="null">Sélectionner...</option>
+        <option *ngFor="let ag of ageGroups" [ngValue]="ag.idAgeGroup">
+          {{ formatAgeGroupOption(ag) }}
         </option>
       </select>
     </div>

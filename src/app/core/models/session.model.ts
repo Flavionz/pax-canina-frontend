@@ -26,8 +26,8 @@ export interface Session {
   ageGroup?: {
     idAgeGroup: number;
     name: string;
-    ageMin?: number;
-    ageMax?: number;
+    minAge?: number | null;
+    maxAge?: number | null;
   };
 
   status?: 'available' | 'full';

@@ -13,7 +13,8 @@
   border-radius: 12px;
   box-shadow: 0 2px 16px rgba(0,0,0,0.08);
   width: 100%;
-  max-width: 420px;
+  /* allineato al login */
+  max-width: 370px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -33,17 +34,19 @@ h1 {
   text-align: center;
 }
 
-form {
-  width: 100%;
-}
+form { width: 100%; }
 
+/* --- griglia nome/cognome: non sfora mai --- */
 .form-row {
   display: flex;
   gap: 1rem;
   margin-bottom: 1.2rem;
+  flex-wrap: wrap; /* fondamentale per evitare overflow */
 
   .form-group {
-    flex: 1;
+    flex: 1 1 145px; /* cresce ma non scende sotto ~145px */
+    min-width: 0;    /* permette agli input di contrarsi dentro la card */
+    margin-bottom: 0; /* evitiamo doppio spacing */
   }
 }
 
@@ -67,44 +70,26 @@ form {
     font-size: 1rem;
     outline: none;
     transition: border 0.2s;
-    &:focus {
-      border-color: #22c55e;
-    }
+    width: 100%;
+    &:focus { border-color: #22c55e; }
   }
 
   .error {
     color: #d9534f;
     font-size: 0.85rem;
     margin-top: 0.2rem;
+    word-break: break-word;
   }
 }
 
-.register-btn {
-  width: 100%;
-  padding: 0.8rem;
-  background: #22c55e;
-  color: #fff;
-  border: none;
-  border-radius: 6px;
-  font-size: 1.1rem;
-  font-weight: bold;
-  cursor: pointer;
-  transition: background 0.2s;
-}
-
-.login-link {
-  margin-top: 1.2rem;
-  text-align: center;
-  font-size: 1rem;
-
+/* stesso componente del login */
 .password-field {
   display: flex;
   align-items: center;
   position: relative;
 
-  input {
-    flex: 1;
-  }
+  input { flex: 1; }
+
   .toggle-password {
     background: none;
     border: none;
@@ -118,5 +103,66 @@ form {
     padding: 0;
   }
 }
+
+.conditions {
+  label {
+    display: flex;
+    align-items: center;
+    gap: .45rem;
+  }
+  a {
+    color: #22c55e;
+    text-decoration: none;
+    &:hover { text-decoration: underline; }
+  }
 }
 
+/* stesso bottone del login */
+.register-btn {
+  width: 100%;
+  padding: 0.8rem;
+  background: #22c55e;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-size: 1.1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.2s;
+
+  &:hover:enabled { background: #16a34a; }
+  &:disabled { background: #b5e3c8; cursor: not-allowed; }
+}
+
+.login-link {
+  margin-top: 1.2rem;
+  text-align: center;
+  font-size: 1rem;
+
+  a {
+    color: #22c55e;
+    margin-left: 0.3rem;
+    text-decoration: none;
+    font-weight: 500;
+    &:hover { text-decoration: underline; }
+  }
+}
+
+/* messaggio successo */
+.success-message{
+  width:100%;
+  border: 1px solid #d1fae5;
+  background: #ecfdf5;
+  color:#065f46;
+  border-radius: 10px;
+  padding: 1rem;
+  font-size: .95rem;
+  margin-bottom: 1rem;
+
+  .small{ color:#0f766e; margin-top:.25rem; }
+  .return-login{ text-align:center; margin-top:.75rem;
+    a{ color:#22c55e; text-decoration:none; &:hover{text-decoration:underline;} }
+  }
+}
+
+.error.global{ text-align:center; margin-top:.6rem; }

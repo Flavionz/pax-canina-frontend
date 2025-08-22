@@ -86,7 +86,6 @@ export class RegisterComponent {
       }).subscribe({
         next: () => {
           this.loading = false;
-          // No auto-login! Show message.
           this.successMessage = "Inscription réussie ! Un e-mail de validation vient de vous être envoyé à l'adresse indiquée.";
           this.registerForm.reset();
         },

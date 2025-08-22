@@ -50,3 +50,201 @@
     padding: 2rem 2.5rem;
   }
 }
+/* =========================
+   Responsive breakpoints
+   ========================= */
+
+/* Laptop medi/piccoli (≤ 1200px) */
+@media (max-width: 1200px) {
+  .admin-dashboard {
+    .sidebar {
+      width: 200px;
+      padding: 1.25rem .9rem;
+
+      nav ul li a {
+        padding: 0.5rem 0.8rem;
+      }
+    }
+    .content {
+      padding: 1.8rem 2rem;
+    }
+  }
+}
+
+/* Tablet landscape (≤ 992px) */
+@media (max-width: 992px) {
+  .admin-dashboard {
+    .sidebar {
+      width: 180px;
+      padding: 1rem .8rem;
+
+      nav ul li {
+        margin-bottom: .85rem;
+      }
+      nav ul li a {
+        font-size: .98rem;
+        padding: 0.48rem 0.75rem;
+
+        span {
+          font-size: .8rem;
+          padding: 0 .45rem;
+          border-radius: 10px;
+        }
+      }
+    }
+    .content {
+      padding: 1.6rem 1.6rem;
+    }
+  }
+}
+
+/* =========================
+   Responsive breakpoints
+   ========================= */
+
+/* Laptop medi/piccoli (≤ 1200px) */
+@media (max-width: 1200px) {
+  .admin-dashboard {
+    .sidebar {
+      width: 200px;
+      padding: 1.25rem .9rem;
+
+      nav ul li a { padding: 0.5rem 0.8rem; }
+    }
+    .content { padding: 1.8rem 2rem; }
+  }
+}
+
+/* Tablet landscape (≤ 992px) */
+@media (max-width: 992px) {
+  .admin-dashboard {
+    /* Prepariamo layout a colonna per i breakpoint piccoli */
+    .sidebar {
+      width: 220px; /* ancora a sinistra a questo breakpoint */
+      padding: 1rem .8rem;
+
+      nav ul li { margin-bottom: .85rem; }
+      nav ul li a {
+        font-size: .98rem;
+        padding: 0.48rem 0.75rem;
+
+        span { font-size: .8rem; padding: 0 .45rem; border-radius: 10px; }
+      }
+    }
+    .content { padding: 1.6rem 1.6rem; }
+  }
+}
+
+/* Tablet portrait / Small tablet (≤ 768px)
+   👉 Sidebar diventa TOP BAR subito sotto la navbar */
+@media (max-width: 768px) {
+  .admin-dashboard {
+    display: flex;
+    flex-direction: column;   /* colonna */
+    min-height: unset;
+
+    /* TOP BAR */
+    .sidebar {
+      order: 1;               /* sopra al contenuto */
+      width: 100%;
+      border-right: none;
+      border-bottom: 1px solid #e2e8f0;
+      padding: .65rem .9rem;
+      background: #f8fafc;
+
+      /* sticky subito sotto la navbar */
+      position: sticky;
+      top: var(--app-header-h, 64px);
+      z-index: 30;
+      /* effetto leggero vetro */
+      background: rgba(248, 250, 252, 0.92);
+      backdrop-filter: blur(6px);
+      box-shadow: 0 6px 12px rgba(0,0,0,.04);
+
+      nav ul {
+        display: flex;
+        gap: .6rem;
+        justify-content: center;  /* centrata */
+        flex-wrap: wrap;          /* va a capo se serve */
+        padding: .1rem 0 .2rem;
+        margin: 0;
+      }
+      nav ul li {
+        margin: 0;
+        flex: 0 0 auto;
+      }
+      nav ul li a {
+        border-radius: 999px;     /* chip style */
+        padding: .45rem .8rem;
+        font-size: .95rem;
+        white-space: nowrap;
+        background: #fff;         /* chip bianco */
+        border: 1px solid #e2e8f0;
+
+        &:hover,
+        &.active {
+          background: #e6f2fa;
+          color: #1879c2;
+          border-color: #c8e1f2;
+        }
+
+        span {
+          /* badge numerico */
+          background: #dde8f1;
+          color: #156da5;
+          font-size: .78rem;
+          padding: 0 .42rem;
+          border-radius: 10px;
+          margin-left: .35rem;
+        }
+      }
+    }
+
+    /* CONTENUTO sotto la top bar */
+    .content {
+      order: 2;
+      padding: 1.2rem 1rem;
+    }
+  }
+}
+
+/* Mobile (≤ 600px): chip più compatti, badge opzionale nascosto */
+@media (max-width: 600px) {
+  .admin-dashboard {
+    .sidebar {
+      padding: .55rem .7rem;
+
+      nav ul { gap: .5rem; }
+      nav ul li a {
+        padding: .4rem .68rem;
+        font-size: .92rem;
+      }
+      nav ul li a span {
+        display: none; /* mostra se vuoi tenere i contatori anche su schermi piccoli */
+      }
+    }
+
+    .content {
+      padding: 1rem .8rem;
+    }
+  }
+}
+
+/* Mobile piccolo (≤ 400px): ancora più compatti */
+@media (max-width: 400px) {
+  .admin-dashboard .sidebar nav ul li a {
+    padding: .36rem .56rem;
+    font-size: .9rem;
+  }
+}
+
+/* Accessibilità: focus visibile + rispetto preferenze movimento */
+.admin-dashboard .sidebar nav ul li a:focus-visible {
+  outline: 2px solid #1879c2;
+  outline-offset: 2px;
+}
+@media (prefers-reduced-motion: reduce) {
+  .admin-dashboard .sidebar nav ul li a {
+    transition: none;
+  }
+}
