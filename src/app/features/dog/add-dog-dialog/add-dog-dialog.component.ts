@@ -12,6 +12,7 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { DogService } from '@core/services/dog.service';
 import { BreedService } from '@core/services/breed.service';
 import { Dog } from '@models/dog.model';
+import { environment } from '@environments/environment';
 
 @Component({
   selector: 'app-add-dog-dialog',
@@ -72,10 +73,25 @@ export class AddDogDialogComponent implements OnInit {
         chipNumber: this.data.dog.chipNumber,
         photoUrl: this.data.dog.photoUrl
       });
+
       if (this.data.dog.photoUrl) {
-        this.photoPreview = this.data.dog.photoUrl;
+        this.photoPreview = this.getDogPhotoUrl(this.data.dog);
       }
     }
+  }
+
+  getDogPhotoUrl(dog: Dog): string {
+    console.log('🐕 getDogPhotoUrl called with:', dog);
+    console.log('🐕 environment.mediaUrl:', environment.mediaUrl);
+
+    if (!dog.photoUrl) return '';
+
+    const fullUrl = dog.photoUrl.startsWith('http') ?
+      dog.photoUrl :
+      `${environment.mediaUrl}/${dog.photoUrl}`;
+
+    console.log('🐕 Final URL:', fullUrl);
+    return fullUrl;
   }
 
   onFileSelected(event: Event): void {
@@ -103,8 +119,10 @@ export class AddDogDialogComponent implements OnInit {
 
   onSubmit(): void {
     if (this.dogForm.invalid) return;
+
     const dogData = this.dogForm.value;
     this.loading = true;
+
     if (this.selectedPhotoFile) {
       this.dogService.uploadDogPhoto(this.selectedPhotoFile).subscribe({
         next: (photoUrl: string) => {
