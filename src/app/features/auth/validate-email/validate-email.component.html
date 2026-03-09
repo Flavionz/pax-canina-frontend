@@ -1,0 +1,16 @@
+<div class="validate-container">
+  <div class="validate-card">
+    <div *ngIf="status === 'loading'" class="status loading">
+      Validation en cours...
+    </div>
+    <div *ngIf="status === 'success'" class="status success">
+      <span>✅</span>
+      <div>{{ message }}</div>
+      <button (click)="goToLogin()">Se connecter</button>
+    </div>
+    <div *ngIf="status === 'error'" class="status error">
+      <span>❌</span>
+      <div>{{ message }}</div>
+    </div>
+  </div>
+</div>

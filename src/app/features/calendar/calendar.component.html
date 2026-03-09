@@ -1,28 +1,60 @@
 <div class="calendar-page">
   <div class="calendar-grid">
-
+    <!-- COLONNA CALENDARIO -->
     <div class="calendar-panel mat-elevation-z2">
-      <h2>Calendrier</h2>
+      <h2>Calendrier des sessions</h2>
       <mat-calendar
         [(selected)]="selectedDate"
         (selectedChange)="onDateChange($event)"
-        (activeDateChange)="onMonthChange($event)"
         [dateClass]="dateClass">
       </mat-calendar>
     </div>
 
+    <!-- SESSIONI DEL GIORNO -->
     <div class="sessions-panel mat-elevation-z2">
       <h2>Sessions du {{ selectedDate | date:'d MMMM':'':'fr' }}</h2>
+
       <ng-container *ngIf="sessionsForSelectedDate.length; else noSessions">
         <ul>
-          <li *ngFor="let s of sessionsForSelectedDate">
-            {{ s.title }}
-            <span class="status" [class.full]="s.status==='full'">
-              ({{ s.status==='full' ? 'Complet' : 'Disponible' }})
-            </span>
+          <li *ngFor="let s of sessionsForSelectedDate" (click)="openSessionDetail(s)" tabindex="0">
+            <div class="session-card" [class.full]="s.status === 'full'">
+              <div class="session-main">
+                <span class="title">{{ s.course?.name }}</span>
+                <span class="hour">{{ s.startTime }}-{{ s.endTime }}</span>
+                <span class="place">{{ s.location }}</span>
+              </div>
+
+              <div class="session-badges">
+                <!-- Stato disponibilità -->
+                <span class="badge"
+                      [ngClass]="{'badge-success': s.status==='available', 'badge-danger': s.status==='full'}">
+                  {{ s.status==='full' ? 'Complet' : 'Disponible' }}
+                </span>
+
+                <!-- Tranche d’âge (usa minAge/maxAge) -->
+                <span class="badge badge-info" *ngIf="s.ageGroup as g">
+                  Tranche:
+                  <ng-container *ngIf="g.minAge != null && g.maxAge != null">
+                    {{ g.minAge }}–{{ g.maxAge }} mois
+                  </ng-container>
+                  <ng-container *ngIf="g.minAge != null && g.maxAge == null">
+                    ≥ {{ g.minAge }} mois
+                  </ng-container>
+                  <ng-container *ngIf="g.minAge == null && g.maxAge != null">
+                    ≤ {{ g.maxAge }} mois
+                  </ng-container>
+                </span>
+
+                <!-- Capienza -->
+                <span class="badge badge-neutral" *ngIf="s.maxCapacity != null && s.registrationsCount != null">
+                  {{ s.registrationsCount }}/{{ s.maxCapacity }}
+                </span>
+              </div>
+            </div>
           </li>
         </ul>
       </ng-container>
+
       <ng-template #noSessions>
         <div class="no-sessions">
           <mat-icon>event_busy</mat-icon>
@@ -30,9 +62,56 @@
         </div>
       </ng-template>
     </div>
-
   </div>
 
+  <!-- SHORTCUT SUMMARY: tutte le sessioni del mese -->
+  <div class="month-summary">
+    <h3>Sessions du mois</h3>
+
+    <div class="summary-list" *ngIf="monthSessions.length; else noMonthSessions">
+      <div
+        class="summary-card"
+        *ngFor="let s of monthSessions"
+        [class.today]="isToday(s.date)"
+        (click)="jumpToSession(s)"
+        tabindex="0"
+      >
+        <div class="summary-left">
+          <span class="summary-date">{{ s.date | date: 'd MMM' : '' : 'fr' }}</span>
+          <span class="summary-title">{{ s.course?.name }}</span>
+        </div>
+
+        <div class="summary-info">
+          <span>{{ s.startTime }}-{{ s.endTime }}</span>
+
+          <!-- Tranche d’âge (minAge/maxAge) -->
+          <span class="badge badge-info" *ngIf="s.ageGroup as g">
+            <ng-container *ngIf="g.minAge != null && g.maxAge != null">
+              {{ g.minAge }}–{{ g.maxAge }} mois
+            </ng-container>
+            <ng-container *ngIf="g.minAge != null && g.maxAge == null">
+              ≥ {{ g.minAge }} mois
+            </ng-container>
+            <ng-container *ngIf="g.minAge == null && g.maxAge != null">
+              ≤ {{ g.maxAge }} mois
+            </ng-container>
+          </span>
+
+          <!-- Stato -->
+          <span class="badge"
+                [ngClass]="{'badge-success': s.status==='available', 'badge-danger': s.status==='full'}">
+            {{ s.status==='full' ? 'Complet' : 'Disponible' }}
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <ng-template #noMonthSessions>
+      <p class="no-summary">Aucune session programmée ce mois.</p>
+    </ng-template>
+  </div>
+
+  <!-- LEGENDA -->
   <div class="calendar-legend mat-elevation-z2">
     <span><span class="dot selected"></span> Date sélectionnée</span>
     <span><span class="dot today"></span> Aujourd'hui</span>

@@ -1,0 +1,67 @@
+<div class="course-section">
+
+  <!-- Solo nella pagina /courses -->
+  <ng-container *ngIf="!previewMode">
+    <div class="back-home">
+      <button routerLink="/" class="btn-back-home">
+        ← Retour à l'accueil
+      </button>
+    </div>
+  </ng-container>
+
+  <!-- Header e sottotitolo SOLO in preview mode (homepage) -->
+  <div *ngIf="previewMode" class="course-list-header">
+    <h2 class="course-list-title">Nos cours populaires</h2>
+    <p class="course-list-subtitle">
+      Explorez nos cours les plus appréciés par notre communauté canine
+    </p>
+  </div>
+
+  <!-- PREVIEW GRID (Homepage) -->
+  <div *ngIf="previewMode" class="course-list preview-grid">
+    <div *ngFor="let course of displayedCourses" class="course-card">
+      <img [src]="course.imageUrl" alt="Image du cours" class="course-image" />
+      <div class="course-details">
+        <h3 class="course-title">{{ course.name }}</h3>
+        <p class="course-description">{{ course.description }}</p>
+        <button class="course-button" [routerLink]="['/courses', course.idCourse]">
+          Voir les sessions
+        </button>
+      </div>
+    </div>
+
+    <a routerLink="/courses" class="view-all-courses">
+      Voir tous les cours disponibles →
+    </a>
+  </div>
+
+  <!-- LISTA COMPLETA (pagina /courses) -->
+  <ng-container *ngIf="!previewMode">
+    <div class="courses-toolbar">
+      <input
+        type="text"
+        placeholder="Rechercher un cours..."
+        [(ngModel)]="searchTerm"
+        (input)="applyFilters()"
+        class="search-input"
+      />
+    </div>
+
+    <div class="courses-list detailed-list">
+      <div *ngIf="filteredCourses.length === 0" class="no-courses">
+        <p>Aucun cours disponible pour le moment.</p>
+      </div>
+
+      <div *ngFor="let course of filteredCourses" class="course-row">
+        <img [src]="course.imageUrl" alt="img" class="course-img-mini" />
+        <div class="course-info">
+          <strong class="course-row-title">{{ course.name }}</strong>
+          <span class="course-row-desc">{{ course.description }}</span>
+        </div>
+        <button class="course-session-btn" [routerLink]="['/courses', course.idCourse]">
+          <i class="fa-regular fa-calendar"></i> Voir les sessions
+        </button>
+      </div>
+    </div>
+  </ng-container>
+</div>

@@ -21,7 +21,12 @@
             formControlName="password"
             placeholder="Entrez votre mot de passe"
           />
-          <button type="button" class="toggle-password" (click)="togglePasswordVisibility()">
+          <button
+            type="button"
+            class="toggle-password"
+            (click)="togglePasswordVisibility()"
+            aria-label="Toggle password visibility"
+          >
             <span *ngIf="!showPassword">&#128065;</span>
             <span *ngIf="showPassword">&#128064;</span>
           </button>
@@ -35,12 +40,18 @@
         <label>
           <input type="checkbox" formControlName="rememberMe" /> Se souvenir de moi
         </label>
+        <div class="remember-feedback" *ngIf="loginForm.get('rememberMe')?.value">
+          Vous serez automatiquement connecté la prochaine fois.
+        </div>
         <a class="forgot" routerLink="/auth/forgot-password">Mot de passe oublié ?</a>
       </div>
 
-      <button class="login-btn" type="submit">
-        Se connecter
+      <button class="login-btn" type="submit" [disabled]="loading">
+        <span *ngIf="!loading">Se connecter</span>
+        <span *ngIf="loading">Connexion...</span>
       </button>
+
+      <div class="error" *ngIf="error">{{ error }}</div>
     </form>
 
     <div class="register-link">

@@ -1,0 +1,208 @@
+/* === OVERLAY: centrato ma scrollabile su schermi piccoli === */
+.form-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: grid;
+  place-items: center;
+  background: rgba(34, 38, 38, 0.15);
+  padding: clamp(8px, 2vw, 24px); /* respiro ai bordi su mobile */
+  overflow: auto;                 /* abilita lo scroll quando serve */
+}
+
+/* === MODAL / FORM === */
+.session-form {
+  background: #fff;
+  border-radius: 20px;
+  padding: 2.5rem 2rem;
+  width: min(100%, 560px);
+  min-width: 340px;
+  max-width: 560px;
+  box-shadow: 0 4px 24px #cbe7e7;
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+
+  /* evita taglio contenuti su mobile (altezza viewport dinamica) */
+  max-height: calc(100dvh - 2 * clamp(8px, 2vw, 24px));
+  overflow: auto;
+
+  h3 {
+    text-align: left;
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 1.7rem;
+    color: #222e3a;
+    letter-spacing: -.5px;
+  }
+
+  .form-row {
+    display: flex;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+    align-items: flex-end;
+
+    > * {
+      flex: 1 1 0;
+      min-width: 130px;
+    }
+
+    label {
+      font-weight: 600;
+      color: #23735d;
+      margin-bottom: 5px;
+      display: block;
+      font-size: 1.05em;
+    }
+
+    input, select, textarea {
+      border: 1.5px solid #dbf0ed;
+      border-radius: 8px;
+      padding: .45em .75em;
+      font-size: 1em;
+      background: #fafefe;
+      margin-bottom: 3px;
+      transition: border .2s, box-shadow .2s;
+      width: 100%;
+
+      &:focus {
+        border-color: #1DCB4F;
+        outline: none;
+        box-shadow: 0 0 0 3px #1dcb4f22;
+      }
+    }
+
+    textarea {
+      min-height: 50px;
+      resize: vertical;
+    }
+  }
+
+  .actions, .btn-row {
+    margin-top: 1rem;
+    display: flex;
+    gap: 1.2rem;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+
+    button {
+      min-width: 120px;
+      padding: .5em 1.2em;
+      border-radius: 12px;
+      border: none;
+      background: #1dcb4f;
+      color: #fff;
+      font-weight: 600;
+      font-size: 1em;
+      box-shadow: 0 2px 8px #dbf0ed60;
+      cursor: pointer;
+      transition: background .18s, color .18s, box-shadow .18s;
+
+      &:hover, &:focus-visible {
+        background: #23735d;
+        color: #fff;
+        box-shadow: 0 4px 16px #1dcb4f40;
+      }
+      &:disabled {
+        background: #dbf0ed;
+        color: #aaa;
+        cursor: not-allowed;
+        box-shadow: none;
+      }
+    }
+
+    button[type="button"] {
+      background: #fff;
+      color: #1DCB4F;
+      border: 2px solid #1DCB4F;
+
+      &:hover, &:focus-visible {
+        background: #eafff1;
+        color: #23735d;
+      }
+    }
+  }
+}
+
+/* === Hint/error === */
+.hint.error {
+  color: #c93030;
+  font-size: 0.99em;
+  margin-top: .25em;
+}
+
+/* =========================
+   BREAKPOINTS
+   ========================= */
+
+/* Tablet / small laptop */
+@media (max-width: 900px) {
+  .session-form {
+    padding: 1.8rem 1.4rem;
+    border-radius: 18px;
+    max-width: 520px;
+
+    h3 { font-size: 1.7rem; margin-bottom: 1.2rem; }
+
+    .form-row { gap: 1rem; }
+    .actions { justify-content: flex-end; }
+  }
+}
+
+/* Mobile */
+@media (max-width: 600px) {
+  .session-form {
+    min-width: 0;
+    width: 100%;
+    padding: 1.2rem .9rem;
+    border-radius: 16px;
+
+    h3 { font-size: 1.45rem; margin-bottom: 1rem; }
+
+    .form-row {
+      flex-direction: column;
+      gap: .7rem;
+
+      > * { min-width: 0; } /* consente shrink completo */
+      label { font-size: 1rem; }
+      input, select, textarea { font-size: .98rem; }
+    }
+
+    .actions {
+      justify-content: stretch;
+      gap: .8rem;
+
+      /* bottoni fluidi su due colonne quando possibile */
+      button {
+        flex: 1 1 48%;
+        min-width: 0;
+      }
+    }
+  }
+}
+
+/* Mobile molto piccolo */
+@media (max-width: 400px) {
+  .session-form {
+    padding: 1rem .75rem;
+    border-radius: 14px;
+
+    h3 { font-size: 1.3rem; }
+
+    .actions {
+      flex-direction: column;
+      button { width: 100%; }
+    }
+  }
+}
+
+/* Accessibilità / Motion */
+@media (prefers-reduced-motion: reduce) {
+  .session-form,
+  .session-form .actions button,
+  .session-form .form-row input,
+  .session-form .form-row select,
+  .session-form .form-row textarea {
+    transition: none !important;
+  }
+}

@@ -1,0 +1,52 @@
+<div class="admin-dogs">
+  <h2>Chiens enregistrés</h2>
+
+  <div *ngIf="loading" class="loading">Chargement des chiens…</div>
+  <div *ngIf="errorMsg" class="error">{{ errorMsg }}</div>
+
+  <table class="dogs-table" *ngIf="!loading && dogs.length > 0; else emptyState">
+    <thead>
+    <tr>
+      <th (click)="sortData('name')">
+        Nom <span [class.active]="sortColumn === 'name'">{{ getSortIcon('name') }}</span>
+      </th>
+      <th (click)="sortData('ownerName')">
+        Propriétaire <span [class.active]="sortColumn === 'ownerName'">{{ getSortIcon('ownerName') }}</span>
+      </th>
+      <th (click)="sortData('birthDate')">
+        Date de naissance <span [class.active]="sortColumn === 'birthDate'">{{ getSortIcon('birthDate') }}</span>
+      </th>
+      <th (click)="sortData('sex')">
+        Sexe <span [class.active]="sortColumn === 'sex'">{{ getSortIcon('sex') }}</span>
+      </th>
+      <th (click)="sortData('breedName')">
+        Race <span [class.active]="sortColumn === 'breedName'">{{ getSortIcon('breedName') }}</span>
+      </th>
+      <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let dog of dogs">
+      <td>{{ dog.name }}</td>
+      <td>{{ dog.ownerName || '-' }}</td>
+      <td>{{ dog.birthDate | date: 'dd/MM/yyyy' }}</td>
+      <td>{{ dog.sex === 'M' ? 'Mâle' : 'Femelle' }}</td>
+      <td>{{ dog.breedName || '-' }}</td>
+      <td>
+        <button class="btn btn-danger btn-sm" (click)="deleteDog(dog.idDog)">
+          Supprimer
+        </button>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+
+  <ng-template #emptyState>
+    <div class="empty-state">
+      Aucun chien enregistré pour l’instant.
+    </div>
+  </ng-template>
+</div>
+<button class="btn-back" routerLink="/dashboard/admin">
+  ← Retour Dashboard
+</button>

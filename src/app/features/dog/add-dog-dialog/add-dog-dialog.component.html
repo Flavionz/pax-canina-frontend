@@ -1,0 +1,77 @@
+<form [formGroup]="dogForm" (ngSubmit)="onSubmit()" class="add-dog-form" autocomplete="off">
+  <h2 class="dialog-title">{{ isEditMode ? 'Modifier le chien' : 'Ajouter un chien' }}</h2>
+  <div class="form-grid">
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Nom du chien</mat-label>
+      <input matInput formControlName="name" placeholder="Ex: Max" required>
+      <mat-error *ngIf="dogForm.get('name')?.hasError('required')">Nom requis</mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Race</mat-label>
+      <mat-select formControlName="idBreed" required>
+        <mat-option value="">Sélectionner...</mat-option>
+        <mat-option *ngFor="let b of breeds" [value]="b.idBreed">{{ b.name }}</mat-option>
+      </mat-select>
+      <mat-error *ngIf="dogForm.get('idBreed')?.hasError('required')">Race requise</mat-error>
+    </mat-form-field>
+
+    <div class="half-col">
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Date de naissance</mat-label>
+        <input matInput [matDatepicker]="picker" formControlName="birthDate" placeholder="JJ/MM/AAAA" required>
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+        <mat-error *ngIf="dogForm.get('birthDate')?.hasError('required')">Date requise</mat-error>
+        <mat-hint>Format: JJ/MM/AAAA</mat-hint>
+      </mat-form-field>
+    </div>
+
+    <div class="half-col">
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Sexe</mat-label>
+        <mat-select formControlName="sex" required>
+          <mat-option value="M">Mâle</mat-option>
+          <mat-option value="F">Femelle</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+
+    <div class="half-col">
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Poids (kg)</mat-label>
+        <input matInput type="number" formControlName="weight" min="0" placeholder="Ex: 25" required>
+        <mat-error *ngIf="dogForm.get('weight')?.hasError('required') || dogForm.get('weight')?.hasError('min')">
+          Requis et positif
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+    <div class="half-col">
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Numéro de puce</mat-label>
+        <input matInput formControlName="chipNumber" placeholder="Ex: 123456789012345">
+      </mat-form-field>
+    </div>
+
+    <!-- Photo upload modern -->
+    <div class="photo-upload full-width">
+      <button type="button" mat-stroked-button (click)="triggerFile()">
+        <mat-icon>upload</mat-icon>
+        {{ selectedPhotoFile ? 'Changer la photo' : 'Télécharger une photo' }}
+      </button>
+      <input #fileInput type="file" style="display:none" (change)="onFileSelected($event)" accept="image/*" />
+      <span *ngIf="selectedPhotoFile" class="file-selected">{{ selectedPhotoFile.name }}</span>
+      <img *ngIf="photoPreview" [src]="photoPreview" class="photo-preview" />
+      <button *ngIf="photoPreview" type="button" class="remove-photo" mat-icon-button (click)="removePhoto()" aria-label="Supprimer la photo">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+  </div>
+  <div class="actions">
+    <button mat-flat-button color="primary" type="submit" [disabled]="dogForm.invalid || loading">
+      {{ isEditMode ? 'Enregistrer' : 'Ajouter' }}
+    </button>
+    <button mat-button type="button" (click)="cancel()" [disabled]="loading">Annuler</button>
+  </div>
+</form>

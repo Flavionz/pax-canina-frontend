@@ -1,15 +1,18 @@
 import { ApplicationConfig } from '@angular/core';
 import { provideRouter, Routes, withInMemoryScrolling } from '@angular/router';
-import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { MainLayoutComponent } from './layouts/main-layout/main-layout.component';
-import { ProfileComponent } from './features/profile/profile.component';
+import { ProfileComponent } from '@features/profile/profile.component';
+import { jwtInterceptor } from '@app/core/interceptors/jwt.interceptor';
+import { connecteGuard } from '@app/core/guards/connecte.guard';
+
 
 const routes: Routes = [
+  { path: '', redirectTo: '/home', pathMatch: 'full' },
   {
     path: '',
     component: MainLayoutComponent,
     children: [
-      { path: '', redirectTo: 'home', pathMatch: 'full' },
       {
         path: 'home',
         loadChildren: () =>
@@ -19,6 +22,11 @@ const routes: Routes = [
         path: 'auth',
         loadChildren: () =>
           import('./features/auth/auth.routes').then(m => m.AUTH_ROUTES)
+      },
+      {
+        path: 'courses',
+        loadChildren: () =>
+          import('./features/courses/courses.routes').then(m => m.COURSES_ROUTES)
       },
       {
         path: 'dashboard',
@@ -35,10 +43,17 @@ const routes: Routes = [
         loadChildren: () =>
           import('./features/contact/contact.routes').then(m => m.CONTACT_ROUTES)
       },
-      { path: 'profile', component: ProfileComponent }
+      { path: 'profile',
+        component: ProfileComponent,
+        canActivate: [connecteGuard] }
     ]
   },
-  { path: '**', redirectTo: '' }
+  {
+    path: 'error',
+    loadChildren: () =>
+      import('./features/errors/errors.routes').then(m => m.ERRORS_ROUTES)
+  },
+  { path: '**', redirectTo: '/error' }
 ];
 
 export const appConfig: ApplicationConfig = {
@@ -50,6 +65,6 @@ export const appConfig: ApplicationConfig = {
         anchorScrolling: 'enabled'
       })
     ),
-    provideHttpClient()
+    provideHttpClient(withInterceptors([jwtInterceptor]))
   ]
 };

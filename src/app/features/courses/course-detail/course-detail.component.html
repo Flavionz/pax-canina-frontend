@@ -1,0 +1,157 @@
+<ng-container *ngIf="!error && !loading; else notFound">
+  <div class="page-container">
+    <!-- HERO -->
+    <section class="course-hero">
+      <div class="course-hero__grid">
+        <div class="course-hero__content">
+          <span class="badge">Formation</span>
+          <h1 class="title">{{ course?.name }}</h1>
+          <p class="lead">{{ course?.description }}</p>
+
+          <div class="stats">
+            <div class="stat">
+              <div class="stat__num">{{ sessions.length }}</div>
+              <div class="stat__label">Sessions disponibles</div>
+            </div>
+            <div class="stat__divider" role="presentation"></div>
+            <div class="stat">
+              <div class="stat__num">{{ getTotalCapacity() }}</div>
+              <div class="stat__label">Places totales</div>
+            </div>
+            <div class="stat__divider" role="presentation"></div>
+            <div class="stat">
+              <div class="stat__num">{{ getAvailablePlaces() }}</div>
+              <div class="stat__label">Places libres</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="course-hero__media">
+          <div class="media__frame">
+            <img
+              *ngIf="course?.imageUrl"
+              [src]="course?.imageUrl"
+              [alt]="course?.name"
+              class="media__img" />
+            <div class="media__overlay"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- SESSIONS -->
+  <section class="sessions section" aria-labelledby="sessions-title">
+    <div class="page-container">
+      <header class="section-header">
+        <div>
+          <p class="eyebrow">Planning</p>
+          <h2 id="sessions-title" class="section-title">Sessions à venir</h2>
+          <p class="section-subtitle">Choisissez votre créneau et réservez votre place</p>
+        </div>
+
+        <div class="filters" role="tablist" aria-label="Filtres">
+          <button class="chip active" type="button">Toutes</button>
+          <button class="chip" type="button">Cette semaine</button>
+          <button class="chip" type="button">Ce mois</button>
+        </div>
+      </header>
+
+      <ng-container *ngIf="sessions.length > 0; else noSessions">
+        <div class="sessions__grid">
+          <article *ngFor="let s of sessions; trackBy: trackBySessionId" class="session-card">
+            <header class="session-card__header">
+              <h3 class="session-card__title">{{ s.level || course?.name }}</h3>
+            </header>
+
+            <div class="session-card__details">
+              <div class="row">
+                <svg class="icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                  <path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.89-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.11-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z"/>
+                </svg>
+                <span>{{ s.date | date:'d MMM yyyy' }}</span>
+              </div>
+
+              <div class="row">
+                <svg class="icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                  <path d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M16.2,16.2L11,13V7H12.5V12.2L17,14.7L16.2,16.2Z"/>
+                </svg>
+                <span>{{ s.startTime }} - {{ s.endTime }}</span>
+              </div>
+
+              <div class="row">
+                <svg class="icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                  <path d="M16 4c0-1.11.89-2 2-2s2 .89 2 2-.89 2-2 2-2-.89-2-2zM4 18v-4h3v-3h2l1-5h6l1.26 5H18v3h3v4H4z"/>
+                </svg>
+                <span>{{ getSessionAvailability(s) }}</span>
+              </div>
+            </div>
+
+            <button
+              class="reserve-btn"
+              [class.full]="isSessionFull(s)"
+              (click)="openSessionDetail(s)"
+              [disabled]="isSessionFull(s) || myDogs.length === 0">
+              {{ isSessionFull(s) ? 'Complet' : 'Réserver' }}
+            </button>
+
+            <footer *ngIf="s.coach || s.ageGroup" class="session-card__meta">
+              <div *ngIf="s.coach" class="row muted">
+                <svg class="icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                  <path d="M12,2A3,3 0 0,1 15,5A3,3 0 0,1 12,8A3,3 0 0,1 9,5A3,3 0 0,1 12,2Z"/>
+                </svg>
+                <span>Coach : {{ s.coach.firstName }} {{ s.coach.lastName }}</span>
+              </div>
+
+              <div *ngIf="s.ageGroup" class="row muted">
+                <svg class="icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                  <path d="M12,2A2,2 0 0,1 14,4A2,2 0 0,1 12,6A2,2 0 0,1 10,4A2,2 0 0,1 12,2Z"/>
+                </svg>
+                <span>
+                  Tranche d'âge : {{ s.ageGroup.name }}
+                  <ng-container *ngIf="s.ageGroup.minAge != null && s.ageGroup.maxAge != null">
+                    ({{ s.ageGroup.minAge }}–{{ s.ageGroup.maxAge }} mois)
+                  </ng-container>
+                  <ng-container *ngIf="s.ageGroup.minAge != null && s.ageGroup.maxAge == null">
+                    (≥ {{ s.ageGroup.minAge }} mois)
+                  </ng-container>
+                  <ng-container *ngIf="s.ageGroup.minAge == null && s.ageGroup.maxAge != null">
+                    (≤ {{ s.ageGroup.maxAge }} mois)
+                  </ng-container>
+                </span>
+              </div>
+            </footer>
+          </article>
+        </div>
+      </ng-container>
+
+      <ng-template #noSessions>
+        <div class="empty">
+          <svg class="empty__icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.89-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.11-.9-2-2-2zm0 16H5V8h14v11z"/>
+          </svg>
+          <p>Aucune session programmée pour le moment</p>
+          <span>Les nouvelles sessions seront bientôt disponibles</span>
+        </div>
+      </ng-template>
+
+      <div class="return-wrapper">
+        <button routerLink="/courses" class="btn-outline">
+          ← Retour aux cours
+        </button>
+      </div>
+    </div>
+  </section>
+</ng-container>
+
+<!-- Not found -->
+<ng-template #notFound>
+  <div class="error">
+    <svg class="error__icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+      <path d="M13,13H11V7H13M13,17H11V15H13M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2Z"/>
+    </svg>
+    <h3>Cours introuvable</h3>
+    <p>Le cours que vous recherchez n'existe pas ou a été supprimé.</p>
+    <button routerLink="/courses" class="btn-outline btn-sm">← Retour aux cours</button>
+  </div>
+</ng-template>

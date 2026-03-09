@@ -1,0 +1,169 @@
+.admin-users {
+  max-width: 900px;
+  margin: 0 auto;
+  background: #fff;
+  border-radius: 14px;
+  box-shadow: 0 2px 12px 0 #c1c1c127;
+  padding: 2rem 2.5rem;
+
+  .users-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    h2 {
+      font-size: 1.4rem;
+      color: #1e3346;
+      margin: 0;
+    }
+    .btn-primary {
+      background: #1879c2;
+      color: #fff;
+      border-radius: 7px;
+      border: none;
+      padding: 0.6rem 1.1rem;
+      font-weight: 600;
+      transition: background 0.2s;
+      &:hover { background: #125a92; }
+    }
+  }
+
+  .user-searchbar {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1.2rem;
+    .user-search-input {
+      flex: 1;
+      padding: 0.6em 1.1em;
+      font-size: 1rem;
+      border-radius: 8px;
+      border: 1px solid #e6e6e6;
+      background: #f9fcff;
+      box-shadow: 0 2px 8px 0 #f3f6fa1f;
+      transition: border-color 0.17s;
+      &:focus { border-color: #1879c2; outline: none; }
+    }
+    .reset-btn {
+      background: none;
+      border: none;
+      color: #c93030;
+      font-size: 1.6em;
+      margin-left: -2.1em;
+      cursor: pointer;
+      padding: 0 0.3em;
+      line-height: 1;
+      opacity: .65;
+      transition: opacity .15s;
+      &:hover { opacity: 1; }
+    }
+  }
+
+  .users-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 1.5rem;
+
+    th, td {
+      padding: 0.65rem 0.7rem;
+      border-bottom: 1px solid #eef1f4;
+      text-align: left;
+      font-size: 1rem;
+    }
+
+    th {
+      color: #43627c;
+      background: #f8fafc;
+      cursor: pointer;
+      user-select: none;
+      position: relative;
+      &.sorted {
+        color: #1879c2;
+        background: #ecf5fd;
+      }
+    }
+
+    .sort-arrows {
+      font-size: .98em;
+      user-select: none;
+      margin-left: 0.13em;
+    }
+
+    .btn-outline {
+      border: 1px solid #c0d2e1;
+      color: #1879c2;
+      background: #f5fafd;
+      border-radius: 5px;
+      font-size: 0.85rem;
+      margin-right: 0.4rem;
+      padding: 0.3rem 0.7rem;
+      transition: background .2s, border .2s;
+      &:hover {
+        background: #e6f2fa;
+        border-color: #1879c2;
+      }
+      &.btn-danger {
+        color: #c93030;
+        border-color: #c93030;
+        background: #faebeb;
+        &:hover { background: #f3c6c6; }
+      }
+    }
+  }
+
+  .role-badge {
+    padding: 0.28em 0.7em;
+    border-radius: 10px;
+    font-weight: 500;
+    font-size: 0.93em;
+    &.badge-admin { background: #e3e9fd; color: #1a43b4; }
+    &.badge-coach { background: #e1f7e9; color: #19a47b; }
+    &.badge-owner { background: #faeee2; color: #c17d20; }
+  }
+
+  .badge-spec,
+  .badge-specialization {
+    background: #eef1f4;
+    color: #1879c2;
+    border-radius: 7px;
+    font-size: 0.89em;
+    padding: 0.16em 0.7em;
+    margin-right: 0.32em;
+    font-weight: 500;
+    display: inline-block;
+  }
+
+  .loading-msg,
+  .error-msg,
+  .empty-state {
+    text-align: center;
+    margin: 2rem 0 0 0;
+    color: #1e3346;
+    font-size: 1.07rem;
+    opacity: .8;
+  }
+  .error-msg { color: #c93030; }
+}
+.btn-back {
+  display: inline-block;
+  margin-bottom: 1.4rem;
+  background: #e6f2fa;
+  color: #1977cc;
+  border: none;
+  border-radius: 1.2rem;
+  padding: 0.38em 1.1em;
+  font-size: 1.02rem;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 2px 8px #e5eefa24;
+  transition: background 0.18s, color 0.18s;
+  text-align: left;
+  &:hover {
+    background: #d3e8f9;
+    color: #144c7c;
+  }
+  i, svg {
+    margin-right: 0.45em;
+    font-size: 1.08em;
+    vertical-align: middle;
+  }
+}

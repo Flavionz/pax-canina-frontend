@@ -1,0 +1,187 @@
+.admin-courses {
+  padding: 2rem;
+  position: relative;
+
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    h2 {
+      font-size: 2rem;
+      color: #1d3557;
+      font-weight: 700;
+    }
+    .btn-primary {
+      background: #27c383;
+      border-radius: 1.5rem;
+      padding: 0.6rem 1.5rem;
+      color: #fff;
+      font-weight: 600;
+      border: none;
+      font-size: 1rem;
+      box-shadow: 0 2px 8px 0 #e3f7e7;
+      transition: 0.2s;
+      &:hover {
+        background: #23b078;
+      }
+    }
+  }
+
+  .courses-table {
+    width: 100%;
+    background: #f9fcff;
+    border-radius: 2rem;
+    box-shadow: 0 2px 12px #e5eefa;
+    overflow: hidden;
+    border-collapse: separate;
+    border-spacing: 0;
+    th, td {
+      padding: 1rem;
+      text-align: left;
+      vertical-align: middle;
+    }
+    th {
+      background: #f3f9fa;
+      color: #246bad;
+      font-size: 1.1rem;
+      font-weight: 700;
+      letter-spacing: 0.01em;
+    }
+    td {
+      font-size: 1rem;
+      .desc {
+        color: #3e5574;
+        max-width: 350px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+    }
+    tr {
+      &:nth-child(even) {
+        background: #f6fafc;
+      }
+      &:hover {
+        background: #e7f9f1;
+      }
+    }
+    .course-img {
+      width: 40px;
+      height: 40px;
+      object-fit: cover;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px #e6e6e6;
+      background: #fff;
+      display: block;
+    }
+    .btn-sm {
+      font-size: 0.95em;
+      padding: 0.35em 1em;
+      border-radius: 1rem;
+      margin-right: 0.5em;
+      background: #f6f6f9;
+      border: 1px solid #ddd;
+      color: #3374b8;
+      cursor: pointer;
+      &:hover {
+        background: #eaf2fb;
+      }
+      &.btn-danger {
+        color: #e3545a;
+        border-color: #ffd4d6;
+        &:hover {
+          background: #ffe7e9;
+        }
+      }
+    }
+  }
+
+  .empty-state {
+    padding: 2rem;
+    text-align: center;
+    color: #7c8491;
+    font-size: 1.2rem;
+  }
+}
+
+.spec-badge {
+  background: #f0f7ff;
+  color: #2070c7;
+  border-radius: 1rem;
+  padding: 0.2em 0.7em;
+  font-size: 0.90em;
+  font-weight: 500;
+  margin-right: 0.4em;
+  display: inline-block;
+}
+.no-spec {
+  color: #aaa;
+  font-style: italic;
+}
+
+.btn-back {
+  display: inline-block;
+  margin-bottom: 1.4rem;
+  background: #e6f2fa;
+  color: #1977cc;
+  border: none;
+  border-radius: 1.2rem;
+  padding: 0.38em 1.1em;
+  font-size: 1.02rem;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 2px 8px #e5eefa24;
+  transition: background 0.18s, color 0.18s;
+  text-align: left;
+  &:hover {
+    background: #d3e8f9;
+    color: #144c7c;
+  }
+  i, svg {
+    margin-right: 0.45em;
+    font-size: 1.08em;
+    vertical-align: middle;
+  }
+}
+
+/* Overlay - livello superiore, copre tutto tranne la modale */
+.form-overlay {
+  position: fixed;
+  z-index: 1000;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(34, 41, 58, 0.14);
+  backdrop-filter: blur(2px);
+}
+
+/* Modale centrata e interattiva sopra overlay */
+.course-form-modal {
+  position: fixed;
+  z-index: 1010;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  margin: 0 auto;
+  max-width: 430px;
+  width: 100%;
+  background: #f8fafc;
+  border-radius: 14px;
+  box-shadow: 0 2px 8px 0 #1879c210;
+  padding: 2rem 2rem 1rem 2rem;
+}
+
+@media (max-width: 900px) {
+  .admin-courses {
+    padding: 0.7rem;
+  }
+  .courses-table th, .courses-table td {
+    padding: 0.4rem;
+    font-size: 0.98em;
+  }
+}
+@media (max-width: 600px) {
+  .course-form-modal {
+    max-width: 98vw;
+    padding: 1rem 0.5rem 0.5rem 0.5rem;
+  }
+}

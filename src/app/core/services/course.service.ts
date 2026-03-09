@@ -1,50 +1,72 @@
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
-import { Course } from '../models/course.model';
+import { HttpClient } from '@angular/common/http';
+import { Observable, map } from 'rxjs';
+import { Course } from '@models/course.model';
+import { environment } from '@environments/environment';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class CourseService {
+  private baseUrl = `${environment.apiUrl}/courses`;
 
-  constructor() {}
+  constructor(private http: HttpClient) {}
 
+  /** Public list (all courses) */
   getCourses(): Observable<Course[]> {
-    // Mock temporaneo
-    return of<Course[]>([
-      {
-        id: 1,
-        nom: 'Éducation Chiot',
-        description: 'Cours pour chiots de 2 à 6 mois.',
-        capacite_max: 10,
-        statut: 'Actif',
-        niveau: 'Débutant',
-        id_type_cours: 1,
-        id_tranche: 1,
-        imageUrl: 'assets/images/socializza.jpg'
-      },
-      {
-        id: 2,
-        nom: 'Agilité Adulte',
-        description: 'Initiation à l’agilité pour chiens adultes.',
-        capacite_max: 8,
-        statut: 'Actif',
-        niveau: 'Intermédiaire',
-        id_type_cours: 2,
-        id_tranche: 2,
-        imageUrl: 'assets/images/agility.jpg'
-      },
-      {
-        id: 3,
-        nom: 'Éducation Adulte',
-        description: 'Cours pour adultes de 12 mois+.',
-        capacite_max: 9,
-        statut: 'Actif',
-        niveau: 'Débutant',
-        id_type_cours: 1,
-        id_tranche: 1,
-        imageUrl: 'assets/images/obey.jpg'
-      },
-    ]);
+    return this.http.get<any[]>(this.baseUrl).pipe(
+      map(dtos => dtos.map(this.dtoToCourse))
+    );
+  }
+
+  /** One course by id */
+  getCourseById(id: number): Observable<Course> {
+    return this.http.get<any>(`${this.baseUrl}/${id}`).pipe(
+      map(this.dtoToCourse)
+    );
+  }
+
+  /** NEW: only courses allowed for the logged-in coach (filtered by specializations) */
+  getCoursesForCoachMe(): Observable<Course[]> {
+    return this.http.get<any[]>(`${this.baseUrl}/for-coach/me`).pipe(
+      map(dtos => dtos.map(this.dtoToCourse))
+    );
+  }
+
+  /** Create / Update / Delete (admin use) */
+  createCourse(course: Course): Observable<Course> {
+    return this.http.post<any>(this.baseUrl, this.courseToDto(course)).pipe(
+      map(this.dtoToCourse)
+    );
+  }
+
+  updateCourse(course: Course): Observable<Course> {
+    return this.http.put<any>(`${this.baseUrl}/${course.idCourse}`, this.courseToDto(course)).pipe(
+      map(this.dtoToCourse)
+    );
+  }
+
+  deleteCourse(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.baseUrl}/${id}`);
+  }
+
+  // ---------- mappers ----------
+  private dtoToCourse = (dto: any): Course => ({
+    idCourse: dto.idCourse,
+    name: dto.name,
+    description: dto.description,
+    imageUrl: dto.imageUrl,
+    // backend sends specializationIds; frontend model expects number[]
+    specializations: dto.specializationIds ?? [],
+    // sessions not needed here; keep optional as in your model
+    sessions: dto.sessions
+  });
+
+  private courseToDto(course: Course): any {
+    return {
+      idCourse: course.idCourse,
+      name: course.name,
+      description: course.description,
+      imageUrl: course.imageUrl,
+      specializationIds: course.specializations ?? []
+    };
   }
 }

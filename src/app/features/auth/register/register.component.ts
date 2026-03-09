@@ -1,12 +1,23 @@
 import { Component } from '@angular/core';
-import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
-import {Router, RouterLink} from '@angular/router';
-import { AuthService } from '../auth.service';
+import {
+  FormBuilder,
+  FormGroup,
+  Validators,
+  AbstractControl,
+  ValidatorFn,
+  ValidationErrors,
+  ReactiveFormsModule
+} from '@angular/forms';
+import { RouterLink } from '@angular/router';
+import { AuthService } from '@core/services/auth.service';
+import { CommonModule } from '@angular/common';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-register',
   standalone: true,
   imports: [
+    CommonModule,
     ReactiveFormsModule,
     RouterLink
   ],
@@ -16,42 +27,92 @@ import { AuthService } from '../auth.service';
 export class RegisterComponent {
   registerForm: FormGroup;
   showPassword = false;
+  showConfirmPassword = false;
+  error: string | null = null;
+  loading = false;
+  successMessage: string | null = null;
+
+  fieldErrors: Record<string, string> = {};
+
+  private static readonly PHONE_REGEX = /^\+?[0-9 .-]{7,15}$/;
 
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
-    private router: Router
+    private http: HttpClient
   ) {
     this.registerForm = this.fb.group({
-      prenom: ['', Validators.required],
-      nom: ['', Validators.required],
+      firstName: ['', Validators.required],
+      lastName: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
-      telephone: ['', Validators.required],
-      password: ['', [Validators.required, Validators.minLength(6)]],
+      phone: ['', [Validators.required, Validators.pattern(RegisterComponent.PHONE_REGEX)]],
+      password: ['', [Validators.required, Validators.minLength(8)]], // <— allineato al back
+      confirmPassword: ['', Validators.required],
       conditions: [false, Validators.requiredTrue]
+    }, {
+      validators: this.passwordsMatchValidator()
     });
   }
 
-  get prenom() { return this.registerForm.get('prenom'); }
-  get nom() { return this.registerForm.get('nom'); }
-  get email() { return this.registerForm.get('email'); }
-  get telephone() { return this.registerForm.get('telephone'); }
-  get password() { return this.registerForm.get('password'); }
-  get conditions() { return this.registerForm.get('conditions'); }
+  private passwordsMatchValidator(): ValidatorFn {
+    return (group: AbstractControl): ValidationErrors | null => {
+      const pwd = group.get('password')?.value;
+      const cpw = group.get('confirmPassword')?.value;
+      return pwd === cpw ? null : { passwordMismatch: true };
+    };
+  }
 
-  togglePasswordVisibility() {
+  get firstName(): AbstractControl { return this.registerForm.get('firstName')!; }
+  get lastName(): AbstractControl { return this.registerForm.get('lastName')!; }
+  get email(): AbstractControl { return this.registerForm.get('email')!; }
+  get phone(): AbstractControl { return this.registerForm.get('phone')!; }
+  get password(): AbstractControl { return this.registerForm.get('password')!; }
+  get confirmPassword(): AbstractControl { return this.registerForm.get('confirmPassword')!; }
+  get conditions(): AbstractControl { return this.registerForm.get('conditions')!; }
+
+  togglePasswordVisibility(): void {
     this.showPassword = !this.showPassword;
   }
 
-  onSubmit() {
-    if (this.registerForm.valid) {
-      // Qui puoi chiamare il backend per la registrazione
-      // Per ora simula la registrazione e logga l'utente
-      this.authService.login(); // Simula login dopo registrazione
-      this.router.navigate(['/dashboard']);
-    } else {
+  toggleConfirmPasswordVisibility(): void {
+    this.showConfirmPassword = !this.showConfirmPassword;
+  }
+
+  onSubmit(): void {
+    this.error = null;
+    this.successMessage = null;
+    this.fieldErrors = {};
+
+    if (this.registerForm.invalid) {
       this.registerForm.markAllAsTouched();
+      return;
     }
+
+    this.loading = true;
+    this.registerForm.disable();
+
+    const { firstName, lastName, email, phone, password } = this.registerForm.value;
+
+    this.http.post(`${this.authService.baseUrl}/register/owner`, {
+      firstName, lastName, email, phone, password
+    }).subscribe({
+      next: (_res: any) => {
+        this.loading = false;
+        this.registerForm.enable();
+        this.successMessage = "Inscription réussie ! Un e-mail de validation vient de vous être envoyé à l'adresse indiquée.";
+        this.registerForm.reset();
+      },
+      error: (err: HttpErrorResponse) => {
+        this.loading = false;
+        this.registerForm.enable();
+
+        if (err.status === 400 && err.error && typeof err.error === 'object' && err.error.errors) {
+          this.fieldErrors = err.error.errors;
+          this.error = "Certaines informations ne sont pas valides.";
+        } else {
+          this.error = "Erreur lors de l'inscription. Vérifiez vos informations ou réessayez plus tard.";
+        }
+      }
+    });
   }
 }
-

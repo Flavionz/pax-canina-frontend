@@ -1,0 +1,73 @@
+<div class="card" *ngIf="!loading">
+  <h3 class="card-title">
+    {{ isEdit ? 'Modifier la session' : 'Créer une session' }}
+  </h3>
+
+  <form [formGroup]="form" (ngSubmit)="submit()">
+    <div class="grid">
+
+      <label for="course">Cours</label>
+      <select id="course" formControlName="courseId">
+        <option [ngValue]="null">— Sélectionner —</option>
+        <option *ngFor="let c of courses" [ngValue]="c.idCourse">
+          {{ c.name }}
+        </option>
+      </select>
+
+      <label for="ageGroup">Tranche d'âge</label>
+      <select id="ageGroup" formControlName="ageGroupId">
+        <option [ngValue]="null">— Sélectionner —</option>
+        <option *ngFor="let ag of ageGroups" [ngValue]="ag.idAgeGroup">
+          {{ translateAgeGroup(ag.name) }}
+          <ng-container *ngIf="ag.minAge != null">
+            <ng-container *ngIf="ag.maxAge != null">
+              ({{ ag.minAge }}–{{ ag.maxAge }} mois)
+            </ng-container>
+            <ng-container *ngIf="ag.maxAge == null">
+              ({{ ag.minAge }} mois+)
+            </ng-container>
+          </ng-container>
+        </option>
+      </select>
+
+      <label for="date">Date</label>
+      <input id="date" type="date" formControlName="date" />
+
+      <label for="start">Début</label>
+      <input id="start" type="time" formControlName="startTime" />
+
+      <label for="end">Fin</label>
+      <input id="end" type="time" formControlName="endTime" />
+
+      <label for="level">Niveau</label>
+      <select id="level" formControlName="level">
+        <option>BEGINNER</option>
+        <option>INTERMEDIATE</option>
+        <option>ADVANCED</option>
+      </select>
+
+      <label for="loc">Lieu</label>
+      <input id="loc" type="text" formControlName="location" />
+
+      <label for="cap">Capacité</label>
+      <input id="cap" type="number" formControlName="maxCapacity" min="1" />
+
+      <label for="desc">Description</label>
+      <textarea id="desc" formControlName="description" rows="3"></textarea>
+    </div>
+
+    <div class="actions">
+      <button class="btn btn-primary"
+              type="submit"
+              [disabled]="form.invalid || courses.length === 0 || ageGroups.length === 0">
+        {{ isEdit ? 'Mettre à jour' : 'Créer' }}
+      </button>
+    </div>
+  </form>
+
+  <div class="muted" *ngIf="courses.length === 0">
+    Aucun cours disponible pour vos spécialisations.
+  </div>
+</div>
+
+<div class="loading-message" *ngIf="loading">Chargement…</div>

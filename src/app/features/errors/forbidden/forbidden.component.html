@@ -1,0 +1,41 @@
+<div class="forbidden-container">
+  <div class="forbidden-card">
+    <div class="forbidden-img-wrapper">
+      <img src="/assets/images/403-dog.jpg" alt="Chien de garde" class="forbidden-img" />
+      <div class="forbidden-badge mat-elevation-z2">
+        <mat-icon class="forbidden-lock">lock</mat-icon>
+        <span class="forbidden-code">403</span>
+      </div>
+    </div>
+    <h1>Accès interdit&nbsp;!</h1>
+    <p class="forbidden-desc">
+      Comme un chien de garde fidèle, nous devons protéger cette zone.<br>
+      Vous n'avez pas les autorisations nécessaires pour accéder à cette page.
+    </p>
+    <div class="forbidden-alert">
+      <mat-icon class="forbidden-alert-icon">help_outline</mat-icon>
+      <div>
+        <strong>Besoin d'accès ?</strong>
+        <span>
+          Si vous pensez que c'est une erreur ou si vous avez besoin d'un accès, veuillez contacter votre administrateur.
+        </span>
+      </div>
+    </div>
+    <div class="forbidden-actions">
+      <button mat-flat-button routerLink="/" class="forbidden-btn-primary">
+        <mat-icon>home</mat-icon>
+        Retour à l'accueil
+      </button>
+      <button mat-stroked-button (click)="goBack()" class="forbidden-btn">
+        <mat-icon>arrow_back</mat-icon>
+        Page précédente
+      </button>
+    </div>
+  </div>
+  <div class="forbidden-footer">
+    <span class="forbidden-fact">
+      <strong>Le saviez-vous&nbsp;?</strong>
+      Les chiens de garde peuvent distinguer les visiteurs autorisés des intrus, tout comme notre système de sécurité&nbsp;! 🐕
+    </span>
+  </div>
+</div>

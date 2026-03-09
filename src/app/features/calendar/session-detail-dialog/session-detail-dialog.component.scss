@@ -1,0 +1,200 @@
+::ng-deep .pax-modal-center .mat-dialog-container {
+  border-radius: 20px;
+  padding: 0; // padding gestito da .modal-content
+  background: #fff;
+  box-shadow: 0 8px 40px #0001;
+  min-width: 340px;
+  max-width: 95vw;
+}
+
+.modal-content {
+  padding: 2.5rem 2.2rem 2rem 2.2rem;
+  position: relative;
+
+  .close-btn {
+    position: absolute;
+    top: 1rem; right: 1rem;
+    background: none; border: none; color: #bbb; font-size: 1.5rem;
+    cursor: pointer; transition: color 0.18s;
+    &:hover { color: #1DCB4F; }
+  }
+
+  h2 {
+    font-size: 1.55rem; font-weight: 700;
+    margin-bottom: 1.2rem; color: #154468; text-align: center;
+    letter-spacing: -0.5px;
+  }
+
+  .details {
+    font-size: 1rem; margin-bottom: 1rem;
+    div {
+      margin-bottom: .6rem; display: flex; align-items: center; gap: .7rem; color: #404c5a;
+    }
+    mat-icon { font-size: 1.13rem; color: #22c55e; }
+    .age-range { color: #5b6e85; margin-left: .25rem; }
+  }
+
+  .session-img {
+    width: 100%; border-radius: 12px; margin: 1.2rem 0 .6rem 0;
+    object-fit: cover; box-shadow: 0 2px 10px #e5e7eb; background: #f8fafc; min-height: 140px;
+  }
+
+  .modal-actions {
+    display: flex; flex-direction: column; gap: 1rem; align-items: center;
+
+    .dog-select-group {
+      margin-bottom: .3rem;
+      label { font-weight: 500; margin-bottom: .3rem; display: block; }
+      select { padding: 0.5rem 1rem; border-radius: 8px; border: 1px solid #e0e6ed; font-size: 1rem; min-width: 180px; }
+    }
+
+    .precheck-hint {
+      color: #b86e09; background: #fff8e6; border: 1px solid #ffe1a6;
+      padding: .6rem .8rem; border-radius: 8px; font-size: 0.98rem; text-align: center;
+      max-width: 420px;
+    }
+
+    .enroll-error {
+      color: #e74c3c; font-size: 1.05rem; text-align: center;
+    }
+
+    button {
+      font-weight: 500; min-width: 180px; border-radius: 10px; font-size: 1.06rem;
+      padding: 0.7rem 0; margin-top: 0.2rem;
+    }
+
+    .no-dog-msg {
+      display: flex; align-items: center; gap: .7rem; color: #d48f17; font-size: 1.08rem; font-weight: 500;
+      mat-icon { color: #f4c542; } text-align: center;
+    }
+  }
+
+  .enroll-success {
+    display: flex; align-items: center; gap: 0.7rem; color: #16a34a; font-size: 1.18rem; font-weight: 600;
+    mat-icon { font-size: 2rem; }
+    margin: 1.8rem 0 1.2rem 0; justify-content: center; text-align: center;
+  }
+}
+
+/* Media query */
+@media (max-width: 680px) {
+  .modal-content {
+    padding: 1.2rem .9rem 1.3rem .9rem;
+    h2 { font-size: 1.28rem; }
+    .session-img { min-height: 100px; }
+    .modal-actions {
+      .precheck-hint { font-size: .95rem; }
+      button { min-width: 160px; }
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .modal-content {
+    padding: 1rem .7rem 1.1rem .7rem;
+    h2 { font-size: 1.18rem; }
+    .modal-actions {
+      .dog-select-group select { min-width: 0; width: 100%; }
+      button { width: 100%; }
+    }
+  }
+}
+
+.title-wrap {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: .75rem;
+  margin-bottom: .25rem;
+}
+
+.badges {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  margin-top: .2rem;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  padding: .22rem .6rem;
+  border-radius: 999px;
+  font-size: .78rem;
+  font-weight: 600;
+  border: 1px solid transparent;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.chip-level {
+  background: #eef2ff;
+  color: #3843d0;
+  border-color: #d9e0ff;
+}
+
+.chip-ok {
+  background: #eaf8ee;
+  color: #1b7a3f;
+  border-color: #c8ecd5;
+}
+
+.chip-full {
+  background: #ffe8ea;
+  color: #b8192f;
+  border-color: #ffd1d7;
+}
+
+.alert {
+  display: flex;
+  align-items: flex-start;
+  gap: .5rem;
+  margin: .75rem 0 .25rem;
+  padding: .6rem .8rem;
+  border-radius: 10px;
+  font-size: .95rem;
+  border: 1px solid transparent;
+
+  mat-icon {
+    font-size: 20px;
+    line-height: 20px;
+    width: 20px;
+    height: 20px;
+    margin-top: 2px;
+  }
+}
+
+.alert-warn {
+  background: #fff7e6;
+  color: #7a4b00;
+  border-color: #ffe3ad;
+}
+
+.alert-info {
+  background: #f2f7ff;
+  color: #1d4d91;
+  border-color: #d7e6ff;
+}
+
+.details {
+  margin-top: .5rem;
+
+  > div {
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+    margin: .35rem 0;
+
+    mat-icon {
+      color: #2e7d32;
+    }
+  }
+}
+
+.session-img {
+  display: block;
+  width: 100%;
+  border-radius: 12px;
+  margin: .6rem 0 .2rem;
+  object-fit: cover;
+}

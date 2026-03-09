@@ -1,39 +1,42 @@
 import { Injectable } from '@angular/core';
-import { User } from '../models/user.model';
+import { HttpClient } from '@angular/common/http';
+import { User } from '@core/models/user.model';
+import { Observable } from 'rxjs';
+import { environment } from '@environments/environment';
+import {map} from 'rxjs/operators';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class UserService {
-  private mockUser: User = {
-    id: 1,
-    firstName: 'Flavio',
-    lastName: 'Terenzi',
-    email: 'flavio.terenzi@example.com',
-    role: 'Propriétaire',
-    telephone: '0612345678',
-    avatar: 'assets/images/avatar.png',
-    address: '5 Rue Principale',
-    city: 'La Maxe',
-    postalCode: '57140',
-    bio: 'Passionné de dressage canin depuis plus de 5 ans. Propriétaire de deux bergers allemands et d\'un labrador.',
-    memberSince: '2022-01-01',
-    dogs: [
-      { name: 'Rex', breed: 'Berger Allemand', age: 3 },
-      { name: 'Luna', breed: 'Labrador', age: 2 }
-    ],
-    registrations: [
-      { activity: 'Cours d\'obéissance', date: '2024-03-15', status: 'Confirmé' },
-      { activity: 'Atelier agility', date: '2024-04-10', status: 'En attente' }
-    ]
-  };
+  private baseUrl = `${environment.apiUrl}/users`;
 
+  constructor(private http: HttpClient) {}
 
-  getUserProfile(): User {
-    return this.mockUser;
+  getAllUsers(): Observable<User[]> {
+    return this.http.get<User[]>(this.baseUrl);
   }
 
-  isLoggedIn(): boolean {
-    return true;
+  getUserById(id: number): Observable<User> {
+    return this.http.get<User>(`${this.baseUrl}/${id}`);
   }
+
+  getUserCount(): Observable<number> {
+    return this.http.get<{ count: number }>(`${this.baseUrl}/count`).pipe(
+      map(res => res.count)
+    );
+  }
+
+
+  createUser(user: User): Observable<User> {
+    return this.http.post<User>(this.baseUrl, user);
+  }
+
+  fullUpdateUser(id: number, user: User): Observable<User> {
+    return this.http.put<User>(`${this.baseUrl}/${id}/full-update`, user);
+  }
+
+  deleteUser(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.baseUrl}/${id}`);
+  }
+
+
 }

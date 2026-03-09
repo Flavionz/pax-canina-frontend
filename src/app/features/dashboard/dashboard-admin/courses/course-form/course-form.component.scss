@@ -1,0 +1,128 @@
+.course-form-modal {
+  position: fixed;
+  z-index: 1010;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  margin: 0 auto;
+  max-width: 430px;
+  width: 100%;
+  background: #f8fafc;
+  border-radius: 14px;
+  box-shadow: 0 2px 8px 0 #1879c210;
+  padding: 2rem 2rem 1rem 2rem;
+  label { font-weight: 600; color: #1e3346; }
+  .form-group { margin-bottom: 1.2em; }
+  input, textarea, select {
+    width: 100%;
+    padding: .6em .7em;
+    margin-bottom: 1.2em;
+    border: 1px solid #d8e0ea;
+    border-radius: 7px;
+    font-size: 1em;
+    background: #fff;
+  }
+  .specialization-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .6em;
+    margin-bottom: .8em;
+    .badge {
+      background: #e4f1fb;
+      color: #145b91;
+      border-radius: 999px;
+      padding: 0.45em 1em 0.45em .8em;
+      display: flex;
+      align-items: center;
+      font-size: .98em;
+      font-weight: 500;
+      .remove-btn {
+        border: none;
+        background: none;
+        font-size: 1.1em;
+        margin-left: .4em;
+        cursor: pointer;
+        color: #ca2c2c;
+        font-weight: bold;
+      }
+    }
+  }
+  .spec-actions {
+    display: flex;
+    align-items: center;
+    gap: .65em;
+    margin-bottom: .7em;
+    select {
+      min-width: 135px;
+      padding-right: 2em;
+    }
+    .add-btn {
+      background: #27c383;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 0.38em 1.15em;
+      font-weight: 600;
+      font-size: 1em;
+      cursor: pointer;
+      transition: background 0.14s;
+      box-shadow: 0 1px 4px #52e2af17;
+      &:disabled {
+        background: #c4f1e1;
+        color: #fff;
+        cursor: not-allowed;
+      }
+      &:hover:not(:disabled) {
+        background: #23b078;
+      }
+    }
+  }
+  .hint.error {
+    color: #c14646;
+    font-size: 0.95em;
+    margin-top: .18em;
+    margin-bottom: .92em;
+    padding-left: 0.05em;
+    font-weight: 500;
+    letter-spacing: 0.01em;
+  }
+  .form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1em;
+    margin-top: 1.3em;
+    .btn-primary {
+      background: #27c383;
+      border-radius: 1.5rem;
+      padding: 0.56rem 1.45rem;
+      color: #fff;
+      font-weight: 600;
+      border: none;
+      font-size: 1rem;
+      box-shadow: 0 2px 8px 0 #e3f7e7;
+      transition: background 0.16s;
+      &:hover {
+        background: #23b078;
+      }
+    }
+    .btn-secondary {
+      background: #f6f6f9;
+      border-radius: 1.5rem;
+      color: #3374b8;
+      font-weight: 500;
+      border: 1px solid #d2e5fa;
+      font-size: 1rem;
+      padding: 0.56rem 1.4rem;
+      transition: background 0.16s;
+      &:hover {
+        background: #eaf2fb;
+      }
+    }
+  }
+}
+@media (max-width: 600px) {
+  .course-form-modal {
+    max-width: 98vw;
+    padding: 1rem 0.5rem 0.5rem 0.5rem;
+  }
+}

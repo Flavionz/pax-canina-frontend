@@ -3,19 +3,34 @@
     <h1>Créer un compte</h1>
     <p class="subtitle">Rejoignez la communauté Pax Canina</p>
 
-    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+    <!-- SUCCESS -->
+    <div *ngIf="successMessage" class="success-message">
+      <p>{{ successMessage }}</p>
+      <p class="small">
+        <strong>Important :</strong> vérifiez votre boîte mail pour activer votre compte.
+        Pensez aussi au dossier spams.
+      </p>
+      <div class="return-login">
+        <a routerLink="/auth/login">Retour à la page de connexion</a>
+      </div>
+    </div>
+
+    <!-- FORM -->
+    <form *ngIf="!successMessage" [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+      <!-- prénom / nom -->
       <div class="form-row">
         <div class="form-group">
-          <label for="prenom">Prénom</label>
-          <input id="prenom" type="text" formControlName="prenom" placeholder="Votre prénom" />
-          <div class="error" *ngIf="prenom?.invalid && (prenom.dirty || prenom.touched)">
+          <label for="firstName">Prénom</label>
+          <input id="firstName" type="text" formControlName="firstName" placeholder="Votre prénom" />
+          <div class="error" *ngIf="firstName.invalid && (firstName.dirty || firstName.touched)">
             Le prénom est requis
           </div>
         </div>
+
         <div class="form-group">
-          <label for="nom">Nom</label>
-          <input id="nom" type="text" formControlName="nom" placeholder="Votre nom" />
-          <div class="error" *ngIf="nom.invalid && (nom.dirty || nom.touched)">
+          <label for="lastName">Nom</label>
+          <input id="lastName" type="text" formControlName="lastName" placeholder="Votre nom" />
+          <div class="error" *ngIf="lastName.invalid && (lastName.dirty || lastName.touched)">
             Le nom est requis
           </div>
         </div>
@@ -24,15 +39,15 @@
       <div class="form-group">
         <label for="email">Adresse e-mail</label>
         <input id="email" type="email" formControlName="email" placeholder="Votre e-mail" />
-        <div class="error" *ngIf="email?.invalid && (email.dirty || email.touched)">
+        <div class="error" *ngIf="email.invalid && (email.dirty || email.touched)">
           L'adresse e-mail est requise et doit être valide
         </div>
       </div>
 
       <div class="form-group">
-        <label for="telephone">Téléphone</label>
-        <input id="telephone" type="tel" formControlName="telephone" placeholder="Votre téléphone" />
-        <div class="error" *ngIf="telephone?.invalid && (telephone.dirty || telephone.touched)">
+        <label for="phone">Téléphone</label>
+        <input id="phone" type="tel" formControlName="phone" placeholder="Votre téléphone" />
+        <div class="error" *ngIf="phone.invalid && (phone.dirty || phone.touched)">
           Le téléphone est requis
         </div>
       </div>
@@ -46,13 +61,46 @@
             formControlName="password"
             placeholder="Créer un mot de passe"
           />
-          <button type="button" class="toggle-password" (click)="togglePasswordVisibility()">
+          <button
+            type="button"
+            class="toggle-password"
+            (click)="togglePasswordVisibility()"
+            aria-label="Afficher/Masquer le mot de passe"
+          >
             <span *ngIf="!showPassword">&#128065;</span>
             <span *ngIf="showPassword">&#128064;</span>
           </button>
         </div>
-        <div class="error" *ngIf="password?.invalid && (password.dirty || password.touched)">
+        <div class="error" *ngIf="password.invalid && (password.dirty || password.touched)">
           Le mot de passe est requis (au moins 6 caractères)
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="confirmPassword">Confirmer le mot de passe</label>
+        <div class="password-field">
+          <input
+            id="confirmPassword"
+            [type]="showConfirmPassword ? 'text' : 'password'"
+            formControlName="confirmPassword"
+            placeholder="Retapez votre mot de passe"
+          />
+          <button
+            type="button"
+            class="toggle-password"
+            (click)="toggleConfirmPasswordVisibility()"
+            aria-label="Afficher/Masquer le mot de passe"
+          >
+            <span *ngIf="!showConfirmPassword">&#128065;</span>
+            <span *ngIf="showConfirmPassword">&#128064;</span>
+          </button>
+        </div>
+        <div class="error" *ngIf="confirmPassword.invalid && (confirmPassword.dirty || confirmPassword.touched)">
+          Vous devez confirmer votre mot de passe
+        </div>
+        <div class="error"
+             *ngIf="registerForm.hasError('passwordMismatch') && (confirmPassword.dirty || confirmPassword.touched)">
+          Les mots de passe ne correspondent pas
         </div>
       </div>
 
@@ -61,20 +109,22 @@
           <input type="checkbox" formControlName="conditions" />
           J'accepte les <a href="#" target="_blank">conditions d'utilisation</a>
         </label>
-        <div class="error" *ngIf="conditions?.invalid && (conditions.dirty || conditions.touched)">
+        <div class="error" *ngIf="conditions.invalid && (conditions.dirty || conditions.touched)">
           Vous devez accepter les conditions
         </div>
       </div>
 
-      <button class="register-btn" type="submit">
-        Créer un compte
+      <button class="register-btn" type="submit" [disabled]="loading || registerForm.invalid">
+        <span *ngIf="!loading">Créer un compte</span>
+        <span *ngIf="loading">Création...</span>
       </button>
+
+      <div class="error global" *ngIf="error">{{ error }}</div>
     </form>
 
-    <div class="login-link">
-     Deja un compte ?
+    <div class="login-link" *ngIf="!successMessage">
+      Déjà un compte ?
       <a routerLink="/auth/login">Se connecter</a>
-   </div>
+    </div>
+  </div>
 </div>
-</div>
-

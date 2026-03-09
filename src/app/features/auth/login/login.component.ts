@@ -1,10 +1,9 @@
-import { Component } from '@angular/core';
-import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
-import { AuthService } from '../auth.service';
-import {Router, RouterLink} from '@angular/router';
-import {CommonModule} from '@angular/common';
-
-
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { AuthService } from '@app/core/services/auth.service';
+import { Router, RouterLink } from '@angular/router';
+import { CommonModule } from '@angular/common';
+import { finalize } from 'rxjs/operators';
 
 @Component({
   selector: 'app-login',
@@ -17,9 +16,11 @@ import {CommonModule} from '@angular/common';
   ],
   styleUrls: ['./login.component.scss']
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit {
   loginForm: FormGroup;
   showPassword = false;
+  error: string | null = null;
+  loading = false;
 
   constructor(
     private fb: FormBuilder,
@@ -33,6 +34,12 @@ export class LoginComponent {
     });
   }
 
+  ngOnInit(): void {
+    if (this.authService.isAuthenticated()) {
+      this.router.navigate(['/profile']);
+    }
+  }
+
   get email() { return this.loginForm.get('email'); }
   get password() { return this.loginForm.get('password'); }
 
@@ -41,9 +48,24 @@ export class LoginComponent {
   }
 
   onSubmit() {
+    this.error = null;
     if (this.loginForm.valid) {
-      this.authService.login();
-      this.router.navigate(['/profile']);
+      this.loading = true;
+      const { email, password } = this.loginForm.value;
+      this.authService.login(email, password)
+        .pipe(finalize(() => this.loading = false))
+        .subscribe({
+          next: (success) => {
+            if (success) {
+              this.router.navigate(['/profile']);
+            } else {
+              this.error = "Identifiants invalides";
+            }
+          },
+          error: () => {
+            this.error = "Erreur de connexion. Veuillez réessayer.";
+          }
+        });
     } else {
       this.loginForm.markAllAsTouched();
     }

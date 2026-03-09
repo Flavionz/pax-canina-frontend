@@ -1,0 +1,101 @@
+.specializations-admin {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 2rem;
+
+  h2 {
+    margin-bottom: 1.5rem;
+    color: #2574a9;
+    font-size: 2rem;
+    font-weight: 700;
+  }
+
+  .error-msg { color: #d32f2f; margin-bottom: 1rem; }
+  .loader { color: #666; margin-bottom: 1rem; }
+  .empty { color: #999; text-align: center; margin-top: 2rem; }
+
+  .specializations-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-bottom: 2rem;
+
+    .specialization-card {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #fff;
+      padding: 1rem;
+      border-radius: 1rem;
+      box-shadow: 0 1px 4px rgba(80, 120, 180, 0.07);
+      transition: box-shadow 0.2s;
+
+      .name { font-size: 1.15rem; font-weight: 600; }
+      .description { color: #666; font-size: 0.96rem; }
+      .actions {
+        display: flex;
+        gap: 0.5rem;
+        .btn-sm {
+          font-size: 0.9rem;
+          padding: 0.3rem 0.7rem;
+          border-radius: 6px;
+        }
+      }
+    }
+  }
+
+  hr { margin: 2rem 0; border: none; border-top: 1px solid #eee; }
+
+  .specialization-form {
+    background: #fafbff;
+    padding: 1.5rem;
+    border-radius: 1rem;
+    box-shadow: 0 1px 4px rgba(50, 100, 150, 0.04);
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+
+    h3 { font-size: 1.1rem; font-weight: 600; margin-bottom: 0.5rem; }
+
+    label { font-weight: 500; margin-bottom: 0.2rem; display: block; }
+    input[type="text"] {
+      width: 100%;
+      padding: 0.5rem;
+      font-size: 1rem;
+      border: 1px solid #dbe4ee;
+      border-radius: 8px;
+      margin-bottom: 0.7rem;
+      &.invalid { border-color: #d32f2f; }
+    }
+
+    .form-actions {
+      display: flex;
+      gap: 1rem;
+      justify-content: flex-end;
+    }
+  }
+}
+.btn-back {
+  display: inline-block;
+  margin-bottom: 1.4rem;
+  background: #e6f2fa;
+  color: #1977cc;
+  border: none;
+  border-radius: 1.2rem;
+  padding: 0.38em 1.1em;
+  font-size: 1.02rem;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 2px 8px #e5eefa24;
+  transition: background 0.18s, color 0.18s;
+  text-align: left;
+  &:hover {
+    background: #d3e8f9;
+    color: #144c7c;
+  }
+  i, svg {
+    margin-right: 0.45em;
+    font-size: 1.08em;
+    vertical-align: middle;
+  }
+}

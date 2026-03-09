@@ -1,0 +1,66 @@
+<div class="user-form">
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <div>
+      <label>Prénom</label>
+      <input formControlName="firstName" type="text" />
+    </div>
+    <div>
+      <label>Nom</label>
+      <input formControlName="lastName" type="text" />
+    </div>
+    <div>
+      <label>Email</label>
+      <input formControlName="email" type="email" [readonly]="!!user" />
+    </div>
+    <div>
+      <label>Téléphone</label>
+      <input formControlName="phone" type="text" />
+    </div>
+    <div>
+      <label>Rôle</label>
+      <select formControlName="role">
+        <option value="OWNER">Propriétaire</option>
+        <option value="COACH">Coach</option>
+        <option value="ADMIN">Admin</option>
+      </select>
+    </div>
+
+    <div *ngIf="form.value.role === 'COACH'" class="spec-zone">
+      <label>Spécialisations</label>
+      <div class="specialization-badges">
+        <span *ngFor="let s of selectedSpecializations" class="badge">
+          {{ s.name }}
+          <button type="button" class="remove-btn" (click)="removeSpecialization(s)">×</button>
+        </span>
+      </div>
+      <div class="spec-actions">
+        <select [(ngModel)]="selectedSpec" [ngModelOptions]="{standalone: true}">
+          <option [ngValue]="null" disabled selected>Ajouter...</option>
+          <option *ngFor="let s of availableSpecializations" [ngValue]="s">{{ s.name }}</option>
+        </select>
+        <button type="button" class="add-btn" (click)="addSpecialization()" [disabled]="!selectedSpec">
+          Ajouter
+        </button>
+      </div>
+      <div class="hint error" *ngIf="specializationError">
+        Sélectionnez au moins une spécialisation.
+      </div>
+    </div>
+
+    <div>
+      <label>Bio</label>
+      <textarea formControlName="bio" rows="2"></textarea>
+    </div>
+    <div>
+      <label>Avatar (URL)</label>
+      <input formControlName="avatarUrl" type="text" />
+    </div>
+    <div class="actions">
+      <button type="submit" class="btn btn-primary" [disabled]="form.invalid || specializationError">
+        {{ user ? 'Enregistrer' : 'Créer' }}
+      </button>
+      <button type="button" class="btn btn-outline" (click)="cancel.emit()">Annuler</button>
+    </div>
+    <div class="error-msg" *ngIf="errorMsg">{{ errorMsg }}</div>
+  </form>
+</div>

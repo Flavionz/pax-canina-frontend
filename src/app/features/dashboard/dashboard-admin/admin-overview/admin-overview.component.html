@@ -1,0 +1,47 @@
+<div class="dashboard-welcome">
+  <h2>Bienvenue {{ adminName }} 👋</h2>
+  <p>Que souhaitez-vous gérer aujourd'hui ?</p>
+</div>
+
+<div class="dashboard-overview">
+  <div class="overview-card" routerLink="users">
+    <div class="icon">👤</div>
+    <div>
+      <h3>Utilisateurs</h3>
+      <p>Créer, modifier ou supprimer les utilisateurs</p>
+      <span class="badge">{{ counts.users }} utilisateurs</span>
+    </div>
+  </div>
+  <div class="overview-card" routerLink="courses">
+    <div class="icon">📚</div>
+    <div>
+      <h3>Cours</h3>
+      <p>Gérer les programmes de formation canine</p>
+      <span class="badge">{{ counts.courses }} cours</span>
+    </div>
+  </div>
+  <div class="overview-card" routerLink="sessions">
+    <div class="icon">📅</div>
+    <div>
+      <h3>Sessions</h3>
+      <p>Planifier et organiser les séances de formation</p>
+      <span class="badge">{{ counts.sessions }} sessions</span>
+    </div>
+  </div>
+  <div class="overview-card" routerLink="dogs">
+    <div class="icon">🐶</div>
+    <div>
+      <h3>Chiens</h3>
+      <p>Suivre les profils et progrès des chiens</p>
+      <span class="badge">{{ counts.dogs }} chiens</span>
+    </div>
+  </div>
+  <div class="overview-card" routerLink="specializations">
+    <div class="icon">🏅</div>
+    <div>
+      <h3>Spécialisations</h3>
+      <p>Définir les domaines de spécialisation</p>
+      <span class="badge">{{ counts.specializations }} spécial.</span>
+    </div>
+  </div>
+</div>

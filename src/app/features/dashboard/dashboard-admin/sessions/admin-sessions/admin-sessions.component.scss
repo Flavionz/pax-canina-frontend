@@ -1,0 +1,68 @@
+.admin-sessions {
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+  }
+  .sessions-table {
+    width: 100%;
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 2px 8px #e5e7eb;
+    overflow: hidden;
+    th, td {
+      padding: 0.9rem 1rem;
+      text-align: left;
+    }
+    th {
+      background: #f8fafb;
+      font-weight: 600;
+      color: #222;
+    }
+    td {
+      vertical-align: middle;
+    }
+    .badge {
+      border-radius: 8px;
+      padding: .3em .8em;
+      font-size: .85em;
+      font-weight: 600;
+      &.badge-success { background: #e5ffe7; color: #1DCB4F; }
+      &.badge-danger { background: #ffeaea; color: #e74c3c; }
+    }
+    .avatar {
+      width: 2rem; height: 2rem; border-radius: 50%; margin-right: .5rem; vertical-align: middle;
+      box-shadow: 0 1px 2px #ccc;
+    }
+  }
+  .empty-state {
+    margin: 3rem 0;
+    text-align: center;
+    color: #888;
+  }
+}
+.btn-back {
+  display: inline-block;
+  margin-bottom: 1.4rem;
+  background: #e6f2fa;
+  color: #1977cc;
+  border: none;
+  border-radius: 1.2rem;
+  padding: 0.38em 1.1em;
+  font-size: 1.02rem;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 2px 8px #e5eefa24;
+  transition: background 0.18s, color 0.18s;
+  text-align: left;
+  &:hover {
+    background: #d3e8f9;
+    color: #144c7c;
+  }
+  i, svg {
+    margin-right: 0.45em;
+    font-size: 1.08em;
+    vertical-align: middle;
+  }
+}

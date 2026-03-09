@@ -1,0 +1,79 @@
+.dashboard-coach {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+
+  .dashboard-header {
+    margin-bottom: 1.5rem;
+    h2 { font-size: 1.9rem; font-weight: 700; }
+  }
+
+  .card {
+    background: #fff;
+    border-radius: 1.25rem;
+    box-shadow: 0 2px 12px rgba(60,60,60,.07), 0 2px 3px rgba(30,30,30,.04);
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+
+    .card-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: .75rem;
+      margin-bottom: .75rem;
+
+      .actions {
+        display: flex;
+        gap: .5rem;
+        flex-wrap: wrap;
+      }
+    }
+
+    .card-title { font-size: 1.15rem; font-weight: 600; margin: 0; }
+
+    .btn {
+      padding: .55rem .9rem;
+      border-radius: .75rem;
+      border: 1px solid #e6e6e6;
+      background: #f8f9fb;
+      cursor: pointer;
+      text-decoration: none;
+      transition: transform .03s ease;
+
+      &.btn-primary {
+        background: #2f7bff;
+        color: #fff;
+        border-color: #2f7bff;
+      }
+
+      &:active { transform: translateY(1px); }
+    }
+
+    .session-list {
+      list-style: none; margin: 0; padding: 0;
+
+      .session-item {
+        padding: .8rem 0;
+        border-bottom: 1px solid #eee;
+        display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+
+        .left {
+          .session-course { font-weight: 600; }
+          .session-meta { color: #6f6f6f; font-size: .95rem; margin-top: .15rem; }
+        }
+
+        .right .btn.btn-sm {
+          padding: .4rem .65rem; font-size: .9rem; border-radius: .6rem;
+        }
+      }
+
+      .session-item:last-child { border-bottom: none; }
+    }
+
+    .text-muted { color: #aaa; }
+  }
+
+  .loading-message {
+    text-align: center; color: #777; padding: 3rem 0; font-size: 1.05rem;
+  }
+}

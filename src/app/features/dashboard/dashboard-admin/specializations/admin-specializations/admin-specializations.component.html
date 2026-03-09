@@ -1,0 +1,47 @@
+<div class="specializations-admin">
+
+  <h2>Spécialisations</h2>
+
+  <!-- Error / Loader -->
+  <div *ngIf="error" class="error-msg">{{ error }}</div>
+  <div *ngIf="loading" class="loader">Chargement...</div>
+
+  <!-- List -->
+  <div class="specializations-list" *ngIf="!loading && specializations.length > 0">
+    <div class="specialization-card" *ngFor="let s of specializations">
+      <div>
+        <div class="name">{{ s.name }}</div>
+        <div class="description">{{ s.description || '—' }}</div>
+      </div>
+      <div class="actions">
+        <button (click)="startEdit(s)" class="btn btn-outline btn-sm">Modifier</button>
+        <button (click)="remove(s.id)" class="btn btn-danger btn-sm">Supprimer</button>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="!loading && specializations.length === 0" class="empty">Aucune spécialisation enregistrée.</div>
+
+  <hr />
+
+  <!-- Add/Edit Form -->
+  <form [formGroup]="form" (ngSubmit)="save()" class="specialization-form">
+    <h3>{{ editing ? 'Modifier' : 'Ajouter' }} une spécialisation</h3>
+    <div>
+      <label>Nom</label>
+      <input formControlName="name" type="text" [class.invalid]="form.get('name')?.invalid && form.get('name')?.touched" />
+    </div>
+    <div>
+      <label>Description</label>
+      <input formControlName="description" type="text" />
+    </div>
+    <div class="form-actions">
+      <button type="submit" class="btn btn-primary" [disabled]="form.invalid">
+        {{ editing ? 'Enregistrer' : 'Ajouter' }}
+      </button>
+      <button type="button" class="btn btn-outline" (click)="cancel()" *ngIf="editing">Annuler</button>
+    </div>
+  </form>
+</div>
+<button class="btn-back" routerLink="/dashboard/admin">
+  ← Retour Dashboard
+</button>

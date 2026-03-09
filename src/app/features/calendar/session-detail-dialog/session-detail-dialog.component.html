@@ -1,0 +1,100 @@
+<div class="modal-content">
+  <button class="close-btn" (click)="close()" aria-label="Fermer">
+    <mat-icon>close</mat-icon>
+  </button>
+
+  <!-- HEADER -->
+  <div class="title-wrap">
+    <h2 class="modal-title">{{ data.session.course?.name }}</h2>
+
+    <div class="badges">
+      <!-- Niveau -->
+      <span class="chip chip-level" *ngIf="data.session.level as lvl">{{ lvl }}</span>
+
+      <!-- Stato -->
+      <span
+        class="chip"
+        [ngClass]="data.session.status === 'full' ? 'chip-full' : 'chip-ok'">
+        {{ data.session.status === 'full' ? 'Complet' : 'Disponible' }}
+      </span>
+    </div>
+  </div>
+
+  <!-- DETTAGLI -->
+  <div class="details">
+    <div><mat-icon>event</mat-icon> {{ data.session.date | date:'fullDate':'':'fr' }}</div>
+    <div><mat-icon>schedule</mat-icon> {{ data.session.startTime }} - {{ data.session.endTime }}</div>
+    <div><mat-icon>place</mat-icon> {{ data.session.location }}</div>
+    <div>
+      <mat-icon>groups</mat-icon>
+      {{ data.session.registrationsCount }}/{{ data.session.maxCapacity }}
+      inscrit{{ data.session.maxCapacity === 1 ? '' : 's' }}
+    </div>
+    <div>
+      <mat-icon>account_circle</mat-icon>
+      Coach : {{ data.session.coach?.firstName }} {{ data.session.coach?.lastName || 'N/A' }}
+    </div>
+    <div>
+      <mat-icon>child_care</mat-icon>
+      Tranche d'âge :
+      <ng-container *ngIf="data.session.ageGroup as g; else noAge">
+        {{ translateAgeGroup(g.name) }}
+        <span class="age-range">
+          <ng-container *ngIf="g.minAge != null && g.maxAge != null">
+            ({{ g.minAge }}–{{ g.maxAge }} mois)
+          </ng-container>
+          <ng-container *ngIf="g.minAge != null && g.maxAge == null">
+            (≥ {{ g.minAge }} mois)
+          </ng-container>
+          <ng-container *ngIf="g.minAge == null && g.maxAge != null">
+            (≤ {{ g.maxAge }} mois)
+          </ng-container>
+        </span>
+      </ng-container>
+      <ng-template #noAge>N/A</ng-template>
+    </div>
+  </div>
+
+  <img *ngIf="data.session.imageUrl" [src]="data.session.imageUrl" class="session-img" alt="Image de la session">
+
+  <!-- AZIONI -->
+  <div class="modal-actions" *ngIf="!enrollSuccess">
+    <!-- Messaggio: nessun cane registrato -->
+    <div *ngIf="data.myDogs.length === 0" class="alert alert-warn">
+      <mat-icon>warning_amber</mat-icon>
+      <span>
+        Vous devez <b>enregistrer un chien</b> avant de pouvoir vous inscrire à une session.
+      </span>
+    </div>
+
+    <!-- Selettore cane -->
+    <div *ngIf="data.myDogs.length > 1" class="dog-select-group">
+      <label for="dog-select">Choisissez un chien à inscrire :</label>
+      <select id="dog-select" [(ngModel)]="selectedDogId">
+        <option [ngValue]="null" disabled>-- Sélectionner --</option>
+        <option *ngFor="let d of data.myDogs" [ngValue]="d.idDog">{{ d.name }}</option>
+      </select>
+    </div>
+
+    <!-- Hint pre-check età -->
+    <div class="alert alert-info" *ngIf="disableReason">
+      <mat-icon>info</mat-icon>
+      <span>{{ disableReason }}</span>
+    </div>
+
+    <button mat-raised-button color="primary"
+            (click)="enrollToSession()"
+            [disabled]="enrolling || !selectedDogId || data.myDogs.length === 0 || enrollSuccess || !!disableReason"
+            *ngIf="data.myDogs.length > 0">
+      <span *ngIf="!enrolling">S'inscrire</span>
+      <span *ngIf="enrolling">Inscription...</span>
+    </button>
+
+    <div class="enroll-error" *ngIf="enrollError">{{ enrollError }}</div>
+  </div>
+
+  <div class="enroll-success" *ngIf="enrollSuccess">
+    <mat-icon color="primary" style="font-size: 2rem;">check_circle</mat-icon>
+    <span>Merci pour votre inscription !</span>
+  </div>
+</div>
