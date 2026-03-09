@@ -82,3 +82,18 @@
     vertical-align: middle;
   }
 }
+.dogs-table th {
+  cursor: pointer;
+  user-select: none;
+  white-space: nowrap;
+
+  span {
+    margin-left: 0.3rem;
+    color: #a0a0a0;
+    font-size: 0.85rem;
+    &.active {
+      color: #1976d2;
+      font-weight: bold;
+    }
+  }
+}

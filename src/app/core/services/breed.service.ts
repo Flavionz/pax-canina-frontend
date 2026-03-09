@@ -10,7 +10,8 @@ export class BreedService {
 
   constructor(private http: HttpClient) {}
 
-  getBreeds(): Observable<Breed[]> {
-    return this.http.get<Breed[]>(this.baseUrl);
+  getBreeds(): Observable<{ idBreed: number; name: string }[]> {
+    return this.http.get<{ idBreed: number; name: string }[]>(`${this.baseUrl}/lite`);
   }
+
 }

@@ -3,7 +3,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { RegistrationService } from '@core/services/registration.service';
 import { Dog } from '@core/models/dog.model';
 import { Session } from '@core/models/session.model';
-import { DatePipe, NgForOf, NgIf } from '@angular/common';
+import {DatePipe, NgClass, NgForOf, NgIf} from '@angular/common';
 import { MatButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { FormsModule } from '@angular/forms';
@@ -11,7 +11,7 @@ import { FormsModule } from '@angular/forms';
 @Component({
   selector: 'app-session-detail-dialog',
   templateUrl: './session-detail-dialog.component.html',
-  imports: [DatePipe, MatIcon, MatButton, FormsModule, NgForOf, NgIf],
+  imports: [DatePipe, MatIcon, MatButton, FormsModule, NgForOf, NgIf, NgClass],
   styleUrls: ['./session-detail-dialog.component.scss']
 })
 export class SessionDetailDialogComponent {

@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DogService } from '@core/services/dog.service';
 import { Dog } from '@core/models/dog.model';
-import {RouterLink} from '@angular/router';
+import { RouterLink } from '@angular/router';
 
 /**
  * Admin dogs management component.
@@ -21,6 +21,10 @@ export class AdminDogsComponent implements OnInit {
   dogs: Dog[] = [];
   loading = false;
   errorMsg: string | null = null;
+
+  // Stato per ordinamento
+  sortColumn: string = '';
+  sortDirection: 'asc' | 'desc' = 'asc';
 
   constructor(private dogService: DogService) {}
 
@@ -60,5 +64,31 @@ export class AdminDogsComponent implements OnInit {
         error: () => alert("Erreur lors de la suppression du chien.")
       });
     }
+  }
+
+  /**
+   * Sort table by column
+   */
+  sortData(column: string) {
+    if (this.sortColumn === column) {
+      this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc';
+    } else {
+      this.sortColumn = column;
+      this.sortDirection = 'asc';
+    }
+
+    this.dogs.sort((a: any, b: any) => {
+      const valueA = a[column] ?? '';
+      const valueB = b[column] ?? '';
+
+      if (valueA < valueB) return this.sortDirection === 'asc' ? -1 : 1;
+      if (valueA > valueB) return this.sortDirection === 'asc' ? 1 : -1;
+      return 0;
+    });
+  }
+
+  getSortIcon(column: string): string {
+    if (this.sortColumn !== column) return '⇅';
+    return this.sortDirection === 'asc' ? '↑' : '↓';
   }
 }

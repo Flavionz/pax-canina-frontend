@@ -3,15 +3,32 @@
     <mat-icon>close</mat-icon>
   </button>
 
-  <h2 class="modal-title">{{ data.session.course?.name }}</h2>
+  <!-- HEADER -->
+  <div class="title-wrap">
+    <h2 class="modal-title">{{ data.session.course?.name }}</h2>
 
+    <div class="badges">
+      <!-- Niveau -->
+      <span class="chip chip-level" *ngIf="data.session.level as lvl">{{ lvl }}</span>
+
+      <!-- Stato -->
+      <span
+        class="chip"
+        [ngClass]="data.session.status === 'full' ? 'chip-full' : 'chip-ok'">
+        {{ data.session.status === 'full' ? 'Complet' : 'Disponible' }}
+      </span>
+    </div>
+  </div>
+
+  <!-- DETTAGLI -->
   <div class="details">
     <div><mat-icon>event</mat-icon> {{ data.session.date | date:'fullDate':'':'fr' }}</div>
     <div><mat-icon>schedule</mat-icon> {{ data.session.startTime }} - {{ data.session.endTime }}</div>
     <div><mat-icon>place</mat-icon> {{ data.session.location }}</div>
     <div>
       <mat-icon>groups</mat-icon>
-      {{ data.session.registrationsCount }}/{{ data.session.maxCapacity }} inscrit{{ data.session.maxCapacity === 1 ? '' : 's' }}
+      {{ data.session.registrationsCount }}/{{ data.session.maxCapacity }}
+      inscrit{{ data.session.maxCapacity === 1 ? '' : 's' }}
     </div>
     <div>
       <mat-icon>account_circle</mat-icon>
@@ -40,13 +57,17 @@
 
   <img *ngIf="data.session.imageUrl" [src]="data.session.imageUrl" class="session-img" alt="Image de la session">
 
-  <!-- Azioni -->
+  <!-- AZIONI -->
   <div class="modal-actions" *ngIf="!enrollSuccess">
-    <div *ngIf="data.myDogs.length === 0" class="no-dog-msg">
-      <mat-icon color="warn">warning</mat-icon>
-      <span>Vous devez <b>enregistrer un chien</b> avant de pouvoir vous inscrire à une session.</span>
+    <!-- Messaggio: nessun cane registrato -->
+    <div *ngIf="data.myDogs.length === 0" class="alert alert-warn">
+      <mat-icon>warning_amber</mat-icon>
+      <span>
+        Vous devez <b>enregistrer un chien</b> avant de pouvoir vous inscrire à une session.
+      </span>
     </div>
 
+    <!-- Selettore cane -->
     <div *ngIf="data.myDogs.length > 1" class="dog-select-group">
       <label for="dog-select">Choisissez un chien à inscrire :</label>
       <select id="dog-select" [(ngModel)]="selectedDogId">
@@ -55,8 +76,11 @@
       </select>
     </div>
 
-    <!-- Hint di pre-check età -->
-    <div class="precheck-hint" *ngIf="disableReason">{{ disableReason }}</div>
+    <!-- Hint pre-check età -->
+    <div class="alert alert-info" *ngIf="disableReason">
+      <mat-icon>info</mat-icon>
+      <span>{{ disableReason }}</span>
+    </div>
 
     <button mat-raised-button color="primary"
             (click)="enrollToSession()"
@@ -66,11 +90,9 @@
       <span *ngIf="enrolling">Inscription...</span>
     </button>
 
-    <!-- Errore server-side amichevole -->
     <div class="enroll-error" *ngIf="enrollError">{{ enrollError }}</div>
   </div>
 
-  <!-- Messaggio successo -->
   <div class="enroll-success" *ngIf="enrollSuccess">
     <mat-icon color="primary" style="font-size: 2rem;">check_circle</mat-icon>
     <span>Merci pour votre inscription !</span>

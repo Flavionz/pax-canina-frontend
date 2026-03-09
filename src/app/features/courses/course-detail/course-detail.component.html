@@ -90,26 +90,33 @@
             <button
               class="reserve-btn"
               [class.full]="isSessionFull(s)"
-              [disabled]="isSessionFull(s)">
+              (click)="openSessionDetail(s)"
+              [disabled]="isSessionFull(s) || myDogs.length === 0">
               {{ isSessionFull(s) ? 'Complet' : 'Réserver' }}
             </button>
 
             <footer *ngIf="s.coach || s.ageGroup" class="session-card__meta">
               <div *ngIf="s.coach" class="row muted">
                 <svg class="icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                  <path d="M12,2A3,3 0 0,1 15,5A3,3 0 0,1 12,8A3,3 0 0,1 9,5A3,3 0 0,1 12,2M21,9V10C21,11.1 20.1,12 19,12H16L13.5,7.5C13.09,6.67 12.27,6.24 11.5,6.5L6,8.5C5.5,8.64 5.03,8.93 4.68,9.34C4.41,9.75 4.32,10.22 4.41,10.67L5.57,16.36C5.78,17.45 6.96,18.09 8.05,17.88L9.5,17.5V21.5C9.5,21.78 9.72,22 10,22H12C12.28,22 12.5,21.78 12.5,21.5V16H17V21.5C17,21.78 17.22,22 17.5,22H19.5C19.78,22 20,21.78 20,21.5V10.24C20.94,9.68 21.5,8.73 21.5,7.68V7.18C21.5,5.97 20.53,5 19.32,5H18.68C17.47,5 16.5,5.97 16.5,7.18V7.68C16.5,8.73 17.06,9.68 18,10.24V10H21V9Z"/>
+                  <path d="M12,2A3,3 0 0,1 15,5A3,3 0 0,1 12,8A3,3 0 0,1 9,5A3,3 0 0,1 12,2Z"/>
                 </svg>
                 <span>Coach : {{ s.coach.firstName }} {{ s.coach.lastName }}</span>
               </div>
 
               <div *ngIf="s.ageGroup" class="row muted">
                 <svg class="icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                  <path d="M12,2A2,2 0 0,1 14,4A2,2 0 0,1 12,6A2,2 0 0,1 10,4A2,2 0 0,1 12,2M21,9V7L15,1V3H9V1L3,7V9H7V24H9V16H15V24H17V9H21Z"/>
+                  <path d="M12,2A2,2 0 0,1 14,4A2,2 0 0,1 12,6A2,2 0 0,1 10,4A2,2 0 0,1 12,2Z"/>
                 </svg>
                 <span>
                   Tranche d'âge : {{ s.ageGroup.name }}
-                  <ng-container *ngIf="s.ageGroup.minAge && s.ageGroup.maxAge">
-                    ({{ s.ageGroup.minAge }}-{{ s.ageGroup.maxAge }} ans)
+                  <ng-container *ngIf="s.ageGroup.minAge != null && s.ageGroup.maxAge != null">
+                    ({{ s.ageGroup.minAge }}–{{ s.ageGroup.maxAge }} mois)
+                  </ng-container>
+                  <ng-container *ngIf="s.ageGroup.minAge != null && s.ageGroup.maxAge == null">
+                    (≥ {{ s.ageGroup.minAge }} mois)
+                  </ng-container>
+                  <ng-container *ngIf="s.ageGroup.minAge == null && s.ageGroup.maxAge != null">
+                    (≤ {{ s.ageGroup.maxAge }} mois)
                   </ng-container>
                 </span>
               </div>
@@ -128,7 +135,6 @@
         </div>
       </ng-template>
 
-      <!-- Retour aux cours spostato qui in basso -->
       <div class="return-wrapper">
         <button routerLink="/courses" class="btn-outline">
           ← Retour aux cours

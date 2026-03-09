@@ -5,7 +5,7 @@ export interface Dog {
   sex: string;
   photoUrl?: string;
   chipNumber?: string;
-  weight: number;
+  weight?: number;
   idOwner?: number;
   idBreed?: number;
   breedName?: string;

@@ -10,7 +10,6 @@ import { MatNativeDateModule, MAT_DATE_LOCALE, provideNativeDateAdapter } from '
 import { MatIconModule } from '@angular/material/icon';
 import { Session } from '@core/models/session.model';
 import { Dog } from '@core/models/dog.model';
-import { MatButton } from '@angular/material/button';
 import { FormsModule } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { SessionDetailDialogComponent } from './session-detail-dialog/session-detail-dialog.component';
@@ -36,23 +35,17 @@ import { SessionDetailDialogComponent } from './session-detail-dialog/session-de
 export class CalendarComponent implements OnInit {
   selectedDate: Date | null = new Date();
 
-  /** Sessions indexed by day (YYYY-MM-DD) for the current month view */
   sessionsByDate: Record<string, Session[]> = {};
-  /** Flat list of sessions for the month (for summary) */
   monthSessions: Session[] = [];
-  /** Sessions for the currently selected date */
   sessions: Session[] = [];
 
   myDogs: Dog[] = [];
 
   private dialog = inject(MatDialog);
 
-  constructor(
-    private http: HttpClient
-  ) {}
+  constructor(private http: HttpClient) {}
 
   ngOnInit() {
-    // Load user's dogs (used by the dialog)
     this.http.get<Dog[]>(`${environment.apiUrl}/dogs/me`).subscribe(dogs => {
       this.myDogs = dogs || [];
     });
@@ -63,15 +56,18 @@ export class CalendarComponent implements OnInit {
     }
   }
 
-  /** Format Date -> YYYY-MM-DD */
   private toIsoDate(d: Date): string {
-    const year = d.getFullYear();
-    const month = (d.getMonth() + 1).toString().padStart(2, '0');
+    const y = d.getFullYear();
+    const m = (d.getMonth() + 1).toString().padStart(2, '0');
     const day = d.getDate().toString().padStart(2, '0');
-    return `${year}-${month}-${day}`;
+    return `${y}-${m}-${day}`;
   }
 
-  /** Map raw DTO -> Session model (kept here because this component calls HTTP directly) */
+  private parseLocalDate(iso: string): Date {
+    const [y, m, d] = iso.split('-').map(Number);
+    return new Date(y, (m ?? 1) - 1, d ?? 1);
+  }
+
   private adaptSession(s: any): Session {
     return {
       ...s,
@@ -81,35 +77,44 @@ export class CalendarComponent implements OnInit {
       coach: s.coach ?? (s.coachId
         ? { id: s.coachId, firstName: s.coachFirstName, lastName: s.coachLastName, avatarUrl: s.coachAvatarUrl }
         : undefined),
-      // 🔁 KEY FIX: minAge/maxAge (non più ageMin/ageMax)
       ageGroup: s.ageGroup ?? (s.ageGroupId
         ? { idAgeGroup: s.ageGroupId, name: s.ageGroupName, minAge: s.minAge, maxAge: s.maxAge }
         : undefined),
-      // status already normalized server-side; keep as provided or compute if needed
     } as Session;
   }
 
-  /** Load all sessions for the month containing 'd' */
   private loadMonth(d: Date) {
-    const year = d.getFullYear(), month = d.getMonth() + 1;
-    const mm = month.toString().padStart(2, '0');
+    const year  = d.getFullYear();
+    const month = d.getMonth() + 1;
+    const mm    = month.toString().padStart(2, '0');
+
+    const lastDay = new Date(year, month, 0).getDate();
+    const ddEnd   = lastDay.toString().padStart(2, '0');
+
     const start = `${year}-${mm}-01`;
-    const end = `${year}-${mm}-31`;
+    const end   = `${year}-${mm}-${ddEnd}`;
 
     this.http.get<any[]>(`${environment.apiUrl}/sessions/by-date-range?start=${start}&end=${end}`)
-      .subscribe(arr => {
-        this.sessionsByDate = {};
-        this.monthSessions = (arr || [])
-          .map(s => this.adaptSession(s))
-          .sort((a, b) => a.date.localeCompare(b.date));
+      .subscribe({
+        next: (arr) => {
+          this.sessionsByDate = {};
+          this.monthSessions = (arr || [])
+            .map(s => this.adaptSession(s))
+            .sort((a, b) => a.date.localeCompare(b.date) ||
+              (a.startTime || '').localeCompare(b.startTime || ''));
 
-        for (const s of this.monthSessions) {
-          (this.sessionsByDate[s.date] ??= []).push(s);
+          for (const s of this.monthSessions) {
+            (this.sessionsByDate[s.date] ??= []).push(s);
+          }
+        },
+        error: (err) => {
+          console.error('[Calendar] by-date-range failed:', err);
+          this.sessionsByDate = {};
+          this.monthSessions = [];
         }
       });
   }
 
-  /** Load all sessions for a single day */
   private loadDay(d: Date) {
     const iso = this.toIsoDate(d);
     this.http.get<any[]>(`${environment.apiUrl}/sessions/by-date/${iso}`)
@@ -119,7 +124,6 @@ export class CalendarComponent implements OnInit {
       });
   }
 
-  /** Calendar cell class: 'full' if all sessions that day are full, else 'available' */
   dateClass: MatCalendarCellClassFunction<Date> = (cellDate, view) => {
     if (view === 'month') {
       const key = this.toIsoDate(cellDate);
@@ -133,25 +137,15 @@ export class CalendarComponent implements OnInit {
     return this.sessions;
   }
 
-  /** Shortcut: all sessions of current month */
-  getMonthSessions(): Session[] {
-    return this.monthSessions;
-  }
-
-  /** Open detail dialog for a session */
   openSessionDetail(s: Session) {
     this.dialog.open(SessionDetailDialogComponent, {
       panelClass: 'pax-modal-center',
-      data: {
-        session: s,
-        myDogs: this.myDogs
-      },
+      data: { session: s, myDogs: this.myDogs },
       autoFocus: false,
       restoreFocus: false,
       width: '410px',
       maxWidth: '95vw'
     }).afterClosed().subscribe(result => {
-      // 🔁 FIX: il dialog chiude con { success: true }, non con boolean
       if (result?.success && this.selectedDate) {
         this.loadMonth(this.selectedDate);
         this.loadDay(this.selectedDate);
@@ -159,29 +153,27 @@ export class CalendarComponent implements OnInit {
     });
   }
 
-  /** Handle date change from the datepicker */
   onDateChange(d: Date | null) {
     if (!(d instanceof Date)) return;
     this.selectedDate = d;
     this.loadDay(d);
   }
 
-  /** Jump to a session date and open its dialog */
   jumpToSession(s: Session) {
+    const target = this.parseLocalDate(s.date);
     if (!this.selectedDate || this.toIsoDate(this.selectedDate) !== s.date) {
-      this.selectedDate = new Date(s.date);
+      this.selectedDate = target;
       this.loadDay(this.selectedDate);
-      setTimeout(() => this.openSessionDetail(s), 150); // ensure day list is rendered
+      setTimeout(() => this.openSessionDetail(s), 150);
     } else {
       this.openSessionDetail(s);
     }
     setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 80);
   }
 
-  /** True if the session date is today */
   isToday(dateStr: string): boolean {
     const today = new Date();
-    const d = new Date(dateStr);
+    const d = this.parseLocalDate(dateStr);
     return today.getFullYear() === d.getFullYear()
       && today.getMonth() === d.getMonth()
       && today.getDate() === d.getDate();

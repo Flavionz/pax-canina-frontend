@@ -7,11 +7,21 @@
   <table class="dogs-table" *ngIf="!loading && dogs.length > 0; else emptyState">
     <thead>
     <tr>
-      <th>Nom</th>
-      <th>Propriétaire</th>
-      <th>Date de naissance</th>
-      <th>Sexe</th>
-      <th>Race</th>
+      <th (click)="sortData('name')">
+        Nom <span [class.active]="sortColumn === 'name'">{{ getSortIcon('name') }}</span>
+      </th>
+      <th (click)="sortData('ownerName')">
+        Propriétaire <span [class.active]="sortColumn === 'ownerName'">{{ getSortIcon('ownerName') }}</span>
+      </th>
+      <th (click)="sortData('birthDate')">
+        Date de naissance <span [class.active]="sortColumn === 'birthDate'">{{ getSortIcon('birthDate') }}</span>
+      </th>
+      <th (click)="sortData('sex')">
+        Sexe <span [class.active]="sortColumn === 'sex'">{{ getSortIcon('sex') }}</span>
+      </th>
+      <th (click)="sortData('breedName')">
+        Race <span [class.active]="sortColumn === 'breedName'">{{ getSortIcon('breedName') }}</span>
+      </th>
       <th>Actions</th>
     </tr>
     </thead>

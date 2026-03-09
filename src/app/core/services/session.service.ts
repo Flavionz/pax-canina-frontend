@@ -10,7 +10,6 @@ export class SessionService {
 
   constructor(private http: HttpClient) {}
 
-  /** --- API standard --- */
   getSessions(): Observable<Session[]> {
     return this.http
       .get<any[]>(`${this.baseUrl}`)
@@ -53,7 +52,6 @@ export class SessionService {
     return this.http.delete<void>(`${this.baseUrl}/${idSession}`);
   }
 
-  /** --- alias compatibilità con i component --- */
   getById(id: number): Observable<Session> {
     return this.getSessionById(id);
   }
@@ -67,7 +65,6 @@ export class SessionService {
     return this.deleteSession(id);
   }
 
-  /** --- lista del coach (filtro client-side) --- */
   getMine(coachId: number): Observable<Session[]> {
     return this.getSessions().pipe(
       map(sessions => (sessions || []).filter(s => s.coach?.id === coachId))
@@ -97,7 +94,6 @@ export class SessionService {
       ? {
         idAgeGroup: dto.ageGroupId,
         name: dto.ageGroupName ?? '',
-        // 👇 allineati al back e al tuo model
         minAge: dto.minAge,
         maxAge: dto.maxAge
       }
@@ -118,15 +114,15 @@ export class SessionService {
       imageUrl: session.imageUrl,
       status: session.status,
 
-      // riferimenti
+
       courseId: session.course?.idCourse,
-      courseName: session.course?.name, // opzionale: se il back lo ignora, non crea problemi
+      courseName: session.course?.name,
       coachId: session.coach?.id,
-      coachFirstName: session.coach?.firstName, // opzionale
-      coachLastName: session.coach?.lastName,   // opzionale
+      coachFirstName: session.coach?.firstName,
+      coachLastName: session.coach?.lastName,
 
       ageGroupId: session.ageGroup?.idAgeGroup,
-      ageGroupName: session.ageGroup?.name, // opzionale
+      ageGroupName: session.ageGroup?.name,
 
       minAge: session.ageGroup?.minAge,
       maxAge: session.ageGroup?.maxAge,
